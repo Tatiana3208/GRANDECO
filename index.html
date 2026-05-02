@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Language Hub | Main</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #fefaf5 0%, #fff7f0 100%);
+      color: #1e2a3e;
+      scroll-behavior: smooth;
+    }
+    .navbar {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 248, 240, 0.92);
+      backdrop-filter: blur(16px);
+      padding: 1rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(224,198,168,0.4);
+    }
+    .logo h1 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #3b5e3b, #6b4c3b);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      color: #2c3e2f;
+      background: rgba(235,215,190,0.4);
+      padding: 0.5rem 1rem;
+      border-radius: 60px;
+      transition: 0.25s;
+    }
+    .nav-links a:hover {
+      background: #d8b48c;
+      color: white;
+    }
+    .hero {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .hero h2 {
+      font-size: 2rem;
+      background: linear-gradient(120deg, #5f4330, #b87a4b);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .sections-grid {
+      max-width: 1280px;
+      margin: 2rem auto 4rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .section-card {
+      background: #ffffffea;
+      border-radius: 2rem;
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(199,163,119,0.25);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .section-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 28px 36px -14px rgba(82,50,23,0.12);
+    }
+    .card-header {
+      padding: 1.5rem 1.5rem 0.75rem;
+      border-bottom: 2px solid #f3e5d5;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-header i {
+      font-size: 2rem;
+      color: #b36b3c;
+      background: #fef1e6;
+      padding: 0.6rem;
+      border-radius: 1.2rem;
+    }
+    .card-header h3 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(130deg, #3b2a1f, #8b5a2e);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .content-preview {
+      padding: 1.5rem;
+      color: #4f3e2e;
+      font-size: 0.95rem;
+    }
+    .info-footer {
+      text-align: center;
+      background: #f1e9e0;
+      padding: 1.8rem;
+      font-size: 0.85rem;
+      color: #5b4a38;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 1.5rem;
+      background: #b36b3ce0;
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.4rem;
+    }
+    @media (max-width: 680px) {
+      .navbar { flex-direction: column; text-align: center; }
+      .card-header h3 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo"><h1>Language Hub</h1></div>
+  <ul class="nav-links">
+    <li><a href="a1-a2.html">A1-A2</a></li>
+    <li><a href="a2-b1.html">A2-B1</a></li>
+    <li><a href="b1-b2.html">B1-B2</a></li>
+    <li><a href="speaking-circle.html">Speaking circle</a></li>
+    <li><a href="grammar.html">Grammar</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <h2>Your structured language journey</h2>
+  <p>Click any card below to open the dedicated page where you can upload full lessons, videos, worksheets, and more.</p>
+</div>
+
+<div class="sections-grid">
+  <a href="a1-a2.html" class="section-card">
+    <div class="card-header"><i class="fas fa-seedling"></i><h3>A1 - A2</h3></div>
+    <div class="content-preview">🔹 Foundational vocabulary &amp; grammar<br>🔹 Listening &amp; reading tasks</div>
+  </a>
+  <a href="a2-b1.html" class="section-card">
+    <div class="card-header"><i class="fas fa-chart-line"></i><h3>A2 - B1</h3></div>
+    <div class="content-preview">🔸 Narrate experiences<br>🔸 Understand main points of clear input</div>
+  </a>
+  <a href="b1-b2.html" class="section-card">
+    <div class="card-header"><i class="fas fa-globe"></i><h3>B1 - B2</h3></div>
+    <div class="content-preview">🌍 Express opinions, debates, real‑world materials</div>
+  </a>
+  <a href="speaking-circle.html" class="section-card">
+    <div class="card-header"><i class="fas fa-comments"></i><h3>Speaking circle</h3></div>
+    <div class="content-preview">🗣️ Weekly prompts, roleplay, pronunciation tips</div>
+  </a>
+  <a href="grammar.html" class="section-card">
+    <div class="card-header"><i class="fas fa-book"></i><h3>Grammar</h3></div>
+    <div class="content-preview">📖 Tenses, clauses, exercises &amp; cheat sheets</div>
+  </a>
+</div>
+
+<div class="info-footer">
+  <p>📁 Each card links to a separate HTML file. Replace the content inside those files with your own lessons, images, or PDFs.</p>
+</div>
+<a href="#" class="back-to-top">↑</a>
+
+<script>
+  document.querySelectorAll('.nav-links a, .back-to-top').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      if(this.getAttribute('href') === '#') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
