@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Language Hub | A1 to Grammar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #fefaf5 0%, #fff7f0 100%);
+      color: #1e2a3e;
+      scroll-behavior: smooth;
+      line-height: 1.5;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f0e3d4;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c7ad8f;
+      border-radius: 10px;
+    }
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 248, 240, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(224, 198, 168, 0.4);
+      padding: 1rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .logo h1 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #3b5e3b, #6b4c3b);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      color: #2c3e2f;
+      background: rgba(235, 215, 190, 0.4);
+      padding: 0.5rem 1rem;
+      border-radius: 60px;
+      font-size: 0.9rem;
+      transition: all 0.25s;
+    }
+    .nav-links a:hover {
+      background: #d8b48c;
+      color: white;
+      transform: translateY(-2px);
+    }
+    .hero {
+      text-align: center;
+      padding: 2.5rem 1.5rem 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(120deg, #5f4330, #b87a4b);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.75rem;
+    }
+    .hero p {
+      font-size: 1rem;
+      color: #4a5b5e;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    .sections-grid {
+      max-width: 1280px;
+      margin: 2rem auto 4rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .section-card {
+      background: #ffffffea;
+      border-radius: 2rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      border: 1px solid rgba(199, 163, 119, 0.25);
+      display: flex;
+      flex-direction: column;
+    }
+    .section-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 28px 36px -14px rgba(82, 50, 23, 0.12);
+    }
+    .card-header {
+      padding: 1.5rem 1.5rem 0.75rem 1.5rem;
+      border-bottom: 2px solid #f3e5d5;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-header i {
+      font-size: 2rem;
+      color: #b36b3c;
+      background: #fef1e6;
+      padding: 0.6rem;
+      border-radius: 1.2rem;
+    }
+    .card-header h3 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      background: linear-gradient(130deg, #3b2a1f, #8b5a2e);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .content-area {
+      padding: 1.5rem;
+      flex: 1;
+      background: #fefcf9;
+      margin: 0.5rem 0.8rem 1.2rem 0.8rem;
+      border-radius: 1.5rem;
+      border: 1px dashed #e2cfb9;
+    }
+    .content-area:hover {
+      background: #fffaf3;
+    }
+    .placeholder-text {
+      color: #4f3e2e;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .edit-badge {
+      display: inline-block;
+      background: #f2e4d8;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.2rem 0.7rem;
+      border-radius: 40px;
+      color: #a16536;
+      margin-top: 12px;
+    }
+    .info-footer {
+      text-align: center;
+      background: #f1e9e0;
+      padding: 1.8rem 1rem;
+      border-top: 1px solid #e5d5c2;
+      font-size: 0.85rem;
+      color: #5b4a38;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 1.5rem;
+      background: #b36b3ce0;
+      backdrop-filter: blur(8px);
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.4rem;
+      transition: 0.2s;
+    }
+    .back-to-top:hover {
+      transform: translateY(-4px);
+      background: #9f623a;
+    }
+    @media (max-width: 680px) {
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+      }
+      .card-header h3 {
+        font-size: 1.4rem;
+      }
+      .hero h2 {
+        font-size: 1.6rem;
+      }
+    }
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(20px);}
+      100% { opacity: 1; transform: translateY(0);}
+    }
+    .section-card {
+      animation: fadeSlide 0.45s ease-out forwards;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">
+    <h1>Language Hub</h1>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#section-A1A2"><i class="fas fa-arrow-right"></i> A1-A2</a></li>
+    <li><a href="#section-A2B1"><i class="fas fa-arrow-right"></i> A2-B1</a></li>
+    <li><a href="#section-B1B2"><i class="fas fa-arrow-right"></i> B1-B2</a></li>
+    <li><a href="#section-Speaking"><i class="fas fa-comments"></i> Speaking circle</a></li>
+    <li><a href="#section-Grammar"><i class="fas fa-book-open"></i> Grammar</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <h2>Your structured language journey</h2>
+  <p>Choose your level or focus. Each section is fully customizable – replace the placeholder content with your own lessons, videos, or PDFs.</p>
+</div>
+
+<div class="sections-grid">
+
+  <!-- A1 - A2 -->
+  <div class="section-card" id="section-A1A2">
+    <div class="card-header">
+      <i class="fas fa-seedling"></i>
+      <h3>A1 - A2</h3>
+    </div>
+    <div class="content-area">
+      <div class="placeholder-text">
+        <i class="fas fa-pen-fancy"></i> <strong>Foundational stage</strong><br>
+        ✅ Basic vocabulary & everyday phrases<br>
+        ✅ Simple listening & reading tasks<br>
+        ✅ Start speaking with confidence<br>
+        <div class="edit-badge"><i class="fas fa-edit"></i> Replace this with your content (text, images, files)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- A2 - B1 -->
+  <div class="section-card" id="section-A2B1">
+    <div class="card-header">
+      <i class="fas fa-chart-line"></i>
+      <h3>A2 - B1</h3>
+    </div>
+    <div class="content-area">
+      <div class="placeholder-text">
+        <i class="fas fa-rocket"></i> <strong>Breakthrough to intermediate</strong><br>
+        ✨ Narrate experiences & describe dreams<br>
+        ✨ Understand main points of clear input<br>
+        ✨ Interactive exercises<br>
+        <div class="edit-badge"><i class="fas fa-edit"></i> Add your own PDFs, audio, or quizzes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B1 - B2 -->
+  <div class="section-card" id="section-B1B2">
+    <div class="card-header">
+      <i class="fas fa-globe"></i>
+      <h3>B1 - B2</h3>
+    </div>
+    <div class="content-area">
+      <div class="placeholder-text">
+        <i class="fas fa-microphone-alt"></i> <strong>Upper intermediate mastery</strong><br>
+        🎯 Express opinions & handle complex topics<br>
+        🎯 Real-world articles & debates<br>
+        <div class="edit-badge"><i class="fas fa-edit"></i> Embed slides, video lessons, or grammar deep-dives</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Speaking circle -->
+  <div class="section-card" id="section-Speaking">
+    <div class="card-header">
+      <i class="fas fa-comments"></i>
+      <h3>Speaking circle</h3>
+    </div>
+    <div class="content-area">
+      <div class="placeholder-text">
+        <i class="fas fa-users"></i> <strong>Conversation hub</strong><br>
+        🗣️ Weekly prompts & roleplay<br>
+        🗣️ Pronunciation tips & partner activities<br>
+        <div class="edit-badge"><i class="fas fa-edit"></i> Add speaking tasks, schedules, or audio prompts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grammar -->
+  <div class="section-card" id="section-Grammar">
+    <div class="card-header">
+      <i class="fas fa-book"></i>
+      <h3>Grammar</h3>
+    </div>
+    <div class="content-area">
+      <div class="placeholder-text">
+        <i class="fas fa-table-list"></i> <strong>Grammar hub – rules & practice</strong><br>
+        📖 Tenses, clauses, prepositions<br>
+        📖 Interactive tables & error correction<br>
+        <div class="edit-badge"><i class="fas fa-edit"></i> Replace with charts, worksheets, or exercises</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="info-footer">
+  <p><i class="fas fa-code-branch"></i> <strong>How to upload your content:</strong> Open <code>index.html</code>, find each <code>.content-area</code> block, and replace the placeholder text with your own HTML (images, lists, links, videos).<br>  
+  📌 Save, commit & push to GitHub Pages → updates go live immediately.</p>
+</div>
+
+<a href="#" class="back-to-top" aria-label="Back to top">
+  <i class="fas fa-chevron-up"></i>
+</a>
+
+<script>
+  document.querySelectorAll('.nav-links a, .back-to-top').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if(href && href.startsWith('#')) {
+        const targetId = href.substring(1);
+        const target = document.getElementById(targetId);
+        if(target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else if(href === '#') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
