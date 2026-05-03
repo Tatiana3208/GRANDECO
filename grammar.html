@@ -304,7 +304,7 @@
                 <div class="topic-card">
                     <h3><i class="fas fa-bolt"></i> Irregular Verbs</h3>
                     <p>Master irregular verb forms with a spaced repetition trainer. Interactive exercises with progress saved in your browser.</p>
-                    <a href="#" class="sample-link switch-tab" data-target="irregular">Open trainer →</a>
+                    <a href="irregular%20verbs.html" class="sample-link">Open trainer →</a>
                 </div>
                 <div class="topic-card">
                     <h3><i class="fas fa-puzzle-piece"></i> Parts of Speech</h3>
@@ -346,7 +346,7 @@
         </div>
     </div>
     <footer>
-        <p>📖 Interactive grammar library + irregular verbs trainer | Designed for GRANDECO language hub</p>
+        <p>📖 Interactive grammar library | Designed for GRANDECO language hub</p>
     </footer>
 </div>
 
@@ -364,20 +364,6 @@
                 tabContents.forEach(c => c.classList.remove('active'));
 
                 btn.classList.add('active');
-                document.getElementById(targetId).classList.add('active');
-            });
-        });
-
-        // Switch to Irregular Verbs tab from theory grid card
-        document.querySelectorAll('.switch-tab').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('data-target');
-
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-
-                document.querySelector(`.tab-btn[data-tab="${targetId}"]`).classList.add('active');
                 document.getElementById(targetId).classList.add('active');
             });
         });
