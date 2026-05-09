@@ -450,13 +450,8 @@ body {
 .btn-sec:hover { border-color: var(--accent); }
 
 /* ─────────────────────────────────────────
-   RESPONSIVE
+   PROGRESS TAB  (unchanged)
 ───────────────────────────────────────── */
-/* ─────────────────────────────────────────
-   PROGRESS TAB
-───────────────────────────────────────── */
-
-/* top stat cards */
 .prog-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -480,8 +475,6 @@ body {
   margin-bottom: .3rem;
 }
 .prog-stat-lbl { font-size: .72rem; color: var(--muted); font-weight: 500; letter-spacing: .5px; }
-
-/* overall accuracy bar */
 .prog-accuracy-wrap { width: 100%; margin-bottom: 2rem; }
 .prog-accuracy-label {
   display: flex;
@@ -493,8 +486,6 @@ body {
 .prog-accuracy-label strong { color: var(--text); }
 .prog-accuracy-bar { width: 100%; height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
 .prog-accuracy-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 99px; transition: width .6s cubic-bezier(.4,0,.2,1); }
-
-/* per-unit accordion */
 .prog-unit-block { width: 100%; margin-bottom: .6rem; }
 .prog-unit-header {
   display: flex;
@@ -517,7 +508,6 @@ body {
 .prog-unit-header.open .puh-chevron { transform: rotate(90deg); }
 .puh-mini-bar { width: 48px; height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; flex-shrink: 0; }
 .puh-mini-fill { height: 100%; background: var(--accent); border-radius: 99px; }
-
 .prog-unit-body {
   display: none;
   background: var(--surface2);
@@ -527,7 +517,6 @@ body {
   overflow: hidden;
 }
 .prog-unit-body.open { display: block; }
-
 .prog-verb-row {
   display: flex;
   align-items: center;
@@ -546,8 +535,6 @@ body {
 .pvr-dot.learning { background: var(--amber); }
 .pvr-dot.struggling { background: var(--red); }
 .pvr-dot.unseen { background: var(--border); }
-
-/* reset button */
 .prog-reset-row { width: 100%; display: flex; justify-content: center; margin-top: 2rem; }
 .prog-reset-btn {
   background: none;
@@ -573,9 +560,7 @@ body {
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     HOME SCREEN
-════════════════════════════════════════════ -->
+<!-- HOME SCREEN -->
 <div class="screen active" id="screen-home">
   <div style="text-align:center;padding:3rem 0 2rem;width:100%">
     <div class="logo">Irregular<span>Verbs</span></div>
@@ -590,26 +575,21 @@ body {
     <button class="tab-btn"        id="tab-btn-progress" onclick="switchTab('progress',this)">Progress</button>
   </div>
 
-  <!-- UNITS -->
   <div class="tab-panel active" id="tab-units">
     <div class="units-grid" id="units-grid"></div>
     <p class="units-footer">All units are open · progress saved in your browser</p>
   </div>
 
-  <!-- DUE -->
   <div class="tab-panel" id="tab-due">
     <div id="due-content"></div>
   </div>
 
-  <!-- PROGRESS -->
   <div class="tab-panel" id="tab-progress">
     <div id="progress-content"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     STUDY SCREEN
-════════════════════════════════════════════ -->
+<!-- STUDY SCREEN -->
 <div class="screen" id="screen-study">
   <div class="study-header">
     <button class="back-btn" onclick="goHome()">← Back</button>
@@ -622,10 +602,10 @@ body {
 
   <div class="card-wrap">
     <div class="card" id="main-card">
-      <div class="card-label">Translation</div>
+      <div class="card-label">Перевод</div>
       <div class="card-translation" id="c-translation">—</div>
       <div class="card-base" id="c-base"></div>
-      <div class="card-ask-label">Choose the correct form</div>
+      <div class="card-ask-label">Выберите правильную форму</div>
       <div class="card-ask-form" id="c-ask-form">Past Simple (V2)</div>
       <div class="reveal-row" id="reveal-row">
         <span class="fb" id="rb-v1"></span>
@@ -653,9 +633,7 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     RESULT SCREEN
-════════════════════════════════════════════ -->
+<!-- RESULT SCREEN -->
 <div class="screen" id="screen-result">
   <div style="text-align:center;padding-top:2rem">
     <div class="res-unit-label" id="res-unit-label">Session complete</div>
@@ -669,741 +647,60 @@ body {
   </div>
 </div>
 
-<!-- FEEDBACK OVERLAY -->
 <div class="feedback-overlay">
   <div class="feedback-icon" id="feedback-icon"></div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     DATA  ·  120 genuine irregular verbs
-════════════════════════════════════════════ -->
 <script>
 const UNITS = [
-  {
-    id: 0,
-    title: "Most Common",
-    verbs: [
-      { v1:"be",          v2:"was / were",  v3:"been",        ru:"быть" },
-      { v1:"have",        v2:"had",         v3:"had",         ru:"иметь" },
-      { v1:"do",          v2:"did",         v3:"done",        ru:"делать" },
-      { v1:"go",          v2:"went",        v3:"gone",        ru:"идти / ехать" },
-      { v1:"say",         v2:"said",        v3:"said",        ru:"говорить / сказать" },
-      { v1:"get",         v2:"got",         v3:"got / gotten",ru:"получать / становиться" },
-      { v1:"make",        v2:"made",        v3:"made",        ru:"делать / создавать" },
-      { v1:"know",        v2:"knew",        v3:"known",       ru:"знать" },
-      { v1:"think",       v2:"thought",     v3:"thought",     ru:"думать" },
-      { v1:"take",        v2:"took",        v3:"taken",       ru:"брать" },
-      { v1:"see",         v2:"saw",         v3:"seen",        ru:"видеть" },
-      { v1:"come",        v2:"came",        v3:"come",        ru:"приходить / приезжать" },
-      { v1:"give",        v2:"gave",        v3:"given",       ru:"давать" },
-      { v1:"find",        v2:"found",       v3:"found",       ru:"находить" },
-      { v1:"tell",        v2:"told",        v3:"told",        ru:"рассказывать" },
-      { v1:"leave",       v2:"left",        v3:"left",        ru:"уходить / оставлять" },
-      { v1:"feel",        v2:"felt",        v3:"felt",        ru:"чувствовать" },
-      { v1:"put",         v2:"put",         v3:"put",         ru:"класть" },
-      { v1:"bring",       v2:"brought",     v3:"brought",     ru:"приносить" },
-      { v1:"keep",        v2:"kept",        v3:"kept",        ru:"держать / хранить" },
-    ]
-  },
-  {
-    id: 1,
-    title: "Movement & Action",
-    verbs: [
-      { v1:"run",         v2:"ran",         v3:"run",         ru:"бежать" },
-      { v1:"fly",         v2:"flew",        v3:"flown",       ru:"летать" },
-      { v1:"drive",       v2:"drove",       v3:"driven",      ru:"водить / ехать" },
-      { v1:"ride",        v2:"rode",        v3:"ridden",      ru:"ехать верхом / ездить" },
-      { v1:"swim",        v2:"swam",        v3:"swum",        ru:"плавать" },
-      { v1:"sit",         v2:"sat",         v3:"sat",         ru:"сидеть" },
-      { v1:"stand",       v2:"stood",       v3:"stood",       ru:"стоять" },
-      { v1:"fall",        v2:"fell",        v3:"fallen",      ru:"падать" },
-      { v1:"send",        v2:"sent",        v3:"sent",        ru:"отправлять / посылать" },
-      { v1:"catch",       v2:"caught",      v3:"caught",      ru:"ловить" },
-      { v1:"meet",        v2:"met",         v3:"met",         ru:"встречать / знакомиться" },
-      { v1:"hold",        v2:"held",        v3:"held",        ru:"держать" },
-      { v1:"buy",         v2:"bought",      v3:"bought",      ru:"покупать" },
-      { v1:"sell",        v2:"sold",        v3:"sold",        ru:"продавать" },
-      { v1:"pay",         v2:"paid",        v3:"paid",        ru:"платить" },
-      { v1:"hear",        v2:"heard",       v3:"heard",       ru:"слышать" },
-      { v1:"lead",        v2:"led",         v3:"led",         ru:"вести / возглавлять" },
-      { v1:"win",         v2:"won",         v3:"won",         ru:"побеждать / выигрывать" },
-      { v1:"lose",        v2:"lost",        v3:"lost",        ru:"терять / проигрывать" },
-      { v1:"hit",         v2:"hit",         v3:"hit",         ru:"ударять / попадать" },
-    ]
-  },
-  {
-    id: 2,
-    title: "Speech & Thought",
-    verbs: [
-      { v1:"speak",       v2:"spoke",       v3:"spoken",      ru:"говорить / разговаривать" },
-      { v1:"write",       v2:"wrote",       v3:"written",     ru:"писать" },
-      { v1:"read",        v2:"read",        v3:"read",        ru:"читать" },
-      { v1:"teach",       v2:"taught",      v3:"taught",      ru:"учить / преподавать" },
-      { v1:"learn",       v2:"learnt",      v3:"learnt",      ru:"учиться / узнавать" },
-      { v1:"understand",  v2:"understood",  v3:"understood",  ru:"понимать" },
-      { v1:"choose",      v2:"chose",       v3:"chosen",      ru:"выбирать" },
-      { v1:"forget",      v2:"forgot",      v3:"forgotten",   ru:"забывать" },
-      { v1:"mean",        v2:"meant",       v3:"meant",       ru:"значить / иметь в виду" },
-      { v1:"show",        v2:"showed",      v3:"shown",       ru:"показывать" },
-      { v1:"become",      v2:"became",      v3:"become",      ru:"становиться" },
-      { v1:"begin",       v2:"began",       v3:"begun",       ru:"начинать" },
-      { v1:"break",       v2:"broke",       v3:"broken",      ru:"ломать / нарушать" },
-      { v1:"build",       v2:"built",       v3:"built",       ru:"строить / создавать" },
-      { v1:"spend",       v2:"spent",       v3:"spent",       ru:"тратить / проводить время" },
-      { v1:"lend",        v2:"lent",        v3:"lent",        ru:"одалживать" },
-      { v1:"bend",        v2:"bent",        v3:"bent",        ru:"гнуть / сгибать" },
-      { v1:"sleep",       v2:"slept",       v3:"slept",       ru:"спать" },
-      { v1:"sweep",       v2:"swept",       v3:"swept",       ru:"подметать" },
-      { v1:"deal",        v2:"dealt",       v3:"dealt",       ru:"иметь дело / распределять" },
-    ]
-  },
-  {
-    id: 3,
-    title: "Body & Senses",
-    verbs: [
-      { v1:"eat",         v2:"ate",         v3:"eaten",       ru:"есть / кушать" },
-      { v1:"drink",       v2:"drank",       v3:"drunk",       ru:"пить" },
-      { v1:"wake",        v2:"woke",        v3:"woken",       ru:"просыпаться / будить" },
-      { v1:"wear",        v2:"wore",        v3:"worn",        ru:"носить (одежду)" },
-      { v1:"cut",         v2:"cut",         v3:"cut",         ru:"резать" },
-      { v1:"hurt",        v2:"hurt",        v3:"hurt",        ru:"причинять боль" },
-      { v1:"hang",        v2:"hung",        v3:"hung",        ru:"вешать" },
-      { v1:"draw",        v2:"drew",        v3:"drawn",       ru:"рисовать / тянуть" },
-      { v1:"grow",        v2:"grew",        v3:"grown",       ru:"расти / выращивать" },
-      { v1:"throw",       v2:"threw",       v3:"thrown",      ru:"бросать / кидать" },
-      { v1:"blow",        v2:"blew",        v3:"blown",       ru:"дуть" },
-      { v1:"bite",        v2:"bit",         v3:"bitten",      ru:"кусать" },
-      { v1:"hide",        v2:"hid",         v3:"hidden",      ru:"прятать / скрывать" },
-      { v1:"rise",        v2:"rose",        v3:"risen",       ru:"подниматься / вставать" },
-      { v1:"shine",       v2:"shone",       v3:"shone",       ru:"светить / блестеть" },
-      { v1:"smell",       v2:"smelt",       v3:"smelt",       ru:"нюхать / пахнуть" },
-      { v1:"feed",        v2:"fed",         v3:"fed",         ru:"кормить" },
-      { v1:"tear",        v2:"tore",        v3:"torn",        ru:"рвать / разрывать" },
-      { v1:"shake",       v2:"shook",       v3:"shaken",      ru:"трясти / встряхивать" },
-      { v1:"steal",       v2:"stole",       v3:"stolen",      ru:"красть / воровать" },
-    ]
-  },
-  {
-    id: 4,
-    title: "Work & Creation",
-    verbs: [
-      { v1:"beat",        v2:"beat",        v3:"beaten",      ru:"бить / побеждать" },
-      { v1:"bind",        v2:"bound",       v3:"bound",       ru:"связывать / переплетать" },
-      { v1:"bleed",       v2:"bled",        v3:"bled",        ru:"кровоточить" },
-      { v1:"breed",       v2:"bred",        v3:"bred",        ru:"разводить / воспитывать" },
-      { v1:"burn",        v2:"burnt",       v3:"burnt",       ru:"гореть / жечь" },
-      { v1:"cast",        v2:"cast",        v3:"cast",        ru:"бросать / отливать" },
-      { v1:"dig",         v2:"dug",         v3:"dug",         ru:"копать / рыть" },
-      { v1:"fight",       v2:"fought",      v3:"fought",      ru:"бороться / сражаться" },
-      { v1:"fit",         v2:"fit",         v3:"fit",         ru:"подходить по размеру" },
-      { v1:"forgive",     v2:"forgave",     v3:"forgiven",    ru:"прощать" },
-      { v1:"freeze",      v2:"froze",       v3:"frozen",      ru:"замерзать / замораживать" },
-      { v1:"grind",       v2:"ground",      v3:"ground",      ru:"молоть / точить" },
-      { v1:"kneel",       v2:"knelt",       v3:"knelt",       ru:"стоять на коленях" },
-      { v1:"lay",         v2:"laid",        v3:"laid",        ru:"класть / укладывать" },
-      { v1:"light",       v2:"lit",         v3:"lit",         ru:"зажигать / освещать" },
-      { v1:"mow",         v2:"mowed",       v3:"mown",        ru:"косить / стричь газон" },
-      { v1:"knit",        v2:"knit",        v3:"knit",        ru:"вязать" },
-      { v1:"weave",       v2:"wove",        v3:"woven",       ru:"ткать / плести" },
-      { v1:"wind",        v2:"wound",       v3:"wound",       ru:"наматывать / заводить" },
-      { v1:"dream",       v2:"dreamt",      v3:"dreamt",      ru:"видеть сны / мечтать" },
-    ]
-  },
-  {
-    id: 5,
-    title: "Advanced & Rare",
-    verbs: [
-      { v1:"arise",       v2:"arose",       v3:"arisen",      ru:"возникать / появляться" },
-      { v1:"bear",        v2:"bore",        v3:"borne",       ru:"нести / рожать" },
-      { v1:"burst",       v2:"burst",       v3:"burst",       ru:"взрываться / лопаться" },
-      { v1:"creep",       v2:"crept",       v3:"crept",       ru:"ползти / красться" },
-      { v1:"forbid",      v2:"forbade",     v3:"forbidden",   ru:"запрещать" },
-      { v1:"foresee",     v2:"foresaw",     v3:"foreseen",    ru:"предвидеть" },
-      { v1:"forsake",     v2:"forsook",     v3:"forsaken",    ru:"покидать / бросать" },
-      { v1:"mislead",     v2:"misled",      v3:"misled",      ru:"вводить в заблуждение" },
-      { v1:"overcome",    v2:"overcame",    v3:"overcome",    ru:"преодолевать / победить" },
-      { v1:"quit",        v2:"quit",        v3:"quit",        ru:"бросать / уходить" },
-      { v1:"seek",        v2:"sought",      v3:"sought",      ru:"искать / добиваться" },
-      { v1:"shed",        v2:"shed",        v3:"shed",        ru:"сбрасывать / проливать" },
-      { v1:"shut",        v2:"shut",        v3:"shut",        ru:"закрывать / захлопывать" },
-      { v1:"sing",        v2:"sang",        v3:"sung",        ru:"петь" },
-      { v1:"sink",        v2:"sank",        v3:"sunk",        ru:"тонуть / погружать" },
-      { v1:"slay",        v2:"slew",        v3:"slain",       ru:"убивать / сразить" },
-      { v1:"sow",         v2:"sowed",       v3:"sown",        ru:"сеять / сажать" },
-      { v1:"stride",      v2:"strode",      v3:"stridden",    ru:"шагать / ступать" },
-      { v1:"strive",      v2:"strove",      v3:"striven",     ru:"стремиться / стараться" },
-      { v1:"undergo",     v2:"underwent",   v3:"undergone",   ru:"претерпевать / проходить" },
-    ]
-  }
-];
-
-/* ═══════════════════════════════════════
-   SRS STORAGE
-   progress[uid][idx] = {
-     interval, due, reps, correct, confidence
-   }
-═══════════════════════════════════════ */
-let progress = JSON.parse(localStorage.getItem('ivsrs3') || '{}');
-
-function vp(uid, idx) {
-  if (!progress[uid]) progress[uid] = {};
-  if (!progress[uid][idx]) progress[uid][idx] = { interval:1, due:0, reps:0, correct:0, confidence:'new' };
-  return progress[uid][idx];
-}
-function save() { localStorage.setItem('ivsrs3', JSON.stringify(progress)); }
-
-// SRS intervals in days per confidence rating
-const CONF_DAYS = { easy: 5, ok: 2, hard: 1 };
-
-function applyRating(uid, idx, wasCorrect, conf) {
-  const p = vp(uid, idx);
-  p.reps++;
-  p.confidence = conf;
-  if (wasCorrect) {
-    p.correct++;
-    const base = CONF_DAYS[conf];
-    p.interval = conf === 'easy' ? Math.max(p.interval * 2, base) : base;
-  } else {
-    p.correct = Math.max(0, p.correct - 1);
-    p.interval = 1;
-  }
-  p.due = Date.now() + p.interval * 86400000;
-  save();
-}
-
-function unitStars(uid) {
-  const u = UNITS[uid]; let m = 0;
-  u.verbs.forEach((_, i) => { if (vp(uid, i).correct >= 3) m++; });
-  if (m === u.verbs.length) return 3;
-  if (m >= u.verbs.length * 0.6) return 2;
-  if (m >= u.verbs.length * 0.3) return 1;
-  return 0;
-}
-function unitPct(uid) {
-  const u = UNITS[uid]; let m = 0;
-  u.verbs.forEach((_, i) => { if (vp(uid, i).correct >= 3) m++; });
-  return Math.round(m / u.verbs.length * 100);
-}
-function getDue() {
-  const now = Date.now(), out = [];
-  UNITS.forEach((u, uid) => {
-    u.verbs.forEach((verb, idx) => {
-      const p = vp(uid, idx);
-      if (p.reps > 0 && p.due <= now) out.push({ verb, uid, idx, p });
-    });
-  });
-  return out;
-}
-
-/* ═══════════════════════════════════════
-   HOME  /  TAB LOGIC
-═══════════════════════════════════════ */
-let activeTab = 'units';
-
-function switchTab(tab, btn) {
-  activeTab = tab;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  if (tab === 'due') renderDue();
-  if (tab === 'progress') renderProgress();
-}
-
-function renderHome() {
-  renderUnits();
-  updateDueBadge();
-  if (activeTab === 'due') renderDue();
-  if (activeTab === 'progress') renderProgress();
-}
-
-function updateDueBadge() {
-  const n = getDue().length;
-  const el = document.getElementById('due-count');
-  el.textContent = n;
-  el.className = 'tab-count' + (n > 0 ? ' has-due' : '');
-}
-
-/* ── Progress tab ── */
-function renderProgress() {
-  const c = document.getElementById('progress-content');
-
-  // ── global stats ──
-  let totalVerbs = 0, seenVerbs = 0, masteredVerbs = 0;
-  let totalReps = 0, totalCorrect = 0;
-
-  UNITS.forEach((u, uid) => {
-    u.verbs.forEach((_, idx) => {
-      totalVerbs++;
-      const p = vp(uid, idx);
-      if (p.reps > 0) seenVerbs++;
-      if (p.correct >= 3) masteredVerbs++;
-      totalReps    += p.reps;
-      totalCorrect += p.correct;
-    });
-  });
-
-  const accuracy = totalReps > 0 ? Math.round(totalCorrect / totalReps * 100) : 0;
-  const dueCount = getDue().length;
-
-  // ── build HTML ──
-  let html = `
-  <!-- Stat cards -->
-  <div class="prog-stats">
-    <div class="prog-stat">
-      <div class="prog-stat-val">${masteredVerbs}</div>
-      <div class="prog-stat-lbl">Mastered</div>
-    </div>
-    <div class="prog-stat">
-      <div class="prog-stat-val">${seenVerbs}</div>
-      <div class="prog-stat-lbl">Studied</div>
-    </div>
-    <div class="prog-stat">
-      <div class="prog-stat-val">${totalVerbs - seenVerbs}</div>
-      <div class="prog-stat-lbl">New</div>
-    </div>
-  </div>
-
-  <!-- Accuracy bar -->
-  <div class="prog-accuracy-wrap">
-    <div class="prog-accuracy-label">
-      <span>Overall accuracy</span>
-      <strong>${accuracy}%</strong>
-    </div>
-    <div class="prog-accuracy-bar">
-      <div class="prog-accuracy-fill" style="width:${accuracy}%"></div>
-    </div>
-  </div>
-  `;
-
-  // ── per-unit accordion ──
-  UNITS.forEach((unit, uid) => {
-    let unitSeen = 0, unitMastered = 0;
-    unit.verbs.forEach((_, idx) => {
-      const p = vp(uid, idx);
-      if (p.reps > 0) unitSeen++;
-      if (p.correct >= 3) unitMastered++;
-    });
-    const pct = Math.round(unitMastered / unit.verbs.length * 100);
-    const metaStr = unitSeen === 0 ? 'Not started'
-      : `${unitMastered}/${unit.verbs.length} mastered`;
-
-    html += `
-    <div class="prog-unit-block">
-      <div class="prog-unit-header" onclick="toggleProgUnit(${uid}, this)">
-        <span class="puh-num">UNIT ${uid + 1}</span>
-        <span class="puh-title">${unit.title}</span>
-        <span class="puh-meta">${metaStr}</span>
-        <div class="puh-mini-bar"><div class="puh-mini-fill" style="width:${pct}%"></div></div>
-        <span class="puh-chevron">›</span>
-      </div>
-      <div class="prog-unit-body" id="prog-body-${uid}">`;
-
-    unit.verbs.forEach((verb, idx) => {
-      const p = vp(uid, idx);
-      // dot colour
-      let dotCls = 'unseen';
-      if (p.reps > 0) {
-        if (p.correct >= 3) dotCls = 'mastered';
-        else if (p.correct >= 1) dotCls = 'learning';
-        else dotCls = 'struggling';
-      }
-      // next review label
-      let nextStr = '—';
-      if (p.reps > 0) {
-        const diff = p.due - Date.now();
-        if (diff <= 0) nextStr = 'Due now';
-        else {
-          const days = Math.ceil(diff / 86400000);
-          nextStr = days === 1 ? 'Tomorrow' : `In ${days} days`;
-        }
-      }
-      // confidence pill
-      const conf = p.confidence;
-      const pillHtml = p.reps > 0
-        ? `<span class="conf-pill ${conf}">${conf.toUpperCase()}</span>`
-        : `<span class="conf-pill new">NEW</span>`;
-
-      html += `
-        <div class="prog-verb-row">
-          <div class="pvr-dot ${dotCls}"></div>
-          <div class="pvr-forms">${verb.v1} — ${verb.v2} — ${verb.v3}</div>
-          <div class="pvr-ru">${verb.ru}</div>
-          ${pillHtml}
-          <div class="pvr-reps">${p.reps > 0 ? p.reps + ' rep' + (p.reps !== 1 ? 's' : '') : ''}</div>
-          <div class="pvr-next">${nextStr}</div>
-        </div>`;
-    });
-
-    html += `</div></div>`;
-  });
-
-  // ── legend ──
-  html += `
-  <div style="display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:1.4rem;font-size:.75rem;color:var(--muted);">
-    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle"></span>Mastered (3+ correct)</span>
-    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber);margin-right:5px;vertical-align:middle"></span>Learning</span>
-    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:5px;vertical-align:middle"></span>Struggling</span>
-    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--border);margin-right:5px;vertical-align:middle"></span>Not seen</span>
-  </div>
-
-  <div class="prog-reset-row">
-    <button class="prog-reset-btn" onclick="resetAllProgress()">Reset all progress</button>
-  </div>`;
-
-  c.innerHTML = html;
-}
-
-function toggleProgUnit(uid, header) {
-  const body = document.getElementById('prog-body-' + uid);
-  const isOpen = body.classList.contains('open');
-  // close all
-  document.querySelectorAll('.prog-unit-body').forEach(b => b.classList.remove('open'));
-  document.querySelectorAll('.prog-unit-header').forEach(h => h.classList.remove('open'));
-  // open clicked if it was closed
-  if (!isOpen) { body.classList.add('open'); header.classList.add('open'); }
-}
-
-function resetAllProgress() {
-  if (!confirm('Reset ALL progress? This cannot be undone.')) return;
-  progress = {};
-  save();
-  renderHome();
-}
-
-/* ── Units grid ── */
-function renderUnits() {
-  const grid = document.getElementById('units-grid');
-  grid.innerHTML = '';
-  UNITS.forEach((unit, uid) => {
-    const stars = unitStars(uid);
-    const pct   = unitPct(uid);
-    const starStr = '★'.repeat(stars) + '☆'.repeat(3 - stars);
-    const card = document.createElement('div');
-    card.className = 'unit-card';
-    card.innerHTML = `
-      <div class="unit-num">UNIT ${uid + 1}</div>
-      <div class="unit-title">${unit.title}</div>
-      <div class="unit-meta">${unit.verbs.length} verbs</div>
-      <div class="unit-stars">${starStr}</div>
-      <div class="unit-bar"><div class="unit-bar-fill" style="width:${pct}%"></div></div>`;
-    card.onclick = () => startUnit(uid);
-    grid.appendChild(card);
-  });
-}
-
-/* ── Due tab ── */
-function renderDue() {
-  const due = getDue();
-  const c = document.getElementById('due-content');
-  if (!due.length) {
-    c.innerHTML = `<div class="due-empty">
-      <div class="due-empty-icon">🎉</div>
-      <p>No verbs due for review right now.<br>Come back later or start a new unit!</p>
-    </div>`;
-    return;
-  }
-  // group by unit
-  const groups = {};
-  due.forEach(item => {
-    if (!groups[item.uid]) groups[item.uid] = [];
-    groups[item.uid].push(item);
-  });
-
-  let html = `<div class="due-header">
-    <span class="due-header-text">${due.length} verb${due.length !== 1 ? 's' : ''} to review</span>
-    <button class="due-start-btn" onclick="startDueSession()">Start review →</button>
-  </div>`;
-
-  Object.keys(groups).sort((a,b)=>+a-+b).forEach(uid => {
-    html += `<div class="due-group">
-      <div class="due-group-label">UNIT ${+uid + 1} — ${UNITS[uid].title}</div>`;
-    groups[uid].forEach(item => {
-      const conf = item.p.confidence;
-      html += `<div class="due-row">
-        <div class="dr-forms">${item.verb.v1} — ${item.verb.v2} — ${item.verb.v3}</div>
-        <div class="dr-ru">${item.verb.ru}</div>
-        <span class="conf-pill ${conf}">${conf.toUpperCase()}</span>
-      </div>`;
-    });
-    html += `</div>`;
-  });
-
-  c.innerHTML = html;
-}
-
-/* ═══════════════════════════════════════
-   STUDY  /  SESSION STATE
-═══════════════════════════════════════ */
-const FORMS  = ['v1', 'v2', 'v3'];
-const FLABEL = {
-  v1: 'Infinitive (V1)',
-  v2: 'Past Simple (V2)',
-  v3: 'Past Participle (V3)'
-};
-
-let currentUnit  = null;   // null = due session
-let queue        = [];
-let qIdx         = 0;
-let sessionLog   = [];     // { verb, uid, idx, correct }
-let streak       = 0;
-let waitAnswer   = false;  // true when waiting for confidence click
-let lastCorrect  = false;
-
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function startUnit(uid) {
-  currentUnit = uid;
-  const items = UNITS[uid].verbs.map((verb, idx) => ({ verb, uid, idx, p: vp(uid, idx) }));
-  queue = shuffle(items).map(it => ({ ...it, form: FORMS[Math.floor(Math.random() * 3)] }));
-  launchSession();
-}
-
-function startDueSession() {
-  currentUnit = null;
-  const items = getDue();
-  queue = shuffle(items).map(it => ({ ...it, form: FORMS[Math.floor(Math.random() * 3)] }));
-  launchSession();
-}
-
-function launchSession() {
-  qIdx = 0; sessionLog = []; streak = 0; waitAnswer = false;
-  renderStreak();
-  showScreen('study');
-  loadQ();
-}
-
-/* ── Streak dots ── */
-function renderStreak() {
-  const row = document.getElementById('streak-row');
-  row.innerHTML = '';
-  for (let i = 0; i < 5; i++) {
-    const d = document.createElement('div');
-    d.className = 'streak-pip' + (i < streak ? ' lit' : '');
-    row.appendChild(d);
-  }
-}
-
-/* ── Load question ── */
-function loadQ() {
-  waitAnswer = false;
-  lastCorrect = false;
-
-  const { verb, uid, idx, p, form } = queue[qIdx];
-  const total = queue.length;
-
-  document.getElementById('q-cur').textContent  = qIdx + 1;
-  document.getElementById('q-tot').textContent  = total;
-  document.getElementById('top-bar').style.width = (qIdx / total * 100) + '%';
-
-  // SRS label
-  const lbl = document.getElementById('srs-label');
-  lbl.textContent = p.reps === 0   ? 'New card'
-    : p.correct  >= 3              ? '⭐ Well known'
-    : `Review #${p.reps + 1}`;
-
-  // Card
-  document.getElementById('c-translation').textContent = verb.ru;
-  document.getElementById('c-base').textContent        = `to ${verb.v1}`;
-  document.getElementById('c-ask-form').textContent    = FLABEL[form];
-
-  // Reset form badges
-  const rr = document.getElementById('reveal-row');
-  rr.style.display = 'none';
-  ['v1','v2','v3'].forEach(f => {
-    const el = document.getElementById('rb-' + f);
-    el.textContent = verb[f];
-    el.className = 'fb';
-  });
-
-  document.getElementById('main-card').className = 'card';
-  document.getElementById('conf-label').className = 'conf-label';
-  document.getElementById('conf-row').className   = 'conf-row';
-
-  renderOpts(verb[form], verb, form, idx, uid);
-}
-
-/* ── Build answer options ── */
-function buildOpts(correct, verb, form, verbIdx, uid) {
-  let traps = [];
-
-  // 1. Other forms of the SAME verb (classic confusion trap)
-  FORMS.forEach(f => {
-    if (f !== form && verb[f] !== correct)
-      traps.push({ text: verb[f], isTrap: true });
-  });
-
-  // 2. Same form from all units (cross-unit distractors)
-  UNITS.forEach((u, ui) => {
-    u.verbs.forEach((v, i) => {
-      if (!(ui === uid && i === verbIdx) && v[form] !== correct)
-        traps.push({ text: v[form], isTrap: false });
-    });
-  });
-
-  // Deduplicate
-  const seen = new Set([correct]);
-  const filtered = traps.filter(t => {
-    if (seen.has(t.text)) return false;
-    seen.add(t.text);
-    return true;
-  });
-
-  // Prefer same-verb traps (up to 2), fill rest from pool
-  const sameVerb = filtered.filter(t =>  t.isTrap);
-  const other    = filtered.filter(t => !t.isTrap);
-  const chosen   = [...sameVerb.slice(0, 2)];
-  while (chosen.length < 3 && other.length)
-    chosen.push(other.splice(Math.floor(Math.random() * other.length), 1)[0]);
-  while (chosen.length < 3)
-    chosen.push({ text: '—', isTrap: false });
-
-  return shuffle([{ text: correct, isCorrect: true, isTrap: false }, ...chosen.slice(0, 3)]);
-}
-
-function renderOpts(correct, verb, form, verbIdx, uid) {
-  const grid = document.getElementById('opt-grid');
-  grid.innerHTML = '';
-  buildOpts(correct, verb, form, verbIdx, uid).forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'opt';
-    btn.innerHTML = opt.text + (opt.isTrap ? '<span class="opt-trap">⚠ trap!</span>' : '');
-    btn.onclick = () => selectOpt(opt, correct, form, btn);
-    grid.appendChild(btn);
-  });
-}
-
-/* ── Select answer ── */
-function selectOpt(opt, correct, form, btn) {
-  if (waitAnswer) return;  // already answered, waiting for confidence click
-  waitAnswer = true;
-
-  const isCorrect = opt.text === correct;
-  lastCorrect = isCorrect;
-
-  // Freeze all buttons and mark correct one
-  document.querySelectorAll('.opt').forEach(b => {
-    b.disabled = true;
-    const raw = b.childNodes[0].textContent.trim();
-    if (raw === correct) b.className = 'opt rev-correct';
-  });
-  btn.className = isCorrect ? 'opt sel-correct' : 'opt sel-wrong';
-
-  // Card colour
-  document.getElementById('main-card').className = 'card ' + (isCorrect ? 'correct' : 'wrong');
-
-  // Streak
-  streak = isCorrect ? Math.min(5, streak + 1) : 0;
-  renderStreak();
-
-  // Log result
-  sessionLog.push({ verb: queue[qIdx].verb, uid: queue[qIdx].uid, idx: queue[qIdx].idx, correct: isCorrect });
-
-  // Reveal all 3 forms
-  const rr = document.getElementById('reveal-row');
-  rr.style.display = 'flex';
-  ['v1','v2','v3'].forEach(f => {
-    const el = document.getElementById('rb-' + f);
-    el.className = 'fb ' + (f === form ? (isCorrect ? 'hit' : 'miss') : 'dim');
-  });
-
-  // Feedback flash
-  flashFeedback(isCorrect);
-
-  // Show confidence buttons
-  document.getElementById('conf-label').className = 'conf-label show';
-  document.getElementById('conf-row').className   = 'conf-row show';
-}
-
-/* ── Confidence rating → advance ── */
-function rateNext(conf) {
-  if (!waitAnswer) return;
-  const { uid, idx } = queue[qIdx];
-  applyRating(uid, idx, lastCorrect, conf);
-
-  // Hide confidence controls
-  document.getElementById('conf-label').className = 'conf-label';
-  document.getElementById('conf-row').className   = 'conf-row';
-
-  qIdx++;
-  if (qIdx >= queue.length) { showResult(); return; }
-  setTimeout(loadQ, 80);
-}
-
-/* ── Feedback flash ── */
-function flashFeedback(ok) {
-  const icon = document.getElementById('feedback-icon');
-  icon.textContent = ok ? '✓' : '✗';
-  icon.style.color = ok ? 'var(--green)' : 'var(--red)';
-  icon.className   = 'feedback-icon pop';
-  setTimeout(() => { icon.className = 'feedback-icon fade'; }, 650);
-  setTimeout(() => { icon.className = 'feedback-icon'; },      1050);
-}
-
-/* ═══════════════════════════════════════
-   RESULT SCREEN
-═══════════════════════════════════════ */
-function showResult() {
-  const correct = sessionLog.filter(r => r.correct).length;
-  const total   = sessionLog.length;
-  const pct     = Math.round(correct / total * 100);
-
-  const label = currentUnit !== null
-    ? `UNIT ${currentUnit + 1} — ${UNITS[currentUnit].title}`
-    : 'Due review session';
-
-  document.getElementById('res-unit-label').textContent = label;
-  document.getElementById('res-score').textContent      = `${correct}/${total}`;
-  document.getElementById('res-caption').textContent    =
-    pct >= 90 ? '🏆 Excellent!' :
-    pct >= 70 ? '👍 Good job!'  :
-    pct >= 50 ? '📖 Keep going' :
-                '💪 More practice needed';
-
-  // Verb list — deduplicated
-  const list = document.getElementById('res-list');
-  list.innerHTML = '';
-  const seen = new Set();
-  sessionLog.forEach(r => {
-    if (seen.has(r.verb.v1)) return;
-    seen.add(r.verb.v1);
-    const allOk = sessionLog.filter(x => x.verb.v1 === r.verb.v1).every(x => x.correct);
-    const row = document.createElement('div');
-    row.className = 'res-row';
-    row.innerHTML = `
-      <div class="res-dot ${allOk ? 'ok' : 'fail'}"></div>
-      <span class="res-forms">${r.verb.v1} — ${r.verb.v2} — ${r.verb.v3}</span>
-      <span class="res-ru">${r.verb.ru}</span>`;
-    list.appendChild(row);
-  });
-
-  showScreen('result');
-}
-
-function retrySession() {
-  if (currentUnit !== null) startUnit(currentUnit);
-  else startDueSession();
-}
-
-/* ═══════════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════════ */
-function goHome() { renderHome(); showScreen('home'); }
-
-function showScreen(name) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-  window.scrollTo(0, 0);
-}
-
-/* ── INIT ── */
-renderHome();
-</script>
-</body>
-</html>
+  { id:0, title:"Most Common", verbs:[
+    { v1:"be", v2:"was / were", v3:"been", ru:"быть" },
+    { v1:"have", v2:"had", v3:"had", ru:"иметь" },
+    { v1:"do", v2:"did", v3:"done", ru:"делать" },
+    { v1:"go", v2:"went", v3:"gone", ru:"идти / ехать" },
+    { v1:"say", v2:"said", v3:"said", ru:"говорить / сказать" },
+    { v1:"get", v2:"got", v3:"got / gotten", ru:"получать / становиться" },
+    { v1:"make", v2:"made", v3:"made", ru:"делать / создавать" },
+    { v1:"know", v2:"knew", v3:"known", ru:"знать" },
+    { v1:"think", v2:"thought", v3:"thought", ru:"думать" },
+    { v1:"take", v2:"took", v3:"taken", ru:"брать" },
+    { v1:"see", v2:"saw", v3:"seen", ru:"видеть" },
+    { v1:"come", v2:"came", v3:"come", ru:"приходить / приезжать" },
+    { v1:"give", v2:"gave", v3:"given", ru:"давать" },
+    { v1:"find", v2:"found", v3:"found", ru:"находить" },
+    { v1:"tell", v2:"told", v3:"told", ru:"рассказывать" },
+    { v1:"leave", v2:"left", v3:"left", ru:"уходить / оставлять" },
+    { v1:"feel", v2:"felt", v3:"felt", ru:"чувствовать" },
+    { v1:"put", v2:"put", v3:"put", ru:"класть" },
+    { v1:"bring", v2:"brought", v3:"brought", ru:"приносить" },
+    { v1:"keep", v2:"kept", v3:"kept", ru:"держать / хранить" }
+  ]},
+  { id:1, title:"Movement & Action", verbs:[
+    { v1:"run", v2:"ran", v3:"run", ru:"бежать" },
+    { v1:"fly", v2:"flew", v3:"flown", ru:"летать" },
+    { v1:"drive", v2:"drove", v3:"driven", ru:"водить / ехать" },
+    { v1:"ride", v2:"rode", v3:"ridden", ru:"ехать верхом / ездить" },
+    { v1:"swim", v2:"swam", v3:"swum", ru:"плавать" },
+    { v1:"sit", v2:"sat", v3:"sat", ru:"сидеть" },
+    { v1:"stand", v2:"stood", v3:"stood", ru:"стоять" },
+    { v1:"fall", v2:"fell", v3:"fallen", ru:"падать" },
+    { v1:"send", v2:"sent", v3:"sent", ru:"отправлять / посылать" },
+    { v1:"catch", v2:"caught", v3:"caught", ru:"ловить" },
+    { v1:"meet", v2:"met", v3:"met", ru:"встречать / знакомиться" },
+    { v1:"hold", v2:"held", v3:"held", ru:"держать" },
+    { v1:"buy", v2:"bought", v3:"bought", ru:"покупать" },
+    { v1:"sell", v2:"sold", v3:"sold", ru:"продавать" },
+    { v1:"pay", v2:"paid", v3:"paid", ru:"платить" },
+    { v1:"hear", v2:"heard", v3:"heard", ru:"слышать" },
+    { v1:"lead", v2:"led", v3:"led", ru:"вести / возглавлять" },
+    { v1:"win", v2:"won", v3:"won", ru:"побеждать / выигрывать" },
+    { v1:"lose", v2:"lost", v3:"lost", ru:"терять / проигрывать" },
+    { v1:"hit", v2:"hit", v3:"hit", ru:"ударять / попадать" }
+  ]},
+  { id:2, title:"Speech & Thought", verbs:[
+    { v1:"speak", v2:"spoke", v3:"spoken", ru:"говорить / разговаривать" },
+    { v1:"write", v2:"wrote", v3:"written", ru:"писать" },
+    { v1:"read", v2:"read", v3:"read", ru:"читать" },
+    { v1:"teach", v2:"taught", v3:"taught", ru:"учить / преподавать" },
+    { v1:"learn", v2:"learnt", v3:"learnt", ru:"учиться / узнавать" },
+    { v1:"
