@@ -1,1 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Irregular Verbs — SRS</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg: #0f0f14;
+--surface: #1a1a24;
+--surface2: #22222f;
+--border: rgba(255,255,255,0.08);
+--text: #f0eff8;
+--muted: #8a8aaa;
+--accent: #7c6ff7;
+--accent2: #a78bfa;
+--green: #34d399;
+--green-bg: rgba(52,211,153,0.13);
+--red: #f87171;
+--red-bg: rgba(248,113,113,0.13);
+--amber: #f59e0b;
+--amber-bg: rgba(245,158,11,0.13);
+--gold: #fbbf24;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+background: var(--bg);
+color: var(--text);
+font-family: 'DM Sans', sans-serif;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.screen { display: none; width: 100%; max-width: 760px; padding: 2rem 1.5rem 4rem; }
+.screen.active { display: flex; flex-direction: column; align-items: center; }
+.logo {
+font-family: 'Playfair Display', serif;
+font-size: 2.5rem;
+letter-spacing: -1px;
+margin-bottom: .25rem;
+}
+.logo span { color: var(--accent2); }
+.tagline { color: var(--muted); font-size: .93rem; margin-bottom: 2.2rem; }
+.tab-bar {
+display: flex;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 12px;
+padding: 4px;
+width: 100%;
+max-width: 480px;
+margin-bottom: 2rem;
+}
+.tab-btn {
+flex: 1;
+background: none;
+border: none;
+color: var(--muted);
+font-family: inherit;
+font-size: .88rem;
+font-weight: 500;
+padding: .55rem .8rem;
+border-radius: 8px;
+cursor: pointer;
+transition: all .2s;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: .4rem;
+}
+.tab-btn.active { background: var(--accent); color: #fff; }
+.tab-count {
+font-size: .68rem;
+font-weight: 700;
+background: var(--surface2);
+color: var(--muted);
+border-radius: 99px;
+padding: 1px 7px;
+min-width: 20px;
+text-align: center;
+}
+.tab-btn.active .tab-count { background: rgba(255,255,255,.22); color: #fff; }
+.tab-panel { display: none; width: 100%; }
+.tab-panel.active { display: block; }
+.units-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+gap: 1rem;
+width: 100%;
+}
+.unit-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 1.3rem 1.5rem;
+cursor: pointer;
+transition: all .2s;
+}
+.unit-card:hover { border-color: var(--accent); background: var(--surface2); transform: translateY(-2px); }
+.unit-num { font-size: .7rem; font-weight: 700; color: var(--accent); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: .45rem; }
+.unit-title { font-size: .92rem; font-weight: 500; margin-bottom: .7rem; }
+.unit-meta { font-size: .78rem; color: var(--muted); }
+.unit-stars { font-size: .82rem; color: var(--gold); margin-top: .35rem; }
+.unit-bar { height: 3px; background: var(--border); border-radius: 99px; margin-top: .75rem; overflow: hidden; }
+.unit-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; }
+.units-footer { font-size: .76rem; color: var(--muted); margin-top: 1.4rem; text-align: center; }
+.due-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 1rem;
+width: 100%;
+}
+.due-start-btn {
+background: var(--accent);
+color: #fff;
+border: none;
+border-radius: 10px;
+padding: .55rem 1.3rem;
+font-family: inherit;
+font-size: .85rem;
+font-weight: 500;
+cursor: pointer;
+}
+.due-start-btn:hover { background: var(--accent2); }
+.due-group { margin-bottom: 1.6rem; }
+.due-group-label {
+font-size: .7rem;
+font-weight: 700;
+color: var(--accent);
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-bottom: .55rem;
+}
+.due-row {
+display: flex;
+align-items: center;
+gap: .75rem;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 10px;
+padding: .6rem 1rem;
+margin-bottom: .38rem;
+font-size: .87rem;
+}
+.due-row .dr-forms { flex: 1; font-weight: 500; }
+.due-row .dr-ru { color: var(--muted); font-size: .78rem; }
+.conf-pill {
+font-size: .66rem;
+font-weight: 700;
+letter-spacing: 1px;
+text-transform: uppercase;
+padding: 2px 8px;
+border-radius: 99px;
+}
+.conf-pill.easy { background: var(--green-bg); color: var(--green); }
+.conf-pill.ok { background: var(--amber-bg); color: var(--amber); }
+.conf-pill.hard { background: var(--red-bg); color: var(--red); }
+.conf-pill.new { background: rgba(124,111,247,.15); color: var(--accent2); }
+.due-empty { text-align: center; padding: 3.5rem 1rem; color: var(--muted); }
+.study-header {
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 1.6rem;
+}
+.back-btn {
+background: var(--surface);
+border: 1px solid var(--border);
+color: var(--muted);
+padding: .5rem 1.1rem;
+border-radius: 9px;
+cursor: pointer;
+font-size: .84rem;
+}
+.back-btn:hover { color: var(--text); border-color: var(--accent); }
+.q-counter { font-size: .85rem; color: var(--muted); }
+.top-bar-wrap { width: 100%; height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 1.8rem; }
+.top-bar-fill {
+height: 100%;
+background: linear-gradient(90deg, var(--accent), var(--accent2));
+border-radius: 99px;
+transition: width .5s;
+}
+.srs-pill {
+display: inline-flex;
+align-items: center;
+gap: .4rem;
+background: var(--surface2);
+border: 1px solid var(--border);
+border-radius: 99px;
+padding: .28rem .85rem;
+font-size: .74rem;
+color: var(--muted);
+margin-bottom: .9rem;
+}
+.streak-row { display: flex; gap: 5px; margin-bottom: 1.4rem; }
+.streak-pip {
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: var(--border);
+}
+.streak-pip.lit { background: var(--gold); box-shadow: 0 0 7px rgba(251,191,36,.55); }
+.card-wrap { width: 100%; max-width: 530px; margin-bottom: 1.4rem; }
+.card {
+background: var(--surface);
+border: 1.5px solid var(--border);
+border-radius: 22px;
+padding: 2.4rem 2rem 1.8rem;
+text-align: center;
+}
+.card.correct { border-color: var(--green); box-shadow: 0 0 36px rgba(52,211,153,.16); }
+.card.wrong { border-color: var(--red); box-shadow: 0 0 36px rgba(248,113,113,.16); }
+.card-label { font-size: .8rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: .5rem; }
+.card-translation { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; }
+.card-ask-label { font-size: .74rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: .4rem; }
+.card-ask-form { font-size: 1.05rem; color: var(--muted); font-style: italic; }
+.reveal-row {
+display: none;
+gap: .5rem;
+justify-content: center;
+align-items: center;
+margin: 1.1rem 0 .4rem;
+flex-wrap: wrap;
+}
+.fb {
+background: var(--surface2);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: .32rem .8rem;
+font-size: .84rem;
+font-weight: 500;
+}
+.fb.hit { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.fb.miss { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+.fb.dim { opacity: .35; }
+.fb-arr { color: var(--muted); font-size: .8rem; }
+.opt-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: .7rem;
+width: 100%;
+max-width: 530px;
+}
+.opt {
+background: var(--surface);
+border: 1.5px solid var(--border);
+color: var(--text);
+border-radius: 13px;
+padding: .95rem 1rem;
+cursor: pointer;
+font-family: inherit;
+font-size: .9rem;
+text-align: center;
+transition: all .16s;
+}
+.opt:hover:not(:disabled) { background: var(--surface2); border-color: var(--accent); }
+.opt:disabled { cursor: not-allowed; }
+.opt.sel-correct { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.opt.sel-wrong { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+.opt.rev-correct { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.opt-trap {
+display: block;
+font-size: .63rem;
+font-weight: 700;
+text-transform: uppercase;
+color: var(--red);
+height: 1em;
+line-height: 1em;
+margin-top: 3px;
+visibility: hidden;
+}
+.opt.sel-wrong .opt-trap { visibility: visible; }
+.conf-label {
+font-size: .7rem;
+color: var(--muted);
+text-transform: uppercase;
+font-weight: 600;
+margin-top: 1.1rem;
+margin-bottom: .5rem;
+opacity: 0;
+transform: translateY(6px);
+transition: all .25s .05s;
+}
+.conf-label.show { opacity: 1; transform: translateY(0); }
+.conf-row {
+display: flex;
+gap: .6rem;
+width: 100%;
+max-width: 530px;
+opacity: 0;
+transform: translateY(8px);
+transition: all .28s .1s;
+pointer-events: none;
+}
+.conf-row.show { opacity: 1; transform: translateY(0); pointer-events: all; }
+.conf-btn {
+flex: 1;
+border: 1.5px solid;
+border-radius: 12px;
+padding: .72rem .4rem;
+font-family: inherit;
+font-size: .86rem;
+font-weight: 700;
+cursor: pointer;
+text-align: center;
+}
+.conf-sub { display: block; font-size: .68rem; font-weight: 400; opacity: .7; margin-top: 2px; }
+.conf-btn.easy { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.conf-btn.ok { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); }
+.conf-btn.hard { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+.feedback-overlay {
+position: fixed; inset: 0;
+display: flex; align-items: center; justify-content: center;
+pointer-events: none; z-index: 200;
+}
+.feedback-icon {
+font-size: 5.5rem;
+opacity: 0;
+transform: scale(.3);
+transition: all .22s;
+}
+.feedback-icon.pop { opacity: 1; transform: scale(1); }
+.feedback-icon.fade { opacity: 0; transform: scale(1.25); transition: all .35s ease; }
+.res-score { font-family: 'Playfair Display', serif; font-size: 4.2rem; font-weight: 700; color: var(--accent2); }
+.res-list { width: 100%; margin-top: 1rem; }
+.res-row {
+display: flex;
+align-items: center;
+gap: .65rem;
+padding: .58rem .8rem;
+border-bottom: 1px solid var(--border);
+}
+.res-dot { width: 8px; height: 8px; border-radius: 50%; }
+.res-dot.ok { background: var(--green); }
+.res-dot.fail { background: var(--red); }
+.res-forms { flex: 1; font-weight: 500; }
+.res-btns { display: flex; gap: .9rem; margin-top: 2rem; justify-content: center; }
+.btn-pri {
+background: var(--accent); color: #fff;
+border: none; border-radius: 12px;
+padding: .8rem 2.2rem;
+font-family: inherit;
+font-size: .9rem;
+cursor: pointer;
+}
+.btn-pri:hover { background: var(--accent2); }
+.btn-sec {
+background: var(--surface); color: var(--text);
+border: 1px solid var(--border); border-radius: 12px;
+padding: .8rem 2.2rem;
+font-family: inherit;
+font-size: .9rem;
+cursor: pointer;
+}
+/* ── Progress tab ─────────────────────────────────────── */
+.prog-stats {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: .75rem;
+width: 100%;
+margin-bottom: 1.5rem;
+}
+.prog-stat {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 1.1rem .8rem;
+text-align: center;
+}
+.prog-stat-val {
+font-family: 'Playfair Display', serif;
+font-size: 2rem;
+font-weight: 700;
+color: var(--accent2);
+line-height: 1;
+margin-bottom: .3rem;
+}
+.prog-stat-lbl {
+font-size: .74rem;
+color: var(--muted);
+text-transform: uppercase;
+letter-spacing: 1px;
+font-weight: 500;
+}
+.prog-accuracy-wrap {
+width: 100%;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 1rem 1.25rem;
+margin-bottom: 1.5rem;
+}
+.prog-accuracy-label {
+display: flex;
+justify-content: space-between;
+font-size: .82rem;
+color: var(--muted);
+margin-bottom: .6rem;
+}
+.prog-accuracy-label strong { color: var(--text); }
+.prog-accuracy-bar {
+height: 6px;
+background: var(--border);
+border-radius: 99px;
+overflow: hidden;
+}
+.prog-accuracy-fill {
+height: 100%;
+background: linear-gradient(90deg, var(--accent), var(--accent2));
+border-radius: 99px;
+transition: width .6s;
+}
+.prog-unit-block {
+width: 100%;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 14px;
+margin-bottom: .75rem;
+overflow: hidden;
+}
+.prog-unit-header {
+display: flex;
+align-items: center;
+gap: .75rem;
+padding: .9rem 1.1rem;
+cursor: pointer;
+user-select: none;
+transition: background .15s;
+}
+.prog-unit-header:hover { background: var(--surface2); }
+.prog-unit-header.open { border-bottom: 1px solid var(--border); }
+.puh-num {
+font-size: .67rem;
+font-weight: 700;
+color: var(--accent);
+letter-spacing: 2px;
+text-transform: uppercase;
+flex-shrink: 0;
+}
+.puh-title {
+font-size: .88rem;
+font-weight: 500;
+flex: 1;
+}
+.puh-meta {
+font-size: .76rem;
+color: var(--muted);
+flex-shrink: 0;
+}
+.puh-mini-bar {
+width: 60px;
+height: 4px;
+background: var(--border);
+border-radius: 99px;
+overflow: hidden;
+flex-shrink: 0;
+}
+.puh-mini-fill {
+height: 100%;
+background: linear-gradient(90deg, var(--accent), var(--accent2));
+border-radius: 99px;
+}
+.puh-chevron {
+color: var(--muted);
+font-size: 1.1rem;
+transition: transform .2s;
+flex-shrink: 0;
+}
+.prog-unit-header.open .puh-chevron { transform: rotate(90deg); }
+.prog-unit-body {
+display: none;
+padding: .25rem 0;
+}
+.prog-unit-body.open { display: block; }
+.prog-verb-row {
+display: flex;
+align-items: center;
+gap: .65rem;
+padding: .55rem 1.1rem;
+border-bottom: 1px solid var(--border);
+font-size: .84rem;
+}
+.prog-verb-row:last-child { border-bottom: none; }
+.pvr-dot {
+width: 8px;
+height: 8px;
+border-radius: 50%;
+flex-shrink: 0;
+}
+.pvr-dot.unseen { background: var(--border); }
+.pvr-dot.mastered { background: var(--green); }
+.pvr-dot.learning { background: var(--amber); }
+.pvr-dot.struggling { background: var(--red); }
+.pvr-forms {
+flex: 1;
+font-weight: 500;
+min-width: 0;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+.pvr-ru {
+font-size: .76rem;
+color: var(--muted);
+flex-shrink: 0;
+max-width: 140px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+.pvr-reps {
+font-size: .72rem;
+color: var(--muted);
+flex-shrink: 0;
+min-width: 40px;
+text-align: right;
+}
+.pvr-next {
+font-size: .72rem;
+color: var(--muted);
+flex-shrink: 0;
+min-width: 70px;
+text-align: right;
+}
+.prog-reset-row {
+width: 100%;
+display: flex;
+justify-content: center;
+padding: 1.5rem 0 .5rem;
+}
+.prog-reset-btn {
+background: none;
+border: 1px solid var(--red);
+color: var(--red);
+border-radius: 9px;
+padding: .5rem 1.4rem;
+font-family: inherit;
+font-size: .82rem;
+cursor: pointer;
+opacity: .7;
+transition: opacity .2s;
+}
+.prog-reset-btn:hover { opacity: 1; }
+/* Legend dots */
+.prog-legend {
+display: flex;
+gap: 1.2rem;
+font-size: .74rem;
+color: var(--muted);
+margin-bottom: 1.1rem;
+flex-wrap: wrap;
+}
+.prog-legend-item { display: flex; align-items: center; gap: .4rem; }
+.prog-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+@media (max-width: 520px) {
+.opt-grid { grid-template-columns: 1fr; }
+.card-translation { font-size: 1.6rem; }
+.prog-stats { grid-template-columns: repeat(3,1fr); gap: .5rem; }
+.prog-stat-val { font-size: 1.6rem; }
+.pvr-ru, .pvr-reps, .pvr-next { display: none; }
+.puh-meta, .puh-mini-bar { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="screen active" id="screen-home">
+<div style="text-align:center;padding:3rem 0 2rem;width:100%">
+<div class="logo">Irregular<span>Verbs</span></div>
+<div class="tagline">Spaced Repetition · 120 irregular verbs · Russian translation</div>
+</div>
+<div class="tab-bar">
+<button class="tab-btn active" onclick="switchTab('units',this)">Units</button>
+<button class="tab-btn" onclick="switchTab('due',this)">Due &nbsp;<span class="tab-count" id="due-count">0</span></button>
+<button class="tab-btn" onclick="switchTab('progress',this)">Progress</button>
+</div>
+<div class="tab-panel active" id="tab-units"><div class="units-grid" id="units-grid"></div><p class="units-footer">All units are open · progress saved in your browser</p></div>
+<div class="tab-panel" id="tab-due"><div id="due-content"></div></div>
+<div class="tab-panel" id="tab-progress"><div id="progress-content"></div></div>
+</div>
+<div class="screen" id="screen-study">
+<div class="study-header"><button class="back-btn" onclick="goHome()">← Back</button><div class="q-counter"><strong id="q-cur">1</strong> / <span id="q-tot">20</span></div></div>
+<div class="top-bar-wrap"><div class="top-bar-fill" id="top-bar" style="width:0%"></div></div>
+<div class="srs-pill"><span id="srs-label">New card</span></div>
+<div class="streak-row" id="streak-row"></div>
+<div class="card-wrap"><div class="card" id="main-card">
+<div class="card-label">Перевод</div>
+<div class="card-translation" id="c-translation">—</div>
+<div class="card-ask-label">Выберите правильную форму</div>
+<div class="card-ask-form" id="c-ask-form">Past Simple (V2)</div>
+<div class="reveal-row" id="reveal-row">
+<span class="fb" id="rb-v1"></span><span class="fb-arr">›</span>
+<span class="fb" id="rb-v2"></span><span class="fb-arr">›</span>
+<span class="fb" id="rb-v3"></span>
+</div>
+</div></div>
+<div class="opt-grid" id="opt-grid"></div>
+<div class="conf-label" id="conf-label">How well did you know this?</div>
+<div class="conf-row" id="conf-row">
+<button class="conf-btn easy" onclick="rateNext('easy')">Easy<span class="conf-sub">Again in 5+ days</span></button>
+<button class="conf-btn ok" onclick="rateNext('ok')">OK<span class="conf-sub">Again in 2 days</span></button>
+<button class="conf-btn hard" onclick="rateNext('hard')">Hard<span class="conf-sub">Again tomorrow</span></button>
+</div>
+</div>
+<div class="screen" id="screen-result">
+<div style="text-align:center;padding-top:2rem">
+<div class="res-score" id="res-score">0/0</div>
+<div class="res-caption" id="res-caption"></div>
+</div>
+<div class="res-list" id="res-list"></div>
+<div class="res-btns">
+<button class="btn-pri" onclick="retrySession()">Retry</button>
+<button class="btn-sec" onclick="goHome()">Back to units</button>
+</div>
+</div>
+<div class="feedback-overlay"><div class="feedback-icon" id="feedback-icon"></div></div>
+<script>
+const UNITS = [
+{ id:0, title:"Most Common", verbs:[
+{ v1:"be", v2:"was / were", v3:"been", ru:"быть" },
+{ v1:"have", v2:"had", v3:"had", ru:"иметь" },
+{ v1:"do", v2:"did", v3:"done", ru:"делать" },
+{ v1:"go", v2:"went", v3:"gone", ru:"идти / ехать" },
+{ v1:"say", v2:"said", v3:"said", ru:"говорить / сказать" },
+{ v1:"get", v2:"got", v3:"got / gotten", ru:"получать / становиться" },
+{ v1:"make", v2:"made", v3:"made", ru:"делать / создавать" },
+{ v1:"know", v2:"knew", v3:"known", ru:"знать" },
+{ v1:"think", v2:"thought", v3:"thought", ru:"думать" },
+{ v1:"take", v2:"took", v3:"taken", ru:"брать" },
+{ v1:"see", v2:"saw", v3:"seen", ru:"видеть" },
+{ v1:"come", v2:"came", v3:"come", ru:"приходить / приезжать" },
+{ v1:"give", v2:"gave", v3:"given", ru:"давать" },
+{ v1:"find", v2:"found", v3:"found", ru:"находить" },
+{ v1:"tell", v2:"told", v3:"told", ru:"рассказывать" },
+{ v1:"leave", v2:"left", v3:"left", ru:"уходить / оставлять" },
+{ v1:"feel", v2:"felt", v3:"felt", ru:"чувствовать" },
+{ v1:"put", v2:"put", v3:"put", ru:"класть" },
+{ v1:"bring", v2:"brought", v3:"brought", ru:"приносить" },
+{ v1:"keep", v2:"kept", v3:"kept", ru:"держать / хранить" }
+]},
+{ id:1, title:"Movement & Action", verbs:[
+{ v1:"run", v2:"ran", v3:"run", ru:"бежать" },
+{ v1:"fly", v2:"flew", v3:"flown", ru:"летать" },
+{ v1:"drive", v2:"drove", v3:"driven", ru:"водить / ехать" },
+{ v1:"ride", v2:"rode", v3:"ridden", ru:"ехать верхом / ездить" },
+{ v1:"swim", v2:"swam", v3:"swum", ru:"плавать" },
+{ v1:"sit", v2:"sat", v3:"sat", ru:"сидеть" },
+{ v1:"stand", v2:"stood", v3:"stood", ru:"стоять" },
+{ v1:"fall", v2:"fell", v3:"fallen", ru:"падать" },
+{ v1:"send", v2:"sent", v3:"sent", ru:"отправлять / посылать" },
+{ v1:"catch", v2:"caught", v3:"caught", ru:"ловить" },
+{ v1:"meet", v2:"met", v3:"met", ru:"встречать / знакомиться" },
+{ v1:"hold", v2:"held", v3:"held", ru:"держать" },
+{ v1:"buy", v2:"bought", v3:"bought", ru:"покупать" },
+{ v1:"sell", v2:"sold", v3:"sold", ru:"продавать" },
+{ v1:"pay", v2:"paid", v3:"paid", ru:"платить" },
+{ v1:"hear", v2:"heard", v3:"heard", ru:"слышать" },
+{ v1:"lead", v2:"led", v3:"led", ru:"вести / возглавлять" },
+{ v1:"win", v2:"won", v3:"won", ru:"побеждать / выигрывать" },
+{ v1:"lose", v2:"lost", v3:"lost", ru:"терять / проигрывать" },
+{ v1:"hit", v2:"hit", v3:"hit", ru:"ударять / попадать" }
+]},
+{ id:2, title:"Speech & Thought", verbs:[
+{ v1:"speak", v2:"spoke", v3:"spoken", ru:"говорить / разговаривать" },
+{ v1:"write", v2:"wrote", v3:"written", ru:"писать" },
+{ v1:"read", v2:"read", v3:"read", ru:"читать" },
+{ v1:"teach", v2:"taught", v3:"taught", ru:"учить / преподавать" },
+{ v1:"learn", v2:"learnt", v3:"learnt", ru:"учиться / узнавать" },
+{ v1:"understand", v2:"understood", v3:"understood", ru:"понимать" },
+{ v1:"choose", v2:"chose", v3:"chosen", ru:"выбирать" },
+{ v1:"forget", v2:"forgot", v3:"forgotten", ru:"забывать" },
+{ v1:"mean", v2:"meant", v3:"meant", ru:"значить / иметь в виду" },
+{ v1:"show", v2:"showed", v3:"shown", ru:"показывать" },
+{ v1:"become", v2:"became", v3:"become", ru:"становиться" },
+{ v1:"begin", v2:"began", v3:"begun", ru:"начинать" },
+{ v1:"break", v2:"broke", v3:"broken", ru:"ломать / нарушать" },
+{ v1:"build", v2:"built", v3:"built", ru:"строить / создавать" },
+{ v1:"spend", v2:"spent", v3:"spent", ru:"тратить / проводить время" },
+{ v1:"lend", v2:"lent", v3:"lent", ru:"одалживать" },
+{ v1:"bend", v2:"bent", v3:"bent", ru:"гнуть / сгибать" },
+{ v1:"sleep", v2:"slept", v3:"slept", ru:"спать" },
+{ v1:"sweep", v2:"swept", v3:"swept", ru:"подметать" },
+{ v1:"deal", v2:"dealt", v3:"dealt", ru:"иметь дело / распределять" }
+]},
+{ id:3, title:"Body & Senses", verbs:[
+{ v1:"eat", v2:"ate", v3:"eaten", ru:"есть / кушать" },
+{ v1:"drink", v2:"drank", v3:"drunk", ru:"пить" },
+{ v1:"wake", v2:"woke", v3:"woken", ru:"просыпаться / будить" },
+{ v1:"wear", v2:"wore", v3:"worn", ru:"носить (одежду)" },
+{ v1:"cut", v2:"cut", v3:"cut", ru:"резать" },
+{ v1:"hurt", v2:"hurt", v3:"hurt", ru:"причинять боль" },
+{ v1:"hang", v2:"hung", v3:"hung", ru:"вешать" },
+{ v1:"draw", v2:"drew", v3:"drawn", ru:"рисовать / тянуть" },
+{ v1:"grow", v2:"grew", v3:"grown", ru:"расти / выращивать" },
+{ v1:"throw", v2:"threw", v3:"thrown", ru:"бросать / кидать" },
+{ v1:"blow", v2:"blew", v3:"blown", ru:"дуть" },
+{ v1:"bite", v2:"bit", v3:"bitten", ru:"кусать" },
+{ v1:"hide", v2:"hid", v3:"hidden", ru:"прятать / скрывать" },
+{ v1:"rise", v2:"rose", v3:"risen", ru:"подниматься / вставать" },
+{ v1:"shine", v2:"shone", v3:"shone", ru:"светить / блестеть" },
+{ v1:"smell", v2:"smelt", v3:"smelt", ru:"нюхать / пахнуть" },
+{ v1:"feed", v2:"fed", v3:"fed", ru:"кормить" },
+{ v1:"tear", v2:"tore", v3:"torn", ru:"рвать / разрывать" },
+{ v1:"shake", v2:"shook", v3:"shaken", ru:"трясти / встряхивать" },
+{ v1:"steal", v2:"stole", v3:"stolen", ru:"красть / воровать" }
+]},
+{ id:4, title:"Work & Creation", verbs:[
+{ v1:"beat", v2:"beat", v3:"beaten", ru:"бить / побеждать" },
+{ v1:"bind", v2:"bound", v3:"bound", ru:"связывать / переплетать" },
+{ v1:"bleed", v2:"bled", v3:"bled", ru:"кровоточить" },
+{ v1:"breed", v2:"bred", v3:"bred", ru:"разводить / воспитывать" },
+{ v1:"burn", v2:"burnt", v3:"burnt", ru:"гореть / жечь" },
+{ v1:"cast", v2:"cast", v3:"cast", ru:"бросать / отливать" },
+{ v1:"dig", v2:"dug", v3:"dug", ru:"копать / рыть" },
+{ v1:"fight", v2:"fought", v3:"fought", ru:"бороться / сражаться" },
+{ v1:"fit", v2:"fit", v3:"fit", ru:"подходить по размеру" },
+{ v1:"forgive", v2:"forgave", v3:"forgiven", ru:"прощать" },
+{ v1:"freeze", v2:"froze", v3:"frozen", ru:"замерзать / замораживать" },
+{ v1:"grind", v2:"ground", v3:"ground", ru:"молоть / точить" },
+{ v1:"kneel", v2:"knelt", v3:"knelt", ru:"стоять на коленях" },
+{ v1:"lay", v2:"laid", v3:"laid", ru:"класть / укладывать" },
+{ v1:"light", v2:"lit", v3:"lit", ru:"зажигать / освещать" },
+{ v1:"mow", v2:"mowed", v3:"mown", ru:"косить / стричь газон" },
+{ v1:"knit", v2:"knit", v3:"knit", ru:"вязать" },
+{ v1:"weave", v2:"wove", v3:"woven", ru:"ткать / плести" },
+{ v1:"wind", v2:"wound", v3:"wound", ru:"наматывать / заводить" },
+{ v1:"dream", v2:"dreamt", v3:"dreamt", ru:"видеть сны / мечтать" }
+]},
+{ id:5, title:"Advanced & Rare", verbs:[
+{ v1:"arise", v2:"arose", v3:"arisen", ru:"возникать / появляться" },
+{ v1:"bear", v2:"bore", v3:"borne", ru:"нести / рожать" },
+{ v1:"burst", v2:"burst", v3:"burst", ru:"взрываться / лопаться" },
+{ v1:"creep", v2:"crept", v3:"crept", ru:"ползти / красться" },
+{ v1:"forbid", v2:"forbade", v3:"forbidden", ru:"запрещать" },
+{ v1:"foresee", v2:"foresaw", v3:"foreseen", ru:"предвидеть" },
+{ v1:"forsake", v2:"forsook", v3:"forsaken", ru:"покидать / бросать" },
+{ v1:"mislead", v2:"misled", v3:"misled", ru:"вводить в заблуждение" },
+{ v1:"overcome", v2:"overcame", v3:"overcome", ru:"преодолевать / победить" },
+{ v1:"quit", v2:"quit", v3:"quit", ru:"бросать / уходить" },
+{ v1:"seek", v2:"sought", v3:"sought", ru:"искать / добиваться" },
+{ v1:"shed", v2:"shed", v3:"shed", ru:"сбрасывать / проливать" },
+{ v1:"shut", v2:"shut", v3:"shut", ru:"закрывать / захлопывать" },
+{ v1:"sing", v2:"sang", v3:"sung", ru:"петь" },
+{ v1:"sink", v2:"sank", v3:"sunk", ru:"тонуть / погружать" },
+{ v1:"slay", v2:"slew", v3:"slain", ru:"убивать / сразить" },
+{ v1:"sow", v2:"sowed", v3:"sown", ru:"сеять / сажать" },
+{ v1:"stride", v2:"strode", v3:"stridden", ru:"шагать / ступать" },
+{ v1:"strive", v2:"strove", v3:"striven", ru:"стремиться / стараться" },
+{ v1:"undergo", v2:"underwent", v3:"undergone", ru:"претерпевать / проходить" }
+]}
+];
 
+let progress = JSON.parse(localStorage.getItem('ivsrs3') || '{}');
+function vp(uid, idx) {
+if (!progress[uid]) progress[uid] = {};
+if (!progress[uid][idx]) progress[uid][idx] = { interval:1, due:0, reps:0, correct:0, confidence:'new' };
+return progress[uid][idx];
+}
+function save() { localStorage.setItem('ivsrs3', JSON.stringify(progress)); }
+const CONF_DAYS = { easy: 5, ok: 2, hard: 1 };
+function applyRating(uid, idx, wasCorrect, conf) {
+const p = vp(uid, idx);
+p.reps++;
+p.confidence = conf;
+if (wasCorrect) { p.correct++; p.interval = conf === 'easy' ? Math.max(p.interval * 2, CONF_DAYS[conf]) : CONF_DAYS[conf]; }
+else { p.correct = Math.max(0, p.correct - 1); p.interval = 1; }
+p.due = Date.now() + p.interval * 86400000;
+save();
+}
+function unitStars(uid) { let m = 0; UNITS[uid].verbs.forEach((_, i) => { if (vp(uid, i).correct >= 3) m++; }); return m === UNITS[uid].verbs.length ? 3 : m >= UNITS[uid].verbs.length * 0.6 ? 2 : m >= UNITS[uid].verbs.length * 0.3 ? 1 : 0; }
+function unitPct(uid) { let m = 0; UNITS[uid].verbs.forEach((_, i) => { if (vp(uid, i).correct >= 3) m++; }); return Math.round(m / UNITS[uid].verbs.length * 100); }
+function getDue() { const now = Date.now(), out = []; UNITS.forEach((u, uid) => { u.verbs.forEach((verb, idx) => { const p = vp(uid, idx); if (p.reps > 0 && p.due <= now) out.push({ verb, uid, idx, p }); }); }); return out; }
+let activeTab = 'units';
+function switchTab(tab, btn) {
+activeTab = tab;
+document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+document.getElementById('tab-' + tab).classList.add('active');
+if (tab === 'due') renderDue();
+if (tab === 'progress') renderProgress();
+}
+function renderHome() { renderUnits(); updateDueBadge(); if (activeTab === 'due') renderDue(); if (activeTab === 'progress') renderProgress(); }
+function updateDueBadge() { const n = getDue().length; const el = document.getElementById('due-count'); el.textContent = n; }
+function renderUnits() {
+const grid = document.getElementById('units-grid'); grid.innerHTML = '';
+UNITS.forEach((unit, uid) => {
+const stars = unitStars(uid); const pct = unitPct(uid);
+const card = document.createElement('div'); card.className = 'unit-card';
+card.innerHTML = `<div class="unit-num">UNIT ${uid+1}</div><div class="unit-title">${unit.title}</div><div class="unit-meta">${unit.verbs.length} verbs</div><div class="unit-stars">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div><div class="unit-bar"><div class="unit-bar-fill" style="width:${pct}%"></div></div>`;
+card.onclick = () => startUnit(uid);
+grid.appendChild(card);
+});
+}
+function renderDue() {
+const due = getDue(); const c = document.getElementById('due-content');
+if (!due.length) { c.innerHTML = `<div class="due-empty">🎉<p>No verbs due for review right now.</p></div>`; return; }
+const groups = {};
+due.forEach(item => { if (!groups[item.uid]) groups[item.uid] = []; groups[item.uid].push(item); });
+let html = `<div class="due-header"><button class="due-start-btn" onclick="startDueSession()">Start review →</button></div>`;
+Object.keys(groups).sort((a,b)=>+a-+b).forEach(uid => {
+html += `<div class="due-group"><div class="due-group-label">UNIT ${+uid+1} — ${UNITS[uid].title}</div>`;
+groups[uid].forEach(item => { html += `<div class="due-row"><div class="dr-forms">${item.verb.v1} — ${item.verb.v2} — ${item.verb.v3}</div><div class="dr-ru">${item.verb.ru}</div><span class="conf-pill ${item.p.confidence}">${item.p.confidence.toUpperCase()}</span></div>`; });
+html += `</div>`;
+});
+c.innerHTML = html;
+}
+function renderProgress() {
+const c = document.getElementById('progress-content');
+let totalVerbs = 0, seenVerbs = 0, masteredVerbs = 0, totalReps = 0, totalCorrect = 0;
+UNITS.forEach((u, uid) => { u.verbs.forEach((_, idx) => { totalVerbs++; const p = vp(uid, idx); if (p.reps > 0) seenVerbs++; if (p.correct >= 3) masteredVerbs++; totalReps += p.reps; totalCorrect += p.correct; }); });
+const accuracy = totalReps > 0 ? Math.round(totalCorrect / totalReps * 100) : 0;
+let html = `
+<div class="prog-stats">
+  <div class="prog-stat"><div class="prog-stat-val">${masteredVerbs}</div><div class="prog-stat-lbl">Mastered</div></div>
+  <div class="prog-stat"><div class="prog-stat-val">${seenVerbs}</div><div class="prog-stat-lbl">Studied</div></div>
+  <div class="prog-stat"><div class="prog-stat-val">${totalVerbs - seenVerbs}</div><div class="prog-stat-lbl">New</div></div>
+</div>
+<div class="prog-accuracy-wrap">
+  <div class="prog-accuracy-label"><span>Overall accuracy</span><strong>${accuracy}%</strong></div>
+  <div class="prog-accuracy-bar"><div class="prog-accuracy-fill" style="width:${accuracy}%"></div></div>
+</div>
+<div class="prog-legend">
+  <div class="prog-legend-item"><div class="prog-legend-dot" style="background:var(--green)"></div>Mastered (3+ correct)</div>
+  <div class="prog-legend-item"><div class="prog-legend-dot" style="background:var(--amber)"></div>Learning</div>
+  <div class="prog-legend-item"><div class="prog-legend-dot" style="background:var(--red)"></div>Struggling</div>
+  <div class="prog-legend-item"><div class="prog-legend-dot" style="background:var(--border)"></div>Not seen</div>
+</div>`;
+UNITS.forEach((unit, uid) => {
+let unitSeen = 0, unitMastered = 0;
+unit.verbs.forEach((_, idx) => { const p = vp(uid, idx); if (p.reps > 0) unitSeen++; if (p.correct >= 3) unitMastered++; });
+const pct = Math.round(unitMastered / unit.verbs.length * 100);
+html += `<div class="prog-unit-block"><div class="prog-unit-header" onclick="toggleProgUnit(${uid}, this)"><span class="puh-num">UNIT ${uid+1}</span><span class="puh-title">${unit.title}</span><span class="puh-meta">${unitSeen === 0 ? 'Not started' : `${unitMastered}/${unit.verbs.length} mastered`}</span><div class="puh-mini-bar"><div class="puh-mini-fill" style="width:${pct}%"></div></div><span class="puh-chevron">›</span></div><div class="prog-unit-body" id="prog-body-${uid}">`;
+unit.verbs.forEach((verb, idx) => {
+const p = vp(uid, idx);
+let dotCls = 'unseen';
+if (p.reps > 0) { if (p.correct >= 3) dotCls = 'mastered'; else if (p.correct >= 1) dotCls = 'learning'; else dotCls = 'struggling'; }
+let nextStr = '—';
+if (p.reps > 0) { const diff = p.due - Date.now(); if (diff <= 0) nextStr = 'Due now'; else { const days = Math.ceil(diff / 86400000); nextStr = days === 1 ? 'Tomorrow' : `In ${days} days`; } }
+html += `<div class="prog-verb-row"><div class="pvr-dot ${dotCls}"></div><div class="pvr-forms">${verb.v1} — ${verb.v2} — ${verb.v3}</div><div class="pvr-ru">${verb.ru}</div><span class="conf-pill ${p.confidence}">${p.confidence.toUpperCase()}</span><div class="pvr-reps">${p.reps > 0 ? p.reps + ' rep' + (p.reps !== 1 ? 's' : '') : ''}</div><div class="pvr-next">${nextStr}</div></div>`;
+});
+html += `</div></div>`;
+});
+html += `<div class="prog-reset-row"><button class="prog-reset-btn" onclick="resetAllProgress()">Reset all progress</button></div>`;
+c.innerHTML = html;
+}
+function toggleProgUnit(uid, header) { const body = document.getElementById('prog-body-' + uid); const isOpen = body.classList.contains('open'); document.querySelectorAll('.prog-unit-body').forEach(b => b.classList.remove('open')); document.querySelectorAll('.prog-unit-header').forEach(h => h.classList.remove('open')); if (!isOpen) { body.classList.add('open'); header.classList.add('open'); } }
+function resetAllProgress() { if (confirm('Reset ALL progress? This cannot be undone.')) { progress = {}; save(); renderHome(); } }
+const FORMS = ['v1', 'v2', 'v3']; const FLABEL = { v1: 'Infinitive (V1)', v2: 'Past Simple (V2)', v3: 'Past Participle (V3)' };
+let currentUnit = null, queue = [], qIdx = 0, sessionLog = [], streak = 0, waitAnswer = false, lastCorrect = false;
+function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+function startUnit(uid) { currentUnit = uid; const items = UNITS[uid].verbs.map((verb, idx) => ({ verb, uid, idx, p: vp(uid, idx) })); queue = shuffle(items).map(it => ({ ...it, form: FORMS[Math.floor(Math.random() * 3)] })); launchSession(); }
+function startDueSession() { currentUnit = null; const items = getDue(); queue = shuffle(items).map(it => ({ ...it, form: FORMS[Math.floor(Math.random() * 3)] })); launchSession(); }
+function launchSession() { qIdx = 0; sessionLog = []; streak = 0; waitAnswer = false; renderStreak(); showScreen('study'); loadQ(); }
+function renderStreak() { const row = document.getElementById('streak-row'); row.innerHTML = ''; for (let i = 0; i < 5; i++) { const d = document.createElement('div'); d.className = 'streak-pip' + (i < streak ? ' lit' : ''); row.appendChild(d); } }
+function loadQ() {
+waitAnswer = false; lastCorrect = false;
+const { verb, uid, idx, p, form } = queue[qIdx]; const total = queue.length;
+document.getElementById('q-cur').textContent = qIdx + 1; document.getElementById('q-tot').textContent = total; document.getElementById('top-bar').style.width = (qIdx / total * 100) + '%';
+document.getElementById('srs-label').textContent = p.reps === 0 ? 'New card' : p.correct >= 3 ? '⭐ Well known' : `Review #${p.reps + 1}`;
+document.getElementById('c-translation').textContent = verb.ru;
+document.getElementById('c-ask-form').textContent = FLABEL[form];
+document.getElementById('reveal-row').style.display = 'none';
+['v1','v2','v3'].forEach(f => { const el = document.getElementById('rb-' + f); el.textContent = verb[f]; el.className = 'fb'; });
+document.getElementById('main-card').className = 'card'; document.getElementById('conf-label').className = 'conf-label'; document.getElementById('conf-row').className = 'conf-row';
+renderOpts(verb[form], verb, form, idx, uid);
+}
+function buildOpts(correct, verb, form, verbIdx, uid) {
+let traps = [];
+FORMS.forEach(f => { if (f !== form && verb[f] !== correct) traps.push({ text: verb[f], isTrap: true }); });
+UNITS.forEach((u, ui) => { u.verbs.forEach((v, i) => { if (!(ui === uid && i === verbIdx) && v[form] !== correct) traps.push({ text: v[form], isTrap: false }); }); });
+const seen = new Set([correct]); const filtered = traps.filter(t => { if (seen.has(t.text)) return false; seen.add(t.text); return true; });
+const sameVerb = filtered.filter(t => t.isTrap); const other = filtered.filter(t => !t.isTrap); const chosen = [...sameVerb.slice(0, 2)];
+while (chosen.length < 3 && other.length) chosen.push(other.splice(Math.floor(Math.random() * other.length), 1)[0]);
+while (chosen.length < 3) chosen.push({ text: '—', isTrap: false });
+return shuffle([{ text: correct, isCorrect: true, isTrap: false }, ...chosen.slice(0, 3)]);
+}
+function renderOpts(correct, verb, form, verbIdx, uid) {
+const grid = document.getElementById('opt-grid'); grid.innerHTML = '';
+buildOpts(correct, verb, form, verbIdx, uid).forEach(opt => {
+const btn = document.createElement('button'); btn.className = 'opt';
+btn.innerHTML = opt.text + '<span class="opt-trap">' + (opt.isTrap ? '⚠ trap!' : '') + '</span>';
+btn.onclick = () => selectOpt(opt, correct, form, btn);
+grid.appendChild(btn);
+});
+}
+function selectOpt(opt, correct, form, btn) {
+if (waitAnswer) return; waitAnswer = true;
+const isCorrect = opt.text === correct; lastCorrect = isCorrect;
+document.querySelectorAll('.opt').forEach(b => { b.disabled = true; const raw = b.childNodes[0].textContent.trim(); if (raw === correct) b.className = 'opt rev-correct'; });
+btn.className = isCorrect ? 'opt sel-correct' : 'opt sel-wrong';
+document.getElementById('main-card').className = 'card ' + (isCorrect ? 'correct' : 'wrong');
+streak = isCorrect ? Math.min(5, streak + 1) : 0; renderStreak();
+sessionLog.push({ verb: queue[qIdx].verb, uid: queue[qIdx].uid, idx: queue[qIdx].idx, correct: isCorrect });
+const rr = document.getElementById('reveal-row'); rr.style.display = 'flex';
+['v1','v2','v3'].forEach(f => { const el = document.getElementById('rb-' + f); el.className = 'fb ' + (f === form ? (isCorrect ? 'hit' : 'miss') : 'dim'); });
+const icon = document.getElementById('feedback-icon'); icon.textContent = isCorrect ? '✓' : '✗'; icon.style.color = isCorrect ? 'var(--green)' : 'var(--red)'; icon.className = 'feedback-icon pop';
+setTimeout(() => { icon.className = 'feedback-icon fade'; }, 650); setTimeout(() => { icon.className = 'feedback-icon'; }, 1050);
+document.getElementById('conf-label').className = 'conf-label show'; document.getElementById('conf-row').className = 'conf-row show';
+}
+function rateNext(conf) {
+if (!waitAnswer) return;
+const { uid, idx } = queue[qIdx]; applyRating(uid, idx, lastCorrect, conf);
+document.getElementById('conf-label').className = 'conf-label'; document.getElementById('conf-row').className = 'conf-row';
+qIdx++; if (qIdx >= queue.length) { showResult(); return; } setTimeout(loadQ, 80);
+}
+function showResult() {
+const correct = sessionLog.filter(r => r.correct).length, total = sessionLog.length;
+document.getElementById('res-score').textContent = `${correct}/${total}`;
+document.getElementById('res-caption').textContent = correct/total >= 0.9 ? '🏆 Excellent!' : correct/total >= 0.7 ? '👍 Good job!' : correct/total >= 0.5 ? '📖 Keep going' : '💪 More practice needed';
+const list = document.getElementById('res-list'); list.innerHTML = ''; const seen = new Set();
+sessionLog.forEach(r => { if (seen.has(r.verb.v1)) return; seen.add(r.verb.v1); const allOk = sessionLog.filter(x => x.verb.v1 === r.verb.v1).every(x => x.correct); const row = document.createElement('div'); row.className = 'res-row'; row.innerHTML = `<div class="res-dot ${allOk ? 'ok' : 'fail'}"></div><span class="res-forms">${r.verb.v1} — ${r.verb.v2} — ${r.verb.v3}</span><span class="res-ru">${r.verb.ru}</span>`; list.appendChild(row); });
+showScreen('result');
+}
+function retrySession() { if (currentUnit !== null) startUnit(currentUnit); else startDueSession(); }
+function goHome() { renderHome(); showScreen('home'); }
+function showScreen(name) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('screen-' + name).classList.add('active'); window.scrollTo(0, 0); }
+renderHome();
+</script>
+</body>
+</html>
