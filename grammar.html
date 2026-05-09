@@ -1,317 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grammar Mastery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Mastery</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────
+   TOKENS (matching main site)
+───────────────────────────────────────── */
+:root {
+  --bg:       #0f0f14;
+  --surface:  #1a1a24;
+  --surface2: #22222f;
+  --border:   rgba(255,255,255,0.08);
+  --text:     #f0eff8;
+  --muted:    #8a8aaa;
+  --accent:   #7c6ff7;
+  --accent2:  #a78bfa;
+  --green:    #34d399;
+  --red:      #f87171;
+  --amber:    #f59e0b;
+  --gold:     #fbbf24;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f9fafb;
-            color: #1e293b;
-            line-height: 1.5;
-        }
+/* ─────────────────────────────────────────
+   HEADER
+───────────────────────────────────────── */
+.main-header {
+  width: 100%;
+  max-width: 760px;
+  padding: 1.5rem 1.5rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.logo a {
+  color: var(--text);
+  text-decoration: none;
+}
+.logo span { color: var(--accent2); }
+.back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent2); }
 
-        /* Header */
-        .main-header {
-            background: linear-gradient(135deg, #1e3c32 0%, #2a4a3f 100%);
-            color: white;
-            padding: 1.2rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        }
+/* ─────────────────────────────────────────
+   CONTAINER
+───────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 760px;
+  padding: 1rem 1.5rem 4rem;
+}
 
-        .header-content {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+/* ─────────────────────────────────────────
+   HERO
+───────────────────────────────────────── */
+.hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--text), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.5rem;
+}
+.hero p {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
 
-        .logo a {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: white;
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
+/* ─────────────────────────────────────────
+   TOPIC GRID
+───────────────────────────────────────── */
+.topic-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+.topic-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.3rem 1.5rem;
+  transition: all 0.2s ease;
+}
+.topic-card:hover {
+  border-color: var(--accent);
+  background: var(--surface2);
+  transform: translateY(-2px);
+}
+.topic-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.topic-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.topic-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.topic-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 40px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.topic-btn:hover { background: var(--accent2); }
 
-        .logo a:hover {
-            opacity: 0.9;
-        }
+/* Special SRS card highlight */
+.topic-card.srs-card {
+  background: linear-gradient(135deg, var(--surface), var(--surface2));
+  border-color: var(--accent);
+}
+.topic-card.srs-card .topic-btn {
+  background: var(--accent2);
+}
+.topic-card.srs-card .topic-btn:hover {
+  background: var(--accent);
+}
 
-        .back-link {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: color 0.2s;
-        }
-
-        .back-link:hover {
-            color: white;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 2.5rem 2rem 4rem;
-        }
-
-        /* Hero */
-        .hero {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #1e3c32, #4a7c6b);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.75rem;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: #4b5563;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Topic Grid */
-        .topic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.75rem;
-            margin-bottom: 3rem;
-        }
-
-        .topic-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.8rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: all 0.25s ease;
-            border: 1px solid #e2e8f0;
-        }
-
-        .topic-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-            border-color: #cbd5e1;
-        }
-
-        .topic-icon {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .topic-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 0.75rem;
-        }
-
-        .topic-desc {
-            color: #4b5563;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .topic-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #1e3c32;
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1.25rem;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: background 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .topic-btn:hover {
-            background: #2a5a4a;
-        }
-
-        /* SRS Special Card */
-        .srs-card {
-            background: linear-gradient(135deg, #1e3c32 0%, #2a4a3f 100%);
-            color: white;
-            grid-column: span 2;
-        }
-
-        .srs-card .topic-title,
-        .srs-card .topic-desc {
-            color: white;
-        }
-
-        .srs-card .topic-desc {
-            color: #cbd5e1;
-        }
-
-        .srs-card .topic-btn {
-            background: white;
-            color: #1e3c32;
-        }
-
-        .srs-card .topic-btn:hover {
-            background: #e2e8f0;
-        }
-
-        /* Coming Soon */
-        .coming-soon {
-            text-align: center;
-            padding: 2rem;
-            background: #f1f5f9;
-            border-radius: 20px;
-            margin-top: 1rem;
-        }
-
-        .coming-soon p {
-            color: #4b5563;
-            font-size: 0.9rem;
-        }
-
-        hr {
-            margin: 2rem 0;
-            border: none;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        /* Footer */
-        .footer-note {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #6c757d;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 2rem;
-            margin-top: 2rem;
-        }
-
-        @media (max-width: 700px) {
-            .container {
-                padding: 1.5rem;
-            }
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-            .topic-grid {
-                grid-template-columns: 1fr;
-            }
-            .srs-card {
-                grid-column: span 1;
-            }
-            .header-content {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+/* ─────────────────────────────────────────
+   COMING SOON & FOOTER
+───────────────────────────────────────── */
+.coming-soon {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--surface);
+  border-radius: 16px;
+  margin-top: 0.5rem;
+}
+.coming-soon p {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+hr {
+  margin: 1.5rem 0;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+.footer-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 1.5rem;
+}
+</style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="header-content">
-            <div class="logo">
-                <a href="index.html">GRANDECO</a>
-            </div>
-            <a href="index.html" class="back-link">← Back to Main</a>
-        </div>
-    </header>
 
-    <div class="container">
-        <div class="hero">
-            <h1>Grammar Mastery</h1>
-            <p>Clear explanations, interactive exercises, and SRS tools to perfect your English grammar.</p>
-        </div>
+<header class="main-header">
+  <div class="logo">
+    <a href="index.html">GRAND<span>ECO</span></a>
+  </div>
+  <a href="index.html" class="back-link">← Back to Main</a>
+</header>
 
-        <div class="topic-grid">
-            <!-- Tenses & Time -->
-            <div class="topic-card">
-                <div class="topic-icon">⏰</div>
-                <div class="topic-title">Tenses & Time</div>
-                <div class="topic-desc">
-                    Master Present, Past, Future — signal words, structures, and common pitfalls. Clear tables and exercises included.
-                </div>
-                <a href="#" class="topic-btn">Explore examples →</a>
-            </div>
+<div class="container">
+  <div class="hero">
+    <h1>Grammar Mastery</h1>
+    <p>Clear explanations, interactive exercises, and SRS tools to perfect your English grammar.</p>
+  </div>
 
-            <!-- Irregular Verbs (SRS) - UPDATED LINK: hyphen instead of space -->
-            <div class="topic-card srs-card">
-                <div class="topic-icon">⚡</div>
-                <div class="topic-title">Irregular Verbs</div>
-                <div class="topic-desc">
-                    Master irregular verb forms with a spaced repetition trainer. Interactive exercises with progress saved in your browser.
-                </div>
-                <a href="irregular-verbs.html" class="topic-btn">Open trainer →</a>
-            </div>
-
-            <!-- Parts of Speech -->
-            <div class="topic-card">
-                <div class="topic-icon">📚</div>
-                <div class="topic-title">Parts of Speech</div>
-                <div class="topic-desc">
-                    Nouns, adjectives, adverbs, pronouns — detailed explanations with quizzes to reinforce understanding.
-                </div>
-                <a href="#" class="topic-btn">Dive deeper →</a>
-            </div>
-
-            <!-- Sentence Structure -->
-            <div class="topic-card">
-                <div class="topic-icon">🔗</div>
-                <div class="topic-title">Sentence Structure</div>
-                <div class="topic-desc">
-                    Understand word order, clauses, conjunctions, and conditional sentences. Real‑life examples.
-                </div>
-                <a href="#" class="topic-btn">Start learning →</a>
-            </div>
-
-            <!-- Common Mistakes -->
-            <div class="topic-card">
-                <div class="topic-icon">⚠️</div>
-                <div class="topic-title">Common Mistakes</div>
-                <div class="topic-desc">
-                    Fix typical errors with prepositions, articles, and irregular forms. Interactive fix‑the‑error tasks.
-                </div>
-                <a href="#" class="topic-btn">Practice now →</a>
-            </div>
-        </div>
-
-        <hr>
-
-        <div class="coming-soon">
-            <p>📘 More topics and downloadable PDFs coming soon.</p>
-        </div>
-
-        <div class="footer-note">
-            <p>Irregular Verbs — Spaced Repetition • Fully interactive SRS tool • Progress is saved in your browser</p>
-        </div>
+  <div class="topic-grid">
+    <!-- Tenses & Time -->
+    <div class="topic-card">
+      <div class="topic-icon">⏰</div>
+      <div class="topic-title">Tenses & Time</div>
+      <div class="topic-desc">
+        Master Present, Past, Future — signal words, structures, and common pitfalls. Clear tables and exercises included.
+      </div>
+      <a href="#" class="topic-btn">Explore examples →</a>
     </div>
+
+    <!-- Irregular Verbs (SRS) - UPDATED LINK: hyphen instead of space -->
+    <div class="topic-card srs-card">
+      <div class="topic-icon">⚡</div>
+      <div class="topic-title">Irregular Verbs</div>
+      <div class="topic-desc">
+        Master irregular verb forms with a spaced repetition trainer. Interactive exercises with progress saved in your browser.
+      </div>
+      <a href="irregular-verbs.html" class="topic-btn">Open trainer →</a>
+    </div>
+
+    <!-- Parts of Speech -->
+    <div class="topic-card">
+      <div class="topic-icon">📚</div>
+      <div class="topic-title">Parts of Speech</div>
+      <div class="topic-desc">
+        Nouns, adjectives, adverbs, pronouns — detailed explanations with quizzes to reinforce understanding.
+      </div>
+      <a href="#" class="topic-btn">Dive deeper →</a>
+    </div>
+
+    <!-- Sentence Structure -->
+    <div class="topic-card">
+      <div class="topic-icon">🔗</div>
+      <div class="topic-title">Sentence Structure</div>
+      <div class="topic-desc">
+        Understand word order, clauses, conjunctions, and conditional sentences. Real‑life examples.
+      </div>
+      <a href="#" class="topic-btn">Start learning →</a>
+    </div>
+
+    <!-- Common Mistakes -->
+    <div class="topic-card">
+      <div class="topic-icon">⚠️</div>
+      <div class="topic-title">Common Mistakes</div>
+      <div class="topic-desc">
+        Fix typical errors with prepositions, articles, and irregular forms. Interactive fix‑the‑error tasks.
+      </div>
+      <a href="#" class="topic-btn">Practice now →</a>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="coming-soon">
+    <p>📘 More topics and downloadable PDFs coming soon.</p>
+  </div>
+
+  <div class="footer-note">
+    <p>Irregular Verbs — Spaced Repetition • Fully interactive SRS tool • Progress is saved in your browser</p>
+  </div>
+</div>
+
 </body>
 </html>
