@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Grammar Theory | GRANDECO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Mastery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,353 +14,304 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #f5f0e8 0%, #e8e2d8 100%);
-            color: #1e2a2f;
-            scroll-behavior: smooth;
+            background: #f9fafb;
+            color: #1e293b;
             line-height: 1.5;
         }
 
-        /* Main container */
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
+        /* Header */
+        .main-header {
+            background: linear-gradient(135deg, #1e3c32 0%, #2a4a3f 100%);
+            color: white;
+            padding: 1.2rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         }
 
-        /* Header & Navigation */
-        .top-bar {
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: baseline;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 2.5rem;
-            padding: 0.8rem 1.8rem;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px);
-            border-radius: 4rem;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .logo a {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo a:hover {
+            opacity: 0.9;
         }
 
         .back-link {
-            background: #2c3e50;
-            color: white;
-            padding: 0.6rem 1.3rem;
-            border-radius: 3rem;
+            color: #cbd5e1;
             text-decoration: none;
-            font-weight: 600;
             font-size: 0.9rem;
-            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            transition: color 0.2s;
         }
 
         .back-link:hover {
-            background: #d35400;
-            transform: translateX(-5px);
-            box-shadow: 0 6px 14px rgba(211, 84, 0, 0.3);
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #2c3e50, #d35400);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        /* Tabs Container */
-        .tabs-container {
-            margin: 2rem 0;
-        }
-
-        .tab-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid rgba(44, 62, 80, 0.15);
-            padding-bottom: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
-            padding: 0.8rem 1.8rem;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #4a5b5e;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            border-radius: 3rem;
-            font-family: 'Inter', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .tab-btn i {
-            font-size: 1.1rem;
-        }
-
-        .tab-btn:hover {
-            background: rgba(211, 84, 0, 0.1);
-            color: #d35400;
-            transform: translateY(-2px);
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, #d35400, #e67e22);
             color: white;
-            box-shadow: 0 6px 14px rgba(211, 84, 0, 0.35);
         }
 
-        .tab-content {
-            display: none;
-            animation: fadeSlide 0.4s ease-out forwards;
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem 4rem;
         }
 
-        .tab-content.active {
-            display: block;
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
         }
 
-        @keyframes fadeSlide {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e3c32, #4a7c6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.75rem;
         }
 
-        /* GRAMMAR THEORY SECTION (first tab) */
-        .theory-grid {
+        .hero p {
+            font-size: 1.1rem;
+            color: #4b5563;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Topic Grid */
+        .topic-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.8rem;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.75rem;
+            margin-bottom: 3rem;
         }
 
         .topic-card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(4px);
-            border-radius: 1.5rem;
-            padding: 1.6rem;
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+            background: white;
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.25s ease;
+            border: 1px solid #e2e8f0;
         }
 
         .topic-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.1);
-            background: white;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+            border-color: #cbd5e1;
         }
 
-        .topic-card h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            border-left: 3px solid #d35400;
-            padding-left: 0.8rem;
-        }
-
-        .topic-card p {
-            color: #4a5b5e;
-            font-size: 0.95rem;
+        .topic-icon {
+            font-size: 2.2rem;
             margin-bottom: 1rem;
+        }
+
+        .topic-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+        }
+
+        .topic-desc {
+            color: #4b5563;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
             line-height: 1.5;
         }
 
-        .sample-link {
+        .topic-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: #f0eae2;
-            padding: 0.4rem 1rem;
-            border-radius: 2rem;
+            background: #1e3c32;
+            color: white;
             text-decoration: none;
+            padding: 0.6rem 1.25rem;
+            border-radius: 40px;
             font-size: 0.85rem;
             font-weight: 500;
-            color: #d35400;
-            transition: all 0.2s;
-        }
-
-        .sample-link:hover {
-            background: #d35400;
-            color: white;
-        }
-
-        /* IRREGULAR VERBS APP SECTION (second tab) */
-        .webapp-card {
-            background: white;
-            border-radius: 1.8rem;
-            overflow: hidden;
-            box-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.12);
-            border: 1px solid #e2d4c0;
-        }
-
-        .webapp-header {
-            background: linear-gradient(135deg, #2c3e50, #1e2a2f);
-            padding: 1.2rem 2rem;
-            color: white;
-        }
-
-        .webapp-header h3 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.9rem;
-        }
-
-        .webapp-frame {
-            width: 100%;
-            min-height: 700px;
+            transition: background 0.2s;
             border: none;
-            background: #fefaf5;
+            cursor: pointer;
         }
 
-        .info-note {
+        .topic-btn:hover {
+            background: #2a5a4a;
+        }
+
+        /* SRS Special Card */
+        .srs-card {
+            background: linear-gradient(135deg, #1e3c32 0%, #2a4a3f 100%);
+            color: white;
+            grid-column: span 2;
+        }
+
+        .srs-card .topic-title,
+        .srs-card .topic-desc {
+            color: white;
+        }
+
+        .srs-card .topic-desc {
+            color: #cbd5e1;
+        }
+
+        .srs-card .topic-btn {
+            background: white;
+            color: #1e3c32;
+        }
+
+        .srs-card .topic-btn:hover {
+            background: #e2e8f0;
+        }
+
+        /* Coming Soon */
+        .coming-soon {
+            text-align: center;
+            padding: 2rem;
+            background: #f1f5f9;
+            border-radius: 20px;
             margin-top: 1rem;
-            font-size: 0.85rem;
-            color: #6c5a48;
-            text-align: center;
-            background: rgba(255, 248, 235, 0.7);
-            padding: 0.6rem 1rem;
-            border-radius: 2rem;
-            display: inline-block;
-            width: auto;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 3.5rem;
-            padding: 1.5rem;
-            font-size: 0.85rem;
-            color: #5e6f7a;
-            border-top: 1px solid rgba(44, 62, 80, 0.1);
+        .coming-soon p {
+            color: #4b5563;
+            font-size: 0.9rem;
         }
 
-        @media (max-width: 680px) {
+        hr {
+            margin: 2rem 0;
+            border: none;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Footer */
+        .footer-note {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6c757d;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 700px) {
             .container {
-                padding: 1rem;
+                padding: 1.5rem;
             }
-            h1 {
+            .hero h1 {
                 font-size: 1.8rem;
             }
-            .tab-btn {
-                padding: 0.5rem 1.2rem;
-                font-size: 0.9rem;
-            }
-            .webapp-frame {
-                min-height: 500px;
-            }
-            .theory-grid {
+            .topic-grid {
                 grid-template-columns: 1fr;
+            }
+            .srs-card {
+                grid-column: span 1;
+            }
+            .header-content {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="top-bar">
-        <a href="index.html" class="back-link">
-            <i class="fas fa-arrow-left"></i> Back to Main
-        </a>
-        <h1>
-            <i class="fas fa-book-open"></i> Grammar Mastery
-        </h1>
-        <div style="width: 40px;"></div>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html">GRANDECO</a>
+            </div>
+            <a href="index.html" class="back-link">← Back to Main</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Grammar Mastery</h1>
+            <p>Clear explanations, interactive exercises, and SRS tools to perfect your English grammar.</p>
+        </div>
+
+        <div class="topic-grid">
+            <!-- Tenses & Time -->
+            <div class="topic-card">
+                <div class="topic-icon">⏰</div>
+                <div class="topic-title">Tenses & Time</div>
+                <div class="topic-desc">
+                    Master Present, Past, Future — signal words, structures, and common pitfalls. Clear tables and exercises included.
+                </div>
+                <a href="#" class="topic-btn">Explore examples →</a>
+            </div>
+
+            <!-- Irregular Verbs (SRS) - UPDATED LINK: hyphen instead of space -->
+            <div class="topic-card srs-card">
+                <div class="topic-icon">⚡</div>
+                <div class="topic-title">Irregular Verbs</div>
+                <div class="topic-desc">
+                    Master irregular verb forms with a spaced repetition trainer. Interactive exercises with progress saved in your browser.
+                </div>
+                <a href="irregular-verbs.html" class="topic-btn">Open trainer →</a>
+            </div>
+
+            <!-- Parts of Speech -->
+            <div class="topic-card">
+                <div class="topic-icon">📚</div>
+                <div class="topic-title">Parts of Speech</div>
+                <div class="topic-desc">
+                    Nouns, adjectives, adverbs, pronouns — detailed explanations with quizzes to reinforce understanding.
+                </div>
+                <a href="#" class="topic-btn">Dive deeper →</a>
+            </div>
+
+            <!-- Sentence Structure -->
+            <div class="topic-card">
+                <div class="topic-icon">🔗</div>
+                <div class="topic-title">Sentence Structure</div>
+                <div class="topic-desc">
+                    Understand word order, clauses, conjunctions, and conditional sentences. Real‑life examples.
+                </div>
+                <a href="#" class="topic-btn">Start learning →</a>
+            </div>
+
+            <!-- Common Mistakes -->
+            <div class="topic-card">
+                <div class="topic-icon">⚠️</div>
+                <div class="topic-title">Common Mistakes</div>
+                <div class="topic-desc">
+                    Fix typical errors with prepositions, articles, and irregular forms. Interactive fix‑the‑error tasks.
+                </div>
+                <a href="#" class="topic-btn">Practice now →</a>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="coming-soon">
+            <p>📘 More topics and downloadable PDFs coming soon.</p>
+        </div>
+
+        <div class="footer-note">
+            <p>Irregular Verbs — Spaced Repetition • Fully interactive SRS tool • Progress is saved in your browser</p>
+        </div>
     </div>
-
-    <div class="tabs-container">
-        <div class="tab-buttons">
-            <button class="tab-btn active" data-tab="theory">
-                <i class="fas fa-chalkboard-teacher"></i> 📘 Grammar Theory
-            </button>
-        </div>
-
-        <!-- TAB 1: GRAMMAR THEORY (main content) -->
-        <div id="theory" class="tab-content active">
-            <div class="theory-grid">
-                <div class="topic-card">
-                    <h3><i class="fas fa-hourglass-half"></i> Tenses & Time</h3>
-                    <p>Master Present, Past, Future — signal words, structures, and common pitfalls. Clear tables and exercises included.</p>
-                    <a href="#" class="sample-link">Explore examples →</a>
-                </div>
-                <div class="topic-card">
-                    <h3><i class="fas fa-bolt"></i> Irregular Verbs</h3>
-                    <p>Master irregular verb forms with a spaced repetition trainer. Interactive exercises with progress saved in your browser.</p>
-                    <a href="#" class="sample-link" id="open-irregular">Open trainer →</a>
-                </div>
-                <div class="topic-card">
-                    <h3><i class="fas fa-puzzle-piece"></i> Parts of Speech</h3>
-                    <p>Nouns, adjectives, adverbs, pronouns — detailed explanations with quizzes to reinforce understanding.</p>
-                    <a href="#" class="sample-link">Dive deeper →</a>
-                </div>
-                <div class="topic-card">
-                    <h3><i class="fas fa-code-branch"></i> Sentence Structure</h3>
-                    <p>Understand word order, clauses, conjunctions, and conditional sentences. Real‑life examples.</p>
-                    <a href="#" class="sample-link">Start learning →</a>
-                </div>
-                <div class="topic-card">
-                    <h3><i class="fas fa-check-double"></i> Common Mistakes</h3>
-                    <p>Fix typical errors with prepositions, articles, and irregular forms. Interactive fix‑the‑error tasks.</p>
-                    <a href="#" class="sample-link">Practice now →</a>
-                </div>
-            </div>
-            <div style="margin-top: 2rem; text-align: center;">
-                <p style="color: #6c5a48;"><i class="fas fa-database"></i> More topics and downloadable PDFs coming soon.</p>
-            </div>
-        </div>
-
-        <!-- TAB 2: IRREGULAR VERBS APPLICATION -->
-        <div id="irregular" class="tab-content">
-            <div class="webapp-card">
-                <div class="webapp-header">
-                    <h3>
-                        <i class="fas fa-language"></i> Irregular Verbs — Spaced Repetition
-                    </h3>
-                </div>
-                <!-- Your irregular verbs.html is embedded here -->
-                <iframe class="webapp-frame" src="irregular%20verbs.html" title="Irregular Verbs Web Application"></iframe>
-            </div>
-            <div style="text-align: center; margin-top: 0.8rem;">
-                <span class="info-note">
-                    <i class="fas fa-info-circle"></i> Fully interactive SRS tool. Progress is saved in your browser. If the app doesn’t appear, make sure <code>irregular verbs.html</code> is in the same folder.
-                </span>
-            </div>
-        </div>
-    </div>
-    <footer>
-        <p>📖 Interactive grammar library | Designed for GRANDECO language hub</p>
-    </footer>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const tabContents = document.querySelectorAll('.tab-content');
-
-        // "Open trainer" card → reveal the iframe panel
-        document.getElementById('open-irregular').addEventListener('click', function(e) {
-            e.preventDefault();
-            tabContents.forEach(c => c.classList.remove('active'));
-            document.getElementById('irregular').classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    });
-</script>
 </body>
 </html>
