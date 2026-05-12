@@ -1,1 +1,950 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRE Vocabulary | Language Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+/* ── Reset ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+/* ── Site tokens ── */
+:root {
+  --bg: #fefaf5;
+  --white: #ffffff;
+  --accent: #b36b3c;
+  --accent-hover: #8f5230;
+  --accent-light: #f3e5d5;
+  --green: #3b5e3b;
+  --text: #1e2a3e;
+  --muted: #7a6352;
+  --border: rgba(199,163,119,0.28);
+  --shadow: 0 20px 40px -12px rgba(0,0,0,0.08);
+  --radius: 1.5rem;
+  --radius-sm: 0.75rem;
+ 
+  /* quiz feedback colours */
+  --c-green: #1D9E75; --c-green-light: #E1F5EE; --c-green-dark: #085041;
+  --c-amber: #BA7517; --c-amber-light: #FAEEDA; --c-amber-dark: #412402;
+  --c-red:   #E24B4A; --c-red-light:   #FCEBEB;
+  --c-blue:  #185FA5; --c-blue-light:  #E6F1FB;
+}
+ 
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+ 
+/* ══════════════════════════════════════════
+   NAVBAR  (matches site exactly)
+══════════════════════════════════════════ */
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,248,240,0.92);
+  backdrop-filter: blur(16px);
+  padding: 1rem 2rem;
+  display: flex; flex-wrap: wrap;
+  justify-content: space-between; align-items: center;
+  border-bottom: 1px solid rgba(224,198,168,0.4);
+}
+.logo h1 {
+  font-size: 1.7rem; font-weight: 700;
+  background: linear-gradient(135deg, #3b5e3b, #6b4c3b);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.nav-links { display: flex; flex-wrap: wrap; gap: 0.75rem; list-style: none; }
+.nav-links a {
+  text-decoration: none; font-weight: 600; font-size: 0.9rem; color: #2c3e2f;
+  background: rgba(235,215,190,0.4); padding: 0.45rem 1rem;
+  border-radius: 60px; transition: 0.22s;
+}
+.nav-links a:hover { background: #d8b48c; color: white; }
+ 
+/* ══════════════════════════════════════════
+   PAGE HEADER
+══════════════════════════════════════════ */
+.page-header {
+  background: linear-gradient(135deg, #3b5e3b 0%, #6b4c3b 100%);
+  padding: 2.5rem 2rem 3rem; color: white; text-align: center;
+  position: relative; overflow: hidden;
+}
+.page-header::before {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.back-link {
+  position: relative; display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(255,255,255,0.18); color: white; text-decoration: none;
+  font-size: 0.86rem; font-weight: 600; padding: 0.42rem 1rem;
+  border-radius: 40px; margin-bottom: 1.2rem; transition: background 0.2s;
+}
+.back-link:hover { background: rgba(255,255,255,0.28); }
+.page-header h1 {
+  font-size: 2.4rem; font-weight: 800; position: relative; margin-bottom: 0.3rem;
+}
+.page-header p { font-size: 0.96rem; opacity: 0.82; position: relative; }
+ 
+/* ══════════════════════════════════════════
+   APP WRAPPER
+══════════════════════════════════════════ */
+.app { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+ 
+/* screens */
+.screen { display: none; }
+.screen.active { display: block; }
+ 
+/* ══════════════════════════════════════════
+   HOME — tab bar
+══════════════════════════════════════════ */
+.home-sub {
+  font-size: 0.88rem; color: var(--muted);
+  margin-bottom: 1.6rem; text-align: center;
+}
+ 
+.section-label {
+  font-size: 0.7rem; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin: 1.6rem 0 0.6rem;
+}
+ 
+/* ── Unit grid ── */
+.unit-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+  gap: 0.75rem; margin-bottom: 0.5rem;
+}
+.unit-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 1rem 1.1rem;
+  cursor: pointer; transition: border-color 0.18s, transform 0.15s;
+}
+.unit-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.unit-num { font-size: 0.68rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.07em; }
+.unit-name { font-size: 0.88rem; font-weight: 600; color: var(--text); margin-top: 3px; line-height: 1.3; }
+.unit-prog { margin-top: 8px; height: 3px; background: var(--accent-light); border-radius: 99px; overflow: hidden; }
+.unit-bar { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.3s; }
+.unit-count { font-size: 0.7rem; color: var(--muted); margin-top: 4px; }
+ 
+/* ── Bottom action buttons ── */
+.btn-primary {
+  display: block; width: 100%; padding: 0.85rem;
+  background: linear-gradient(135deg, #3b5e3b, #6b4c3b);
+  color: white; border: none; border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; margin-top: 1rem; transition: opacity 0.18s;
+  box-shadow: 0 6px 18px -4px rgba(59,94,59,0.35);
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-secondary {
+  display: block; width: 100%; padding: 0.8rem;
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; margin-top: 0.6rem; transition: background 0.18s;
+}
+.btn-secondary:hover { background: var(--accent-light); }
+ 
+/* ══════════════════════════════════════════
+   QUIZ SCREEN
+══════════════════════════════════════════ */
+.quiz-header {
+  display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.4rem;
+}
+.quiz-back {
+  background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 0.45rem 1rem; font-size: 0.83rem; cursor: pointer;
+  color: var(--muted); font-family: 'Inter', sans-serif; transition: 0.18s;
+}
+.quiz-back:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+.quiz-meta { flex: 1; }
+.quiz-title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.quiz-subtitle { font-size: 0.78rem; color: var(--muted); }
+ 
+/* progress bar */
+.quiz-prog-wrap { height: 5px; background: var(--accent-light); border-radius: 99px; overflow: hidden; margin-bottom: 1.4rem; }
+.quiz-prog-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--accent)); border-radius: 99px; transition: width 0.4s ease; }
+ 
+/* card */
+.card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 2rem 1.8rem;
+  text-align: center; margin-bottom: 1rem;
+  box-shadow: var(--shadow); transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card.correct { border-color: var(--c-green); box-shadow: 0 0 0 3px rgba(29,158,117,0.12); }
+.card.wrong   { border-color: var(--c-red);   box-shadow: 0 0 0 3px rgba(226,75,74,0.12); }
+.card-label { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.7rem; }
+.card-word { font-size: 2.2rem; font-weight: 800; color: var(--text); letter-spacing: -0.5px; line-height: 1.2; }
+.card-context { font-size: 0.84rem; color: var(--muted); margin-top: 0.5rem; font-style: italic; line-height: 1.5; }
+.card-reveal { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-top: 0.5rem; }
+.card-type { font-size: 0.75rem; color: var(--muted); margin-top: 3px; }
+ 
+/* options */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.9rem; }
+.opt {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.85rem 1rem;
+  font-size: 0.88rem; font-weight: 500; cursor: pointer;
+  text-align: left; font-family: 'Inter', sans-serif; color: var(--text);
+  transition: border-color 0.15s, background 0.15s;
+}
+.opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-light); }
+.opt:disabled { cursor: default; }
+.opt.correct { background: var(--c-green-light); border-color: var(--c-green); color: var(--c-green-dark); }
+.opt.wrong   { background: var(--c-red-light);   border-color: var(--c-red);   color: #791F1F; }
+ 
+/* rating */
+.rate-label { font-size: 0.8rem; color: var(--muted); text-align: center; margin-bottom: 0.55rem; font-weight: 600; }
+.rate-btns { display: flex; gap: 0.55rem; }
+.rate-btn {
+  flex: 1; padding: 0.7rem; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); font-family: 'Inter', sans-serif;
+  font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: 0.15s;
+}
+.rate-easy   { background: var(--c-green-light); color: var(--c-green-dark); border-color: var(--c-green); }
+.rate-medium { background: var(--c-amber-light); color: var(--c-amber-dark); border-color: var(--c-amber); }
+.rate-hard   { background: var(--c-red-light);   color: #791F1F;            border-color: var(--c-red); }
+.rate-easy:hover   { filter: brightness(0.95); }
+.rate-medium:hover { filter: brightness(0.95); }
+.rate-hard:hover   { filter: brightness(0.95); }
+ 
+/* due-next notice */
+.next-due {
+  background: var(--accent-light); border-radius: var(--radius-sm);
+  padding: 0.7rem 1rem; font-size: 0.82rem; color: var(--accent);
+  margin-bottom: 1rem; font-weight: 500;
+}
+ 
+/* ══════════════════════════════════════════
+   RESULTS SCREEN
+══════════════════════════════════════════ */
+.results-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 2.5rem 2rem; text-align: center;
+  margin-bottom: 1rem; box-shadow: var(--shadow);
+}
+.results-score { font-size: 4.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.results-label { font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem; }
+.results-breakdown { display: flex; gap: 0.75rem; margin-top: 1.5rem; justify-content: center; }
+.rb { flex: 1; max-width: 110px; padding: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.rb-num { font-size: 1.5rem; font-weight: 800; }
+.rb-label { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+ 
+/* ══════════════════════════════════════════
+   PAGE FOOTER
+══════════════════════════════════════════ */
+.page-footer { text-align: center; background: #f1e9e0; padding: 1.5rem; font-size: 0.8rem; color: #5b4a38; }
+ 
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 520px) {
+  .options-grid { grid-template-columns: 1fr; }
+  .card-word { font-size: 1.7rem; }
+  .navbar { flex-direction: column; gap: 0.6rem; text-align: center; }
+  .page-header h1 { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+ 
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="logo"><h1>Language Hub</h1></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="a1-a2.html">A1-A2</a></li>
+    <li><a href="a2-b1.html">A2-B1</a></li>
+    <li><a href="b1-b2.html">B1-B2</a></li>
+    <li><a href="speaking-circle.html">Speaking circle</a></li>
+    <li><a href="grammar.html">Grammar</a></li>
+  </ul>
+</nav>
+ 
+<!-- ══ PAGE HEADER ══ -->
+<div class="page-header">
+  <a href="a1-a2.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to A1-A2</a>
+  <h1><i class="fas fa-spell-check"></i> BRE Vocabulary</h1>
+  <p>Business Result Elementary · spaced-repetition trainer · 12 units</p>
+</div>
+ 
+<!-- ══ APP ══ -->
+<div class="app">
+ 
+  <!-- HOME -->
+  <div id="screen-home" class="screen active">
+    <p class="home-sub">Choose a unit to practise, or review words that are due.</p>
+    <div id="unit-grid-container"></div>
+    <button class="btn-primary" onclick="startReview()"><i class="fas fa-sync-alt"></i> &nbsp;Review due words</button>
+    <button class="btn-secondary" onclick="startAll()">Practice all learned words</button>
+  </div>
+ 
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-header">
+      <button class="quiz-back" onclick="goHome()"><i class="fas fa-arrow-left"></i> Back</button>
+      <div class="quiz-meta">
+        <div class="quiz-title" id="quiz-title">Unit 1</div>
+        <div class="quiz-subtitle" id="quiz-subtitle">Question 1 of 25</div>
+      </div>
+    </div>
+    <div class="quiz-prog-wrap"><div class="quiz-prog-fill" id="quiz-prog-fill"></div></div>
+ 
+    <div class="card" id="quiz-card">
+      <div class="card-label" id="card-label">What does this word mean?</div>
+      <div class="card-word" id="quiz-word">meeting</div>
+      <div class="card-context" id="quiz-context"></div>
+      <div class="card-reveal" id="quiz-reveal" style="display:none"></div>
+      <div class="card-type" id="quiz-type"></div>
+    </div>
+ 
+    <div id="options-area">
+      <div class="options-grid" id="options-grid"></div>
+    </div>
+ 
+    <div id="rate-area" style="display:none">
+      <div class="rate-label">How well did you know it?</div>
+      <div class="rate-btns">
+        <button class="rate-btn rate-easy"   onclick="rate(3)">Easy</button>
+        <button class="rate-btn rate-medium" onclick="rate(2)">OK</button>
+        <button class="rate-btn rate-hard"   onclick="rate(1)">Hard</button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- RESULTS -->
+  <div id="screen-results" class="screen">
+    <div class="results-card">
+      <div class="results-label" id="results-unit-label">Unit complete</div>
+      <div class="results-score" id="results-score">8/10</div>
+      <div class="results-label">correct</div>
+      <div class="results-breakdown">
+        <div class="rb"><div class="rb-num" id="rb-easy"   style="color:var(--c-green)">0</div><div class="rb-label">Easy</div></div>
+        <div class="rb"><div class="rb-num" id="rb-medium" style="color:var(--c-amber)">0</div><div class="rb-label">OK</div></div>
+        <div class="rb"><div class="rb-num" id="rb-hard"   style="color:var(--c-red)">0</div>  <div class="rb-label">Hard</div></div>
+      </div>
+    </div>
+    <div class="next-due" id="next-due-msg"></div>
+    <button class="btn-primary"    onclick="goHome()">Back to units</button>
+    <button class="btn-secondary"  onclick="retryHard()">Retry hard words</button>
+  </div>
+ 
+</div><!-- /app -->
+ 
+<div class="page-footer">
+  ✏️ Part of <strong>Language Hub</strong> · A1-A2 Foundation
+</div>
+ 
+<script>
+// ─────────────────────────────────────────────
+// VOCABULARY DATA  (words + collocations only — no irregular verbs)
+// ─────────────────────────────────────────────
+const VOCAB = {
+"Unit 1A – Work (Set A)":[
+{word:"job",def:"the work you do to earn money",ctx:"She has a good job at the bank.",type:"noun"},
+{word:"company",def:"an organisation that makes or sells things",ctx:"He works for a big company.",type:"noun"},
+{word:"office",def:"a room or building where people work",ctx:"My office is on the third floor.",type:"noun"},
+{word:"meeting",def:"when people come together to discuss something",ctx:"We have a meeting every Monday.",type:"noun"},
+{word:"colleague",def:"a person you work with",ctx:"My colleague helped me with the report.",type:"noun"},
+{word:"manager",def:"a person who controls a team or department",ctx:"She is the manager of the sales team.",type:"noun"},
+{word:"salary",def:"the money you earn each month",ctx:"He got a higher salary after his promotion.",type:"noun"},
+{word:"busy",def:"having a lot of things to do",ctx:"I'm very busy today.",type:"adjective"},
+{word:"travel",def:"to go from one place to another",ctx:"I travel to Paris for work.",type:"verb"},
+{word:"project",def:"a planned piece of work",ctx:"We are working on a big project.",type:"noun"},
+{word:"department",def:"a section of a company with a specific function",ctx:"She works in the marketing department.",type:"noun"},
+{word:"employee",def:"a person who is paid to work for someone",ctx:"We have 200 employees.",type:"noun"},
+{word:"employer",def:"a person or company that pays people to work",ctx:"My employer is very supportive.",type:"noun"},
+{word:"deadline",def:"the last time or date for finishing something",ctx:"The deadline is Friday at 5pm.",type:"noun"},
+{word:"shift",def:"a period of time when you work",ctx:"She works the night shift.",type:"noun"},
+{word:"flexible",def:"able to change or be changed easily",ctx:"We offer flexible working hours.",type:"adjective"},
+{word:"promote",def:"to give someone a higher position at work",ctx:"He was promoted to senior manager.",type:"verb"},
+{word:"resign",def:"to leave your job by choice",ctx:"She resigned from the company last week.",type:"verb"},
+{word:"hire",def:"to give someone a job",ctx:"We need to hire three new people.",type:"verb"},
+{word:"workload",def:"the amount of work a person has to do",ctx:"My workload is very heavy this month.",type:"noun"},
+{word:"work overtime",def:"to work more hours than usual",ctx:"He often works overtime to finish projects.",type:"collocation"},
+{word:"attend a meeting",def:"to go to a meeting",ctx:"All staff must attend the Monday meeting.",type:"collocation"},
+{word:"apply for a job",def:"to make a formal request for a position",ctx:"She applied for a job at Google.",type:"collocation"},
+{word:"earn a salary",def:"to receive regular pay for work",ctx:"Doctors earn a high salary.",type:"collocation"},
+{word:"go on a business trip",def:"to travel for work purposes",ctx:"He goes on a business trip every month.",type:"collocation"}
+],
+"Unit 1B – Work (Set B)":[
+{word:"report",def:"a formal document about a topic",ctx:"She wrote a report about sales.",type:"noun"},
+{word:"task",def:"a piece of work to be done",ctx:"My first task is to check my emails.",type:"noun"},
+{word:"boss",def:"the person in charge",ctx:"My boss is strict but fair.",type:"noun"},
+{word:"break",def:"a short rest during work",ctx:"Let's take a ten-minute break.",type:"noun"},
+{word:"schedule",def:"a plan showing times for activities",ctx:"Check your schedule for tomorrow.",type:"noun"},
+{word:"remote",def:"working away from the office, usually from home",ctx:"She works remote three days a week.",type:"adjective"},
+{word:"permanent",def:"lasting for a long time or forever",ctx:"I have a permanent contract.",type:"adjective"},
+{word:"temporary",def:"lasting for a short time only",ctx:"It is a temporary position.",type:"adjective"},
+{word:"part-time",def:"working fewer hours than a full working week",ctx:"She works part-time while studying.",type:"adjective"},
+{word:"full-time",def:"working the whole working week",ctx:"He is looking for a full-time job.",type:"adjective"},
+{word:"retire",def:"to stop working permanently, usually at an old age",ctx:"She plans to retire at 65.",type:"verb"},
+{word:"progress",def:"improvement or forward movement",ctx:"The project is making good progress.",type:"noun"},
+{word:"target",def:"a goal you want to achieve",ctx:"We need to meet our sales target.",type:"noun"},
+{word:"team",def:"a group of people working together",ctx:"My team is very motivated.",type:"noun"},
+{word:"performance",def:"how well someone does their work",ctx:"Her performance this year was excellent.",type:"noun"},
+{word:"feedback",def:"comments about someone's work",ctx:"My manager gave me useful feedback.",type:"noun"},
+{word:"policy",def:"a set of rules made by an organisation",ctx:"Please read our company policy.",type:"noun"},
+{word:"role",def:"a position or function within a company",ctx:"His role is to manage the accounts.",type:"noun"},
+{word:"industry",def:"a type of business or trade",ctx:"She works in the banking industry.",type:"noun"},
+{word:"professional",def:"relating to a job that needs special training",ctx:"She has a very professional approach.",type:"adjective"},
+{word:"meet a deadline",def:"to finish something on time",ctx:"We always try to meet our deadlines.",type:"collocation"},
+{word:"take a break",def:"to stop working for a short time",ctx:"Let's take a break at noon.",type:"collocation"},
+{word:"give feedback",def:"to tell someone what you think of their work",ctx:"The manager gave positive feedback.",type:"collocation"},
+{word:"set a target",def:"to decide on a goal to achieve",ctx:"We set a new sales target for Q3.",type:"collocation"},
+{word:"work from home",def:"to do your job at home instead of the office",ctx:"I work from home on Fridays.",type:"collocation"}
+],
+"Unit 2A – Companies (Set A)":[
+{word:"headquarters",def:"the main office of a company",ctx:"Their headquarters is in London.",type:"noun"},
+{word:"branch",def:"a local office of a larger company",ctx:"We opened a new branch in Berlin.",type:"noun"},
+{word:"product",def:"something made to sell",ctx:"This is our best product.",type:"noun"},
+{word:"service",def:"help or work provided to customers",ctx:"We offer excellent customer service.",type:"noun"},
+{word:"international",def:"involving more than one country",ctx:"It is an international company.",type:"adjective"},
+{word:"successful",def:"achieving what you wanted to achieve",ctx:"She is a very successful businesswoman.",type:"adjective"},
+{word:"staff",def:"the people who work for an organisation",ctx:"Our staff work very hard.",type:"noun"},
+{word:"customer",def:"a person who buys something",ctx:"We have customers all over the world.",type:"noun"},
+{word:"profit",def:"the money made after paying costs",ctx:"The company made a big profit last year.",type:"noun"},
+{word:"competitor",def:"a company selling similar products",ctx:"Our biggest competitor is in Germany.",type:"noun"},
+{word:"global",def:"relating to the whole world",ctx:"We have a global network of offices.",type:"adjective"},
+{word:"local",def:"relating to a specific area or region",ctx:"We support local businesses.",type:"adjective"},
+{word:"launch",def:"to introduce a new product or service",ctx:"We will launch the new product next month.",type:"verb"},
+{word:"expand",def:"to make bigger or grow",ctx:"The company plans to expand into Asia.",type:"verb"},
+{word:"merger",def:"when two companies join together",ctx:"The merger created a very large firm.",type:"noun"},
+{word:"startup",def:"a new company just beginning to operate",ctx:"He works for a tech startup.",type:"noun"},
+{word:"revenue",def:"the total money a company earns",ctx:"Revenue grew by 15% last year.",type:"noun"},
+{word:"market",def:"a place or system where goods are bought and sold",ctx:"We are entering new markets.",type:"noun"},
+{word:"invest",def:"to put money into something to make a profit",ctx:"We invest in new technology.",type:"verb"},
+{word:"manufacture",def:"to make goods in large quantities",ctx:"They manufacture cars in Germany.",type:"verb"},
+{word:"run a company",def:"to manage and control a company",ctx:"She runs a company with 50 employees.",type:"collocation"},
+{word:"launch a product",def:"to introduce a new product to the market",ctx:"They launched a new product in January.",type:"collocation"},
+{word:"increase profit",def:"to make more money than before",ctx:"The new strategy helped increase profit.",type:"collocation"},
+{word:"expand into a market",def:"to start selling in a new place or area",ctx:"We want to expand into the Asian market.",type:"collocation"},
+{word:"provide a service",def:"to offer something useful to customers",ctx:"We provide a 24-hour support service.",type:"collocation"}
+],
+"Unit 2B – Companies (Set B)":[
+{word:"shareholder",def:"a person who owns part of a company",ctx:"Shareholders voted for the new CEO.",type:"noun"},
+{word:"CEO",def:"the most senior person in a company",ctx:"The CEO announced a new strategy.",type:"noun"},
+{word:"board",def:"a group of people who control a company",ctx:"The board meets four times a year.",type:"noun"},
+{word:"subsidiary",def:"a company owned by a larger company",ctx:"It is a subsidiary of a French group.",type:"noun"},
+{word:"turnover",def:"the total sales of a company in a period",ctx:"The company's turnover is €5 million.",type:"noun"},
+{word:"workforce",def:"all the people employed by a company",ctx:"The workforce includes 300 people.",type:"noun"},
+{word:"sector",def:"a part of the economy or business world",ctx:"She works in the public sector.",type:"noun"},
+{word:"partnership",def:"an arrangement where two parties work together",ctx:"We formed a partnership with a US firm.",type:"noun"},
+{word:"supplier",def:"a company that provides goods or materials",ctx:"Our main supplier is in China.",type:"noun"},
+{word:"client",def:"a person or company that uses a professional service",ctx:"We have 50 regular clients.",type:"noun"},
+{word:"distribute",def:"to deliver goods to different places",ctx:"We distribute our products worldwide.",type:"verb"},
+{word:"compete",def:"to try to be more successful than others",ctx:"We compete with larger companies.",type:"verb"},
+{word:"loss",def:"when costs are more than income",ctx:"The company reported a loss this year.",type:"noun"},
+{word:"strategy",def:"a plan to achieve a goal",ctx:"We need a new marketing strategy.",type:"noun"},
+{word:"brand",def:"the name and image of a company or product",ctx:"They have a very strong brand.",type:"noun"},
+{word:"annual",def:"happening once a year",ctx:"The annual report is published in March.",type:"adjective"},
+{word:"domestic",def:"relating to one's own country",ctx:"Domestic sales rose by 10%.",type:"adjective"},
+{word:"private",def:"owned by individuals, not the government",ctx:"It is a private company.",type:"adjective"},
+{word:"public",def:"owned by or available to everyone",ctx:"The company went public last year.",type:"adjective"},
+{word:"operate",def:"to function or be in business",ctx:"The company operates in 30 countries.",type:"verb"},
+{word:"sign a contract",def:"to write your name on a legal agreement",ctx:"We signed a contract with the supplier.",type:"collocation"},
+{word:"set up a business",def:"to start a new company",ctx:"He set up a business last year.",type:"collocation"},
+{word:"lose a customer",def:"when a customer stops buying from you",ctx:"Bad service can make you lose a customer.",type:"collocation"},
+{word:"hold a meeting",def:"to organise and have a meeting",ctx:"We hold a team meeting every Friday.",type:"collocation"},
+{word:"do business with",def:"to trade or work with someone",ctx:"We do business with companies in Asia.",type:"collocation"}
+],
+"Unit 3A – Travel (Set A)":[
+{word:"airport",def:"a place where planes take off and land",ctx:"The airport is very busy in summer.",type:"noun"},
+{word:"flight",def:"a journey by plane",ctx:"Our flight leaves at 6am.",type:"noun"},
+{word:"hotel",def:"a place where you pay to sleep",ctx:"I stayed at a nice hotel.",type:"noun"},
+{word:"reservation",def:"when you book something in advance",ctx:"I made a reservation for two nights.",type:"noun"},
+{word:"departure",def:"the time a transport leaves",ctx:"Departure is at 14:00.",type:"noun"},
+{word:"arrival",def:"the time a transport gets somewhere",ctx:"Our arrival time is 18:30.",type:"noun"},
+{word:"delay",def:"when something is later than planned",ctx:"There was a delay of two hours.",type:"noun"},
+{word:"boarding pass",def:"the document you need to get on a plane",ctx:"Please show your boarding pass.",type:"noun"},
+{word:"luggage",def:"the bags you take when you travel",ctx:"I only have one piece of luggage.",type:"noun"},
+{word:"check in",def:"to register at a hotel or airport",ctx:"You can check in online.",type:"verb"},
+{word:"passport",def:"an official document for travelling abroad",ctx:"Don't forget your passport.",type:"noun"},
+{word:"visa",def:"permission to enter another country",ctx:"I need a visa to visit Russia.",type:"noun"},
+{word:"terminal",def:"the building at an airport for passengers",ctx:"We leave from Terminal 2.",type:"noun"},
+{word:"taxi",def:"a car you pay to drive you somewhere",ctx:"I took a taxi to the hotel.",type:"noun"},
+{word:"connection",def:"a second flight you take after the first one",ctx:"I have a connection in Frankfurt.",type:"noun"},
+{word:"accommodation",def:"a place to stay when you travel",ctx:"The company pays for accommodation.",type:"noun"},
+{word:"itinerary",def:"a plan for a journey",ctx:"The travel agent sent me the itinerary.",type:"noun"},
+{word:"transfer",def:"to move from one transport to another",ctx:"There is a free transfer to the hotel.",type:"noun"},
+{word:"direct",def:"going from one place to another without stops",ctx:"I prefer a direct flight.",type:"adjective"},
+{word:"economy class",def:"the cheapest level of seats on a plane",ctx:"I usually fly economy class.",type:"noun"},
+{word:"book a flight",def:"to reserve a seat on a plane",ctx:"I booked my flight three weeks ago.",type:"collocation"},
+{word:"miss a flight",def:"to be too late for your plane",ctx:"He missed his flight because of traffic.",type:"collocation"},
+{word:"make a reservation",def:"to arrange to use something in the future",ctx:"I made a reservation at the restaurant.",type:"collocation"},
+{word:"go through customs",def:"to pass through the border check at an airport",ctx:"We went through customs quickly.",type:"collocation"},
+{word:"catch a train",def:"to get on a train in time",ctx:"I need to catch the 8 o'clock train.",type:"collocation"}
+],
+"Unit 3B – Travel (Set B)":[
+{word:"check out",def:"to leave a hotel after paying",ctx:"We check out at 11am.",type:"verb"},
+{word:"single room",def:"a hotel room for one person",ctx:"I need a single room for one night.",type:"noun"},
+{word:"double room",def:"a hotel room with a large bed",ctx:"We booked a double room.",type:"noun"},
+{word:"reception",def:"the front desk area in a hotel",ctx:"Please collect your key from reception.",type:"noun"},
+{word:"platform",def:"the area at a train station where you board",ctx:"The train leaves from platform 4.",type:"noun"},
+{word:"ticket",def:"a document that lets you travel or enter",ctx:"I bought a return ticket.",type:"noun"},
+{word:"return",def:"a ticket that includes travel there and back",ctx:"A return ticket is cheaper on weekdays.",type:"adjective"},
+{word:"one-way",def:"a ticket for travel in one direction only",ctx:"I bought a one-way ticket to Madrid.",type:"adjective"},
+{word:"currency",def:"the money used in a particular country",ctx:"What is the local currency?",type:"noun"},
+{word:"exchange rate",def:"how much one currency is worth in another",ctx:"The exchange rate is good today.",type:"noun"},
+{word:"business class",def:"a comfortable and expensive level on a plane",ctx:"She always travels business class.",type:"noun"},
+{word:"hand luggage",def:"a small bag you take onto the plane",ctx:"I only have hand luggage.",type:"noun"},
+{word:"gate",def:"the area in an airport where you board the plane",ctx:"Please go to gate 12 now.",type:"noun"},
+{word:"schedule",def:"a list of planned times",ctx:"Check the train schedule online.",type:"noun"},
+{word:"rent a car",def:"to pay to use a car for a period of time",ctx:"I rented a car at the airport.",type:"verb"},
+{word:"confirm",def:"to say that something is definite",ctx:"Please confirm your booking.",type:"verb"},
+{word:"cancel",def:"to decide that a planned event will not happen",ctx:"The flight was cancelled.",type:"verb"},
+{word:"refund",def:"money paid back after a cancellation",ctx:"I got a full refund for the ticket.",type:"noun"},
+{word:"frequent flyer",def:"a regular plane traveller with reward points",ctx:"He is a frequent flyer with BA.",type:"noun"},
+{word:"jet lag",def:"tiredness after a long flight across time zones",ctx:"I always have jet lag after flying to Japan.",type:"noun"},
+{word:"check out of a hotel",def:"to leave a hotel after paying your bill",ctx:"We checked out of the hotel at noon.",type:"collocation"},
+{word:"go on a trip",def:"to travel somewhere for a period of time",ctx:"We went on a business trip to Rome.",type:"collocation"},
+{word:"pack your bags",def:"to put things in your bags before travelling",ctx:"I packed my bags the night before.",type:"collocation"},
+{word:"board the plane",def:"to get on the aircraft",ctx:"Passengers will board the plane at 10am.",type:"collocation"},
+{word:"book accommodation",def:"to reserve a place to stay",ctx:"I booked accommodation near the conference.",type:"collocation"}
+],
+"Unit 4A – Communication (Set A)":[
+{word:"email",def:"an electronic message sent over the internet",ctx:"I sent you an email this morning.",type:"noun"},
+{word:"message",def:"a piece of information sent to someone",ctx:"Did you get my message?",type:"noun"},
+{word:"reply",def:"to answer someone",ctx:"Please reply to this email by Friday.",type:"verb"},
+{word:"attach",def:"to add a file to an email",ctx:"I will attach the document.",type:"verb"},
+{word:"subject",def:"the title of an email",ctx:"What is the subject of the email?",type:"noun"},
+{word:"presentation",def:"when you show and explain something to an audience",ctx:"She gave a great presentation.",type:"noun"},
+{word:"agenda",def:"a list of things to discuss in a meeting",ctx:"The agenda has three items.",type:"noun"},
+{word:"confirm",def:"to say yes, something is correct or will happen",ctx:"Please confirm your attendance.",type:"verb"},
+{word:"call",def:"to speak to someone by phone",ctx:"I'll call you at 3pm.",type:"verb"},
+{word:"discuss",def:"to talk about something with another person",ctx:"Let's discuss the proposal.",type:"verb"},
+{word:"arrange",def:"to make plans for something",ctx:"Can you arrange a meeting for Tuesday?",type:"verb"},
+{word:"introduce",def:"to present someone or something for the first time",ctx:"Let me introduce my colleague, Anna.",type:"verb"},
+{word:"memo",def:"a short written note sent within a company",ctx:"I sent a memo to all staff.",type:"noun"},
+{word:"minutes",def:"written notes taken during a meeting",ctx:"Who is going to write the minutes?",type:"noun"},
+{word:"proposal",def:"a plan or suggestion for others to consider",ctx:"She presented a proposal to the board.",type:"noun"},
+{word:"negotiate",def:"to discuss to reach an agreement",ctx:"We need to negotiate the price.",type:"verb"},
+{word:"formal",def:"following accepted rules and conventions",ctx:"Please write a formal email.",type:"adjective"},
+{word:"urgent",def:"needing to be done very soon",ctx:"This is an urgent matter.",type:"adjective"},
+{word:"send an email",def:"to write and deliver an email message",ctx:"I'll send an email to confirm the meeting.",type:"collocation"},
+{word:"give a presentation",def:"to present information to an audience",ctx:"She gave a presentation to the board.",type:"collocation"},
+{word:"make a phone call",def:"to call someone by telephone",ctx:"He made a phone call to the supplier.",type:"collocation"},
+{word:"arrange a meeting",def:"to organise a meeting",ctx:"Can you arrange a meeting for Thursday?",type:"collocation"},
+{word:"take notes",def:"to write down important information",ctx:"Please take notes during the meeting.",type:"collocation"}
+],
+"Unit 4B – Communication (Set B)":[
+{word:"conference call",def:"a phone call with several people at once",ctx:"We have a conference call at 10.",type:"noun"},
+{word:"feedback",def:"comments about someone's work or ideas",ctx:"I got very useful feedback on my report.",type:"noun"},
+{word:"clarify",def:"to make something easier to understand",ctx:"Can you clarify your question?",type:"verb"},
+{word:"summarise",def:"to give the main points of something briefly",ctx:"Please summarise the key findings.",type:"verb"},
+{word:"apology",def:"saying sorry for something",ctx:"Please accept my apology for the delay.",type:"noun"},
+{word:"complaint",def:"a statement that something is wrong",ctx:"We received a complaint from a client.",type:"noun"},
+{word:"update",def:"to give the latest information about something",ctx:"Please update me on the project.",type:"verb"},
+{word:"enquiry",def:"a question asking for information",ctx:"I sent an enquiry about pricing.",type:"noun"},
+{word:"invitation",def:"a request to come to an event",ctx:"She sent me an invitation to the launch.",type:"noun"},
+{word:"decline",def:"to politely refuse",ctx:"He declined the invitation.",type:"verb"},
+{word:"interrupt",def:"to say something while someone else is talking",ctx:"Please don't interrupt me.",type:"verb"},
+{word:"misunderstand",def:"to understand something incorrectly",ctx:"I think I misunderstood your message.",type:"verb"},
+{word:"tone",def:"the mood or feeling of a piece of writing",ctx:"The tone of the email was too informal.",type:"noun"},
+{word:"bilingual",def:"able to speak two languages",ctx:"She is bilingual in English and Spanish.",type:"adjective"},
+{word:"translate",def:"to change words into another language",ctx:"Can you translate this document?",type:"verb"},
+{word:"signature",def:"your name written by yourself at the end",ctx:"Please add your signature to the form.",type:"noun"},
+{word:"attachment",def:"a file sent with an email",ctx:"The attachment is a PDF file.",type:"noun"},
+{word:"cc",def:"to send a copy of an email to another person",ctx:"Please cc me in all future emails.",type:"verb"},
+{word:"deal with a complaint",def:"to handle and respond to a customer complaint",ctx:"We deal with complaints within 24 hours.",type:"collocation"},
+{word:"reach an agreement",def:"to find a solution both sides accept",ctx:"We finally reached an agreement.",type:"collocation"},
+{word:"write a report",def:"to produce a formal written document",ctx:"I need to write a report for the CEO.",type:"collocation"},
+{word:"answer the phone",def:"to pick up and speak on the telephone",ctx:"She always answers the phone politely.",type:"collocation"},
+{word:"keep someone updated",def:"to give someone the latest information",ctx:"Please keep me updated on the situation.",type:"collocation"}
+],
+"Unit 5A – Money (Set A)":[
+{word:"invoice",def:"a document asking for payment",ctx:"I sent the invoice to the client.",type:"noun"},
+{word:"payment",def:"the act of paying money",ctx:"Payment is due in 30 days.",type:"noun"},
+{word:"budget",def:"a plan for how to spend money",ctx:"We need to stay within the budget.",type:"noun"},
+{word:"cost",def:"the amount of money you pay for something",ctx:"What is the cost of the project?",type:"noun"},
+{word:"discount",def:"a reduction in the price",ctx:"We offer a 10% discount for large orders.",type:"noun"},
+{word:"price",def:"the amount you pay to buy something",ctx:"The price is too high.",type:"noun"},
+{word:"order",def:"a request to buy something",ctx:"We received a large order yesterday.",type:"noun"},
+{word:"contract",def:"a legal agreement between two parties",ctx:"Please sign the contract.",type:"noun"},
+{word:"expense",def:"money spent on something",ctx:"Travel expenses are paid by the company.",type:"noun"},
+{word:"tax",def:"money paid to the government",ctx:"The price includes tax.",type:"noun"},
+{word:"cash",def:"money in the form of coins and notes",ctx:"Do you pay by cash or card?",type:"noun"},
+{word:"loan",def:"money borrowed and paid back with interest",ctx:"She took out a bank loan.",type:"noun"},
+{word:"interest",def:"extra money paid for borrowing",ctx:"The interest rate is 5% per year.",type:"noun"},
+{word:"debt",def:"money owed to someone",ctx:"The company is in debt.",type:"noun"},
+{word:"income",def:"money received regularly from work",ctx:"Her income has increased this year.",type:"noun"},
+{word:"transfer",def:"to move money from one account to another",ctx:"Please transfer the money by Friday.",type:"verb"},
+{word:"charge",def:"to ask someone to pay an amount",ctx:"They charge €50 for delivery.",type:"verb"},
+{word:"refund",def:"money returned after paying too much",ctx:"I got a full refund for the broken item.",type:"noun"},
+{word:"pay an invoice",def:"to give money for a bill or invoice",ctx:"Please pay the invoice within 14 days.",type:"collocation"},
+{word:"stay within budget",def:"to not spend more than planned",ctx:"We need to stay within budget.",type:"collocation"},
+{word:"offer a discount",def:"to reduce the price for a customer",ctx:"We offered a 15% discount.",type:"collocation"},
+{word:"place an order",def:"to make a request to buy something",ctx:"I placed an order for 200 units.",type:"collocation"},
+{word:"sign a contract",def:"to write your name on a legal document",ctx:"Both parties signed the contract.",type:"collocation"}
+],
+"Unit 6A – People & Skills (Set A)":[
+{word:"experience",def:"knowledge gained from doing things",ctx:"She has ten years of experience.",type:"noun"},
+{word:"qualification",def:"a certificate showing you have a skill",ctx:"What qualifications do you have?",type:"noun"},
+{word:"responsible",def:"in charge of something or someone",ctx:"He is responsible for marketing.",type:"adjective"},
+{word:"interview",def:"a meeting to decide if someone gets a job",ctx:"I have a job interview tomorrow.",type:"noun"},
+{word:"apply",def:"to make a formal request for something",ctx:"I want to apply for this position.",type:"verb"},
+{word:"recruit",def:"to find new people to work for you",ctx:"We are recruiting three new staff.",type:"verb"},
+{word:"skill",def:"the ability to do something well",ctx:"Communication is an important skill.",type:"noun"},
+{word:"teamwork",def:"working together with other people",ctx:"Good teamwork is essential.",type:"noun"},
+{word:"CV",def:"a document with your work history and skills",ctx:"Please send us your CV.",type:"noun"},
+{word:"confident",def:"feeling sure about yourself and your abilities",ctx:"She is a confident public speaker.",type:"adjective"},
+{word:"motivated",def:"having a reason or desire to do something",ctx:"The team is very motivated.",type:"adjective"},
+{word:"flexible",def:"willing to change and adapt",ctx:"You need to be flexible in this job.",type:"adjective"},
+{word:"ambitious",def:"wanting to be very successful",ctx:"He is very ambitious and works hard.",type:"adjective"},
+{word:"reliable",def:"able to be trusted to do what you promise",ctx:"We need a reliable supplier.",type:"adjective"},
+{word:"creative",def:"using imagination to produce new ideas",ctx:"She has a very creative approach.",type:"adjective"},
+{word:"leadership",def:"the ability to lead and guide others",ctx:"Good leadership is important.",type:"noun"},
+{word:"communication",def:"sharing information with others",ctx:"Good communication is key in business.",type:"noun"},
+{word:"training",def:"teaching or learning new skills",ctx:"All new staff receive training.",type:"noun"},
+{word:"have experience in",def:"to have done something before",ctx:"She has experience in finance.",type:"collocation"},
+{word:"attend an interview",def:"to go to a job interview",ctx:"He attended three interviews this week.",type:"collocation"},
+{word:"apply for a position",def:"to formally request a job",ctx:"I applied for the position online.",type:"collocation"},
+{word:"develop a skill",def:"to improve an ability over time",ctx:"You can develop your skills with practice.",type:"collocation"},
+{word:"work in a team",def:"to cooperate with a group to do a task",ctx:"She works well in a team.",type:"collocation"}
+],
+"Unit 7A – Products & Services (Set A)":[
+{word:"quality",def:"how good something is",ctx:"Our products are known for their quality.",type:"noun"},
+{word:"design",def:"the way something looks or is made",ctx:"The design is modern and attractive.",type:"noun"},
+{word:"feature",def:"an important part or aspect of something",ctx:"The main feature is the battery life.",type:"noun"},
+{word:"range",def:"a set of different products or options",ctx:"We have a wide range of products.",type:"noun"},
+{word:"available",def:"possible to get or use",ctx:"The product is available in three colours.",type:"adjective"},
+{word:"guarantee",def:"a promise that a product will work",ctx:"The laptop comes with a one-year guarantee.",type:"noun"},
+{word:"warranty",def:"a written promise to repair or replace goods",ctx:"The warranty covers all parts.",type:"noun"},
+{word:"delivery",def:"bringing goods to a customer",ctx:"Delivery is free for orders over €50.",type:"noun"},
+{word:"stock",def:"goods that a shop has available to sell",ctx:"We are out of stock at the moment.",type:"noun"},
+{word:"sample",def:"a small quantity of a product to try",ctx:"Can you send me a sample?",type:"noun"},
+{word:"upgrade",def:"a better version of a product",ctx:"I upgraded my phone last month.",type:"verb"},
+{word:"consumer",def:"a person who buys and uses products",ctx:"Consumers want cheaper products.",type:"noun"},
+{word:"review",def:"an opinion about a product or service",ctx:"The product has very good reviews.",type:"noun"},
+{word:"place an order",def:"to officially request to buy something",ctx:"We placed an order for 500 items.",type:"collocation"},
+{word:"come with a guarantee",def:"to include a quality promise",ctx:"All products come with a two-year guarantee.",type:"collocation"},
+{word:"be in stock",def:"to be available to buy now",ctx:"Is the item in stock?",type:"collocation"},
+{word:"deliver on time",def:"to bring goods by the agreed date",ctx:"We always deliver on time.",type:"collocation"},
+{word:"meet customer needs",def:"to provide what customers want",ctx:"Our service meets customer needs.",type:"collocation"}
+],
+"Unit 8A – Marketing (Set A)":[
+{word:"advertising",def:"telling people about products to make them buy",ctx:"We spend a lot on advertising.",type:"noun"},
+{word:"campaign",def:"a planned series of activities for a goal",ctx:"The marketing campaign was a success.",type:"noun"},
+{word:"target audience",def:"the group of people you want to reach",ctx:"Our target audience is young professionals.",type:"noun"},
+{word:"brand",def:"the name and image of a product or company",ctx:"They have a very well-known brand.",type:"noun"},
+{word:"logo",def:"the design symbol of a company",ctx:"The logo is simple but effective.",type:"noun"},
+{word:"slogan",def:"a short phrase used in advertising",ctx:"Their slogan is 'Just do it'.",type:"noun"},
+{word:"promotion",def:"activity to make people buy more",ctx:"We are running a summer promotion.",type:"noun"},
+{word:"social media",def:"websites and apps for sharing information",ctx:"We use social media to reach customers.",type:"noun"},
+{word:"market research",def:"finding out what customers want",ctx:"We did market research before the launch.",type:"noun"},
+{word:"survey",def:"a set of questions to collect information",ctx:"We sent a survey to 500 customers.",type:"noun"},
+{word:"strategy",def:"a plan to achieve a business goal",ctx:"We need a strong marketing strategy.",type:"noun"},
+{word:"viral",def:"spreading quickly among many people online",ctx:"The video went viral in one day.",type:"adjective"},
+{word:"sponsor",def:"to pay for an event in exchange for publicity",ctx:"We sponsor the local football team.",type:"verb"},
+{word:"run a campaign",def:"to organise and carry out a marketing campaign",ctx:"We ran a campaign on social media.",type:"collocation"},
+{word:"do market research",def:"to study what customers want",ctx:"We did market research before the launch.",type:"collocation"},
+{word:"build a brand",def:"to create and develop a brand identity",ctx:"It takes time to build a strong brand.",type:"collocation"},
+{word:"attract customers",def:"to make customers want to come to you",ctx:"Good prices attract customers.",type:"collocation"},
+{word:"go viral",def:"to spread very quickly on social media",ctx:"The video went viral overnight.",type:"collocation"}
+],
+"Unit 9A – Technology (Set A)":[
+{word:"software",def:"programs used by a computer",ctx:"We use special software for accounting.",type:"noun"},
+{word:"hardware",def:"the physical parts of a computer",ctx:"We need to upgrade our hardware.",type:"noun"},
+{word:"network",def:"a system connecting computers together",ctx:"The office network went down.",type:"noun"},
+{word:"cloud",def:"storing data on internet servers",ctx:"We save all files in the cloud.",type:"noun"},
+{word:"password",def:"a secret word to access a system",ctx:"Change your password regularly.",type:"noun"},
+{word:"data",def:"facts and information stored by a computer",ctx:"We collect data from our customers.",type:"noun"},
+{word:"security",def:"protecting information from harm",ctx:"Cybersecurity is very important.",type:"noun"},
+{word:"database",def:"an organised collection of information",ctx:"All customer details are in the database.",type:"noun"},
+{word:"device",def:"a piece of technology like a phone or laptop",ctx:"You can access it from any device.",type:"noun"},
+{word:"update",def:"to install a newer version of software",ctx:"Please update your software.",type:"verb"},
+{word:"download",def:"to copy data from the internet to your device",ctx:"Download the app for free.",type:"verb"},
+{word:"upload",def:"to copy data from your device to the internet",ctx:"Please upload the file to the server.",type:"verb"},
+{word:"backup",def:"a copy of data kept in case the original is lost",ctx:"Always make a backup of your files.",type:"noun"},
+{word:"app",def:"a software program for phones or computers",ctx:"Download our free app.",type:"noun"},
+{word:"digital",def:"using computer technology",ctx:"We are moving to digital processes.",type:"adjective"},
+{word:"wireless",def:"using radio signals without cables",ctx:"We have wireless internet in the office.",type:"adjective"},
+{word:"save data",def:"to store information in a file or system",ctx:"Remember to save your data regularly.",type:"collocation"},
+{word:"install software",def:"to put a program onto a computer",ctx:"IT installed new software on my laptop.",type:"collocation"},
+{word:"connect to the internet",def:"to link a device to the internet",ctx:"Can I connect to the internet here?",type:"collocation"},
+{word:"back up files",def:"to make copies of files for safety",ctx:"Back up your files every week.",type:"collocation"},
+{word:"upgrade a system",def:"to improve technology or software",ctx:"We need to upgrade our IT system.",type:"collocation"}
+],
+"Unit 10A – Meetings & Negotiations (Set A)":[
+{word:"agenda",def:"a list of topics to discuss in a meeting",ctx:"Please send the agenda before Friday.",type:"noun"},
+{word:"chairperson",def:"the person who leads a meeting",ctx:"The chairperson opened the meeting.",type:"noun"},
+{word:"minutes",def:"an official written record of a meeting",ctx:"Who will take the minutes today?",type:"noun"},
+{word:"vote",def:"to choose an option by saying yes or no",ctx:"We voted for the new proposal.",type:"verb"},
+{word:"decision",def:"a choice made after thinking",ctx:"The board made a final decision.",type:"noun"},
+{word:"consensus",def:"when everyone agrees",ctx:"We reached a consensus after discussion.",type:"noun"},
+{word:"propose",def:"to put forward an idea or plan",ctx:"She proposed a new solution.",type:"verb"},
+{word:"object",def:"to say you do not agree with something",ctx:"He objected to the proposed changes.",type:"verb"},
+{word:"adjourn",def:"to stop a meeting and continue later",ctx:"We adjourned the meeting until Thursday.",type:"verb"},
+{word:"issue",def:"an important topic to discuss",ctx:"There is an issue with the contract.",type:"noun"},
+{word:"solution",def:"an answer to a problem",ctx:"We found a solution to the problem.",type:"noun"},
+{word:"compromise",def:"when both sides agree to give up something",ctx:"We reached a compromise on price.",type:"noun"},
+{word:"goal",def:"what you want to achieve",ctx:"Our goal is to increase sales by 20%.",type:"noun"},
+{word:"outcome",def:"the result of something",ctx:"The outcome of the meeting was positive.",type:"noun"},
+{word:"clarify",def:"to make something clearer",ctx:"Can you clarify what you mean?",type:"verb"},
+{word:"chair a meeting",def:"to lead or control a meeting",ctx:"She chaired the annual meeting.",type:"collocation"},
+{word:"reach a decision",def:"to decide on something after discussion",ctx:"We reached a decision by noon.",type:"collocation"},
+{word:"take the minutes",def:"to write notes of what is said in a meeting",ctx:"Could you take the minutes please?",type:"collocation"},
+{word:"raise a point",def:"to mention a topic for discussion",ctx:"He raised an important point.",type:"collocation"},
+{word:"set an agenda",def:"to decide what topics to discuss in a meeting",ctx:"Please set the agenda for Thursday.",type:"collocation"}
+]
+};
+ 
+// ─────────────────────────────────────────────
+// SRS ENGINE
+// ─────────────────────────────────────────────
+const UNIT_KEYS = Object.keys(VOCAB);
+ 
+let progress = JSON.parse(localStorage.getItem('bre_vocab_v2') || '{}');
+ 
+function wp(unit, idx) {
+  if (!progress[unit]) progress[unit] = {};
+  if (!progress[unit][idx]) progress[unit][idx] = { interval:1, due:0, reps:0, correct:0, ease:3, rating:0 };
+  return progress[unit][idx];
+}
+function save() { localStorage.setItem('bre_vocab_v2', JSON.stringify(progress)); }
+ 
+function applyRating(unit, idx, wasCorrect, r) {
+  const p = wp(unit, idx);
+  p.reps++; p.rating = r;
+  if (wasCorrect) {
+    p.correct++;
+    p.ease = Math.max(1.3, p.ease + (r === 3 ? 0.1 : r === 2 ? 0 : -0.2));
+    p.interval = p.reps === 1 ? 1 : Math.round(p.interval * p.ease * (r === 1 ? 0.5 : 1));
+  } else {
+    p.correct = Math.max(0, p.correct - 1);
+    p.interval = 1;
+  }
+  p.due = Date.now() + p.interval * 86400000;
+  save();
+}
+ 
+function unitPct(unit) {
+  const words = VOCAB[unit]; let m = 0;
+  words.forEach((_, i) => { if (wp(unit, i).correct >= 3) m++; });
+  return Math.round(m / words.length * 100);
+}
+ 
+function getDue() {
+  const now = Date.now(), out = [];
+  UNIT_KEYS.forEach(u => {
+    VOCAB[u].forEach((w, i) => {
+      const p = wp(u, i);
+      if (p.reps > 0 && p.due <= now) out.push({ word: w, unit: u, idx: i });
+    });
+  });
+  return out;
+}
+ 
+// ─────────────────────────────────────────────
+// RENDER HOME
+// ─────────────────────────────────────────────
+function renderHome() {
+  const container = document.getElementById('unit-grid-container');
+  container.innerHTML = '';
+ 
+  UNIT_KEYS.forEach(unit => {
+    const words = VOCAB[unit];
+    const pct = unitPct(unit);
+    const studied = words.filter((_, i) => wp(unit, i).reps > 0).length;
+ 
+    const label = document.createElement('div');
+    label.className = 'section-label';
+    label.textContent = unit;
+    container.appendChild(label);
+ 
+    const grid = document.createElement('div');
+    grid.className = 'unit-grid';
+ 
+    // split into chunks of 10 for "sets"
+    const chunk = 10;
+    for (let s = 0; s < Math.ceil(words.length / chunk); s++) {
+      const start = s * chunk;
+      const slice = words.slice(start, start + chunk);
+      const slicePct = Math.round(slice.filter((_, i) => wp(unit, start + i).correct >= 3).length / slice.length * 100);
+ 
+      const card = document.createElement('div');
+      card.className = 'unit-card';
+      card.innerHTML = `
+        <div class="unit-num">Set ${s + 1}</div>
+        <div class="unit-name">${slice[0].word} … ${slice[slice.length-1].word}</div>
+        <div class="unit-prog"><div class="unit-bar" style="width:${slicePct}%"></div></div>
+        <div class="unit-count">${slice.length} words · ${slicePct}% mastered</div>`;
+      card.onclick = () => startUnit(unit, start);
+      grid.appendChild(card);
+    }
+    container.appendChild(grid);
+  });
+}
+ 
+// ─────────────────────────────────────────────
+// SESSION
+// ─────────────────────────────────────────────
+let queue = [], qIdx = 0, sessionResults = [], lastCorrect = false;
+ 
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+ 
+function startUnit(unit, startIdx) {
+  const words = VOCAB[unit];
+  const end = Math.min(startIdx + 10, words.length);
+  queue = shuffle(words.slice(startIdx, end).map((w, i) => ({ word: w, unit, idx: startIdx + i })));
+  document.getElementById('quiz-title').textContent = unit;
+  launchSession();
+}
+ 
+function startReview() {
+  const due = getDue();
+  if (!due.length) { alert('No words are due for review right now! 🎉'); return; }
+  queue = shuffle(due);
+  document.getElementById('quiz-title').textContent = 'Due Review';
+  launchSession();
+}
+ 
+function startAll() {
+  const all = [];
+  UNIT_KEYS.forEach(u => {
+    VOCAB[u].forEach((w, i) => { if (wp(u, i).reps > 0) all.push({ word: w, unit: u, idx: i }); });
+  });
+  if (!all.length) { alert('Study some units first!'); return; }
+  queue = shuffle(all);
+  document.getElementById('quiz-title').textContent = 'All Learned Words';
+  launchSession();
+}
+ 
+function launchSession() {
+  qIdx = 0; sessionResults = [];
+  showScreen('quiz');
+  loadQ();
+}
+ 
+function loadQ() {
+  if (qIdx >= queue.length) { showResults(); return; }
+ 
+  const item = queue[qIdx];
+  const total = queue.length;
+ 
+  document.getElementById('quiz-subtitle').textContent = `Question ${qIdx + 1} of ${total}`;
+  document.getElementById('quiz-prog-fill').style.width = (qIdx / total * 100) + '%';
+ 
+  document.getElementById('card-label').textContent = item.word.type === 'collocation' ? 'What does this collocation mean?' : 'What does this word mean?';
+  document.getElementById('quiz-word').textContent = item.word.word;
+  document.getElementById('quiz-context').textContent = item.word.ctx || '';
+  document.getElementById('quiz-reveal').style.display = 'none';
+  document.getElementById('quiz-type').textContent = '';
+  document.getElementById('quiz-card').className = 'card';
+  document.getElementById('rate-area').style.display = 'none';
+  document.getElementById('options-area').style.display = 'block';
+ 
+  renderOptions(item);
+}
+ 
+function renderOptions(item) {
+  // collect distractors from same unit first, then others
+  const sameUnit = VOCAB[item.unit].filter(w => w.def !== item.word.def);
+  const others   = UNIT_KEYS.flatMap(u => u === item.unit ? [] : VOCAB[u]).filter(w => w.def !== item.word.def);
+  const pool = shuffle([...sameUnit, ...others]);
+  const seen = new Set([item.word.def]);
+  const distractors = [];
+  for (const w of pool) {
+    if (!seen.has(w.def)) { seen.add(w.def); distractors.push(w.def); }
+    if (distractors.length === 3) break;
+  }
+  const opts = shuffle([item.word.def, ...distractors]);
+ 
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  opts.forEach(def => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = def;
+    btn.onclick = () => selectOpt(def, item.word.def, item);
+    grid.appendChild(btn);
+  });
+}
+ 
+function selectOpt(chosen, correct, item) {
+  const isCorrect = chosen === correct;
+  lastCorrect = isCorrect;
+ 
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === correct) b.classList.add('correct');
+  });
+  if (!isCorrect) event.target.classList.add('wrong');
+ 
+  document.getElementById('quiz-card').className = 'card ' + (isCorrect ? 'correct' : 'wrong');
+ 
+  const reveal = document.getElementById('quiz-reveal');
+  reveal.style.display = 'block';
+  reveal.textContent = item.word.def;
+  document.getElementById('quiz-type').textContent = item.word.type;
+ 
+  sessionResults.push({ item, correct: isCorrect });
+  document.getElementById('options-area').style.display = 'block';
+  document.getElementById('rate-area').style.display = 'block';
+}
+ 
+function rate(r) {
+  const item = queue[qIdx];
+  applyRating(item.unit, item.idx, lastCorrect, r);
+  qIdx++;
+  document.getElementById('rate-area').style.display = 'none';
+  loadQ();
+}
+ 
+// ─────────────────────────────────────────────
+// RESULTS
+// ─────────────────────────────────────────────
+function showResults() {
+  const correct = sessionResults.filter(r => r.correct).length;
+  const total = sessionResults.length;
+  document.getElementById('results-score').textContent = `${correct}/${total}`;
+  document.getElementById('results-unit-label').textContent = document.getElementById('quiz-title').textContent + ' complete';
+ 
+  const easy   = sessionResults.filter(r => r.correct && queue.find(q => q.word === r.item.word)?.rating === 3).length;
+  const medium = sessionResults.filter(r => r.correct && queue.find(q => q.word === r.item.word)?.rating === 2).length;
+  const hard   = sessionResults.filter(r => !r.correct).length;
+  document.getElementById('rb-easy').textContent   = easy;
+  document.getElementById('rb-medium').textContent = medium;
+  document.getElementById('rb-hard').textContent   = hard;
+ 
+  const pct = total ? Math.round(correct / total * 100) : 0;
+  document.getElementById('next-due-msg').textContent =
+    pct === 100 ? '🏆 Perfect score! Review again tomorrow.' :
+    pct >= 70   ? '👍 Good job! Hard words will come back sooner.' :
+                  '📖 Keep practising — hard words will repeat.';
+ 
+  showScreen('results');
+  renderHome();
+}
+ 
+function retryHard() {
+  queue = sessionResults.filter(r => !r.correct).map(r => r.item);
+  if (!queue.length) { goHome(); return; }
+  qIdx = 0; sessionResults = [];
+  showScreen('quiz'); loadQ();
+}
+ 
+function goHome() { showScreen('home'); renderHome(); }
+ 
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+ 
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+renderHome();
+</script>
+</body>
+</html>
