@@ -8,46 +8,167 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'Inter', sans-serif; background: #fefaf5; color: #1e2a3e; line-height: 1.6; }
-.navbar { position: sticky; top: 0; z-index: 100; background: rgba(255,248,240,0.92); backdrop-filter: blur(16px); padding: 1rem 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(224,198,168,0.4); }
-.logo h1 { font-size: 1.7rem; font-weight: 700; background: linear-gradient(135deg, #3b5e3b, #6b4c3b); background-clip: text; -webkit-background-clip: text; color: transparent; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #fefaf5;
+  color: #1e2a3e;
+  line-height: 1.6;
+}
+
+/* ── Navbar (matches index.html exactly) ── */
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,248,240,0.92);
+  backdrop-filter: blur(16px);
+  padding: 1rem 2rem;
+  display: flex; flex-wrap: wrap;
+  justify-content: space-between; align-items: center;
+  border-bottom: 1px solid rgba(224,198,168,0.4);
+}
+.logo h1 {
+  font-size: 1.7rem; font-weight: 700;
+  background: linear-gradient(135deg, #3b5e3b, #6b4c3b);
+  background-clip: text; -webkit-background-clip: text; color: transparent;
+}
 .nav-links { display: flex; flex-wrap: wrap; gap: 1rem; list-style: none; }
-.nav-links a { text-decoration: none; font-weight: 600; color: #2c3e2f; background: rgba(235,215,190,0.4); padding: 0.5rem 1rem; border-radius: 60px; transition: 0.25s; }
+.nav-links a {
+  text-decoration: none; font-weight: 600; color: #2c3e2f;
+  background: rgba(235,215,190,0.4);
+  padding: 0.5rem 1rem; border-radius: 60px; transition: 0.25s;
+}
 .nav-links a:hover, .nav-links a.active { background: #d8b48c; color: white; }
-.page-header { background: linear-gradient(135deg, #3b5e3b 0%, #6b4c3b 100%); padding: 2.5rem 2rem 3rem; color: white; text-align: center; position: relative; overflow: hidden; }
-.page-header::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E"); }
-.back-link { position: relative; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.18); color: white; text-decoration: none; font-size: 0.88rem; font-weight: 600; padding: 0.45rem 1rem; border-radius: 40px; margin-bottom: 1.2rem; transition: background 0.2s; }
+
+/* ── Page header ── */
+.page-header {
+  background: linear-gradient(135deg, #3b5e3b 0%, #6b4c3b 100%);
+  padding: 2.5rem 2rem 3rem; color: white; text-align: center;
+  position: relative; overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.back-link {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(255,255,255,0.18); color: white;
+  text-decoration: none; font-size: 0.88rem; font-weight: 600;
+  padding: 0.45rem 1rem; border-radius: 40px;
+  margin-bottom: 1.2rem; transition: background 0.2s;
+}
 .back-link:hover { background: rgba(255,255,255,0.28); }
-.page-header h1 { font-size: 2.5rem; font-weight: 800; position: relative; margin-bottom: 0.3rem; }
+.page-header h1 {
+  font-size: 2.5rem; font-weight: 800; position: relative; margin-bottom: 0.3rem;
+}
 .page-header p { font-size: 0.97rem; opacity: 0.82; position: relative; }
-.tabs-wrapper { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
-.tabs-bar { display: flex; gap: 0.3rem; flex-wrap: wrap; background: white; border-radius: 0 0 1.4rem 1.4rem; padding: 0.6rem 0.7rem; box-shadow: 0 8px 24px -6px rgba(0,0,0,0.1); border: 1px solid rgba(199,163,119,0.25); border-top: none; }
-.tab-btn { flex: 1; min-width: 100px; background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.86rem; font-weight: 600; color: #7a6352; padding: 0.6rem 0.8rem; border-radius: 0.8rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
+
+/* ── Section tabs ── */
+.tabs-wrapper {
+  max-width: 900px; margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.tabs-bar {
+  display: flex; gap: 0.3rem; flex-wrap: wrap;
+  background: white;
+  border-radius: 0 0 1.4rem 1.4rem;
+  padding: 0.6rem 0.7rem;
+  box-shadow: 0 8px 24px -6px rgba(0,0,0,0.1);
+  border: 1px solid rgba(199,163,119,0.25);
+  border-top: none;
+}
+.tab-btn {
+  flex: 1; min-width: 100px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Inter', sans-serif; font-size: 0.86rem; font-weight: 600;
+  color: #7a6352; padding: 0.6rem 0.8rem; border-radius: 0.8rem;
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+}
 .tab-btn:hover { background: #f3e5d5; color: #b36b3c; }
 .tab-btn.active { background: #b36b3c; color: white; }
 .tab-btn i { font-size: 0.85rem; }
-.tabs-content { max-width: 900px; margin: 1.8rem auto 4rem; padding: 0 1.5rem; }
+
+/* ── Tab content ── */
+.tabs-content {
+  max-width: 900px; margin: 1.8rem auto 4rem; padding: 0 1.5rem;
+}
 .tab-panel { display: none; animation: fadeIn 0.25s ease; }
 .tab-panel.active { display: block; }
 @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
-.vocab-card { background: white; border: 1px solid rgba(199,163,119,0.25); border-radius: 2rem; padding: 3rem 2.5rem; text-align: center; box-shadow: 0 16px 40px -12px rgba(0,0,0,0.08); }
-.vocab-icon { width: 80px; height: 80px; border-radius: 1.6rem; background: linear-gradient(135deg, #3b5e3b, #6b4c3b); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: white; margin: 0 auto 1.5rem; box-shadow: 0 10px 24px -4px rgba(59,94,59,0.35); }
-.vocab-card h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0.6rem; background: linear-gradient(135deg, #3b5e3b, #6b4c3b); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.vocab-card p { color: #7a6352; font-size: 0.97rem; margin: 0 auto 2rem; max-width: 460px; }
-.vocab-tags { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.2rem; }
-.vocab-tag { background: #f3e5d5; color: #b36b3c; font-size: 0.79rem; font-weight: 600; padding: 0.32rem 0.85rem; border-radius: 99px; display: flex; align-items: center; gap: 0.3rem; }
-.launch-btn { display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, #3b5e3b, #6b4c3b); color: white; text-decoration: none; font-size: 1rem; font-weight: 700; padding: 0.95rem 2.6rem; border-radius: 99px; box-shadow: 0 8px 22px -4px rgba(59,94,59,0.4); transition: transform 0.2s, box-shadow 0.2s; }
-.launch-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -6px rgba(59,94,59,0.5); }
-.placeholder-card { background: white; border: 2px dashed rgba(199,163,119,0.4); border-radius: 1.8rem; padding: 3rem 2rem; text-align: center; color: #7a6352; }
+
+/* ── Vocabulary panel ── */
+.vocab-card {
+  background: white; border: 1px solid rgba(199,163,119,0.25);
+  border-radius: 2rem; padding: 3rem 2.5rem; text-align: center;
+  box-shadow: 0 16px 40px -12px rgba(0,0,0,0.08);
+}
+.vocab-icon {
+  width: 80px; height: 80px; border-radius: 1.6rem;
+  background: linear-gradient(135deg, #3b5e3b, #6b4c3b);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.2rem; color: white; margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 24px -4px rgba(59,94,59,0.35);
+}
+.vocab-card h2 {
+  font-size: 2rem; font-weight: 800; margin-bottom: 0.6rem;
+  background: linear-gradient(135deg, #3b5e3b, #6b4c3b);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.vocab-card p {
+  color: #7a6352; font-size: 0.97rem;
+  margin: 0 auto 2rem; max-width: 460px;
+}
+.vocab-tags {
+  display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.2rem;
+}
+.vocab-tag {
+  background: #f3e5d5; color: #b36b3c;
+  font-size: 0.79rem; font-weight: 600;
+  padding: 0.32rem 0.85rem; border-radius: 99px;
+  display: flex; align-items: center; gap: 0.3rem;
+}
+.launch-btn {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: linear-gradient(135deg, #3b5e3b, #6b4c3b);
+  color: white; text-decoration: none;
+  font-size: 1rem; font-weight: 700;
+  padding: 0.95rem 2.6rem; border-radius: 99px;
+  box-shadow: 0 8px 22px -4px rgba(59,94,59,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.launch-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -6px rgba(59,94,59,0.5);
+}
+
+/* ── Placeholder panels ── */
+.placeholder-card {
+  background: white; border: 2px dashed rgba(199,163,119,0.4);
+  border-radius: 1.8rem; padding: 3rem 2rem; text-align: center; color: #7a6352;
+}
 .placeholder-card i { font-size: 2.8rem; color: #b36b3c; opacity: 0.45; margin-bottom: 1rem; display: block; }
 .placeholder-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; color: #4f3e2e; }
+.placeholder-card p { font-size: 0.9rem; }
 .placeholder-card code { background: #f3e5d5; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.82rem; color: #b36b3c; }
-.page-footer { text-align: center; background: #f1e9e0; padding: 1.6rem; font-size: 0.82rem; color: #5b4a38; }
-@media (max-width: 680px) { .navbar { flex-direction: column; text-align: center; } .page-header h1 { font-size: 1.9rem; } .vocab-card { padding: 2rem 1.2rem; } .tab-btn { font-size: 0.78rem; } }
+
+/* ── Footer ── */
+.page-footer {
+  text-align: center; background: #f1e9e0;
+  padding: 1.6rem; font-size: 0.82rem; color: #5b4a38;
+}
+
+@media (max-width: 680px) {
+  .navbar { flex-direction: column; text-align: center; }
+  .page-header h1 { font-size: 1.9rem; }
+  .vocab-card { padding: 2rem 1.2rem; }
+  .tab-btn { font-size: 0.78rem; padding: 0.5rem 0.5rem; }
+}
 </style>
 </head>
 <body>
 
+<!-- Navbar -->
 <nav class="navbar">
   <div class="logo"><h1>Language Hub</h1></div>
   <ul class="nav-links">
@@ -60,39 +181,59 @@ body { font-family: 'Inter', sans-serif; background: #fefaf5; color: #1e2a3e; li
   </ul>
 </nav>
 
+<!-- Page header -->
 <div class="page-header">
   <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to main page</a>
   <h1><i class="fas fa-seedling"></i> A1 – A2: Foundation</h1>
   <p>Vocabulary, grammar, listening and speaking materials for beginners</p>
 </div>
 
+<!-- Tabs bar -->
 <div class="tabs-wrapper">
   <div class="tabs-bar">
-    <button class="tab-btn active" onclick="switchTab('vocabulary', this)"><i class="fas fa-book-open"></i> Vocabulary</button>
-    <button class="tab-btn" onclick="switchTab('grammar', this)"><i class="fas fa-pen-nib"></i> Grammar</button>
-    <button class="tab-btn" onclick="switchTab('listening', this)"><i class="fas fa-headphones"></i> Listening</button>
-    <button class="tab-btn" onclick="switchTab('speaking', this)"><i class="fas fa-microphone"></i> Speaking</button>
-    <button class="tab-btn" onclick="switchTab('reading', this)"><i class="fas fa-file-alt"></i> Reading</button>
+    <button class="tab-btn active" onclick="switchTab('vocabulary', this)">
+      <i class="fas fa-book-open"></i> Vocabulary
+    </button>
+    <button class="tab-btn" onclick="switchTab('grammar', this)">
+      <i class="fas fa-pen-nib"></i> Grammar
+    </button>
+    <button class="tab-btn" onclick="switchTab('listening', this)">
+      <i class="fas fa-headphones"></i> Listening
+    </button>
+    <button class="tab-btn" onclick="switchTab('speaking', this)">
+      <i class="fas fa-microphone"></i> Speaking
+    </button>
+    <button class="tab-btn" onclick="switchTab('reading', this)">
+      <i class="fas fa-file-alt"></i> Reading
+    </button>
   </div>
 </div>
 
+<!-- Tab content -->
 <div class="tabs-content">
 
+  <!-- VOCABULARY TAB -->
   <div class="tab-panel active" id="tab-vocabulary">
     <div class="vocab-card">
       <div class="vocab-icon"><i class="fas fa-spell-check"></i></div>
       <h2>BRE Vocabulary App</h2>
-      <p>Business Result Elementary — a spaced-repetition vocabulary trainer with 12 units, 240+ words & collocations, quizzes and progress tracking.</p>
+      <p>
+        Business Result Elementary — a spaced-repetition vocabulary trainer
+        with 12 units, 240+ words &amp; collocations, quizzes and progress tracking.
+      </p>
       <div class="vocab-tags">
         <span class="vocab-tag"><i class="fas fa-layer-group"></i> 12 Units</span>
         <span class="vocab-tag"><i class="fas fa-star"></i> Spaced Repetition</span>
         <span class="vocab-tag"><i class="fas fa-check-circle"></i> Quizzes</span>
         <span class="vocab-tag"><i class="fas fa-chart-line"></i> Progress tracking</span>
       </div>
-      <a href="BRE_vocab.html" class="launch-btn"><i class="fas fa-play"></i> Open Vocabulary App</a>
+      <a href="BRE_vocab.html" class="launch-btn">
+        <i class="fas fa-play"></i> Open Vocabulary App
+      </a>
     </div>
   </div>
 
+  <!-- GRAMMAR TAB -->
   <div class="tab-panel" id="tab-grammar">
     <div class="placeholder-card">
       <i class="fas fa-pen-nib"></i>
@@ -101,6 +242,7 @@ body { font-family: 'Inter', sans-serif; background: #fefaf5; color: #1e2a3e; li
     </div>
   </div>
 
+  <!-- LISTENING TAB -->
   <div class="tab-panel" id="tab-listening">
     <div class="placeholder-card">
       <i class="fas fa-headphones"></i>
@@ -109,6 +251,7 @@ body { font-family: 'Inter', sans-serif; background: #fefaf5; color: #1e2a3e; li
     </div>
   </div>
 
+  <!-- SPEAKING TAB -->
   <div class="tab-panel" id="tab-speaking">
     <div class="placeholder-card">
       <i class="fas fa-microphone"></i>
@@ -117,6 +260,7 @@ body { font-family: 'Inter', sans-serif; background: #fefaf5; color: #1e2a3e; li
     </div>
   </div>
 
+  <!-- READING TAB -->
   <div class="tab-panel" id="tab-reading">
     <div class="placeholder-card">
       <i class="fas fa-file-alt"></i>
