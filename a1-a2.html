@@ -8,14 +8,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-
+ 
 body {
   font-family: 'Inter', sans-serif;
   background: #fefaf5;
   color: #1e2a3e;
   line-height: 1.6;
 }
-
+ 
 /* ── Navbar (matches index.html exactly) ── */
 .navbar {
   position: sticky; top: 0; z-index: 100;
@@ -38,7 +38,7 @@ body {
   padding: 0.5rem 1rem; border-radius: 60px; transition: 0.25s;
 }
 .nav-links a:hover, .nav-links a.active { background: #d8b48c; color: white; }
-
+ 
 /* ── Page header ── */
 .page-header {
   background: linear-gradient(135deg, #3b5e3b 0%, #6b4c3b 100%);
@@ -63,7 +63,7 @@ body {
   font-size: 2.5rem; font-weight: 800; position: relative; margin-bottom: 0.3rem;
 }
 .page-header p { font-size: 0.97rem; opacity: 0.82; position: relative; }
-
+ 
 /* ── Section tabs ── */
 .tabs-wrapper {
   max-width: 900px; margin: 0 auto;
@@ -88,7 +88,7 @@ body {
 .tab-btn:hover { background: #f3e5d5; color: #b36b3c; }
 .tab-btn.active { background: #b36b3c; color: white; }
 .tab-btn i { font-size: 0.85rem; }
-
+ 
 /* ── Tab content ── */
 .tabs-content {
   max-width: 900px; margin: 1.8rem auto 4rem; padding: 0 1.5rem;
@@ -96,7 +96,7 @@ body {
 .tab-panel { display: none; animation: fadeIn 0.25s ease; }
 .tab-panel.active { display: block; }
 @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
-
+ 
 /* ── Vocabulary panel ── */
 .vocab-card {
   background: white; border: 1px solid rgba(199,163,119,0.25);
@@ -141,7 +141,7 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 14px 28px -6px rgba(59,94,59,0.5);
 }
-
+ 
 /* ── Placeholder panels ── */
 .placeholder-card {
   background: white; border: 2px dashed rgba(199,163,119,0.4);
@@ -151,13 +151,13 @@ body {
 .placeholder-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; color: #4f3e2e; }
 .placeholder-card p { font-size: 0.9rem; }
 .placeholder-card code { background: #f3e5d5; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.82rem; color: #b36b3c; }
-
+ 
 /* ── Footer ── */
 .page-footer {
   text-align: center; background: #f1e9e0;
   padding: 1.6rem; font-size: 0.82rem; color: #5b4a38;
 }
-
+ 
 @media (max-width: 680px) {
   .navbar { flex-direction: column; text-align: center; }
   .page-header h1 { font-size: 1.9rem; }
@@ -167,7 +167,7 @@ body {
 </style>
 </head>
 <body>
-
+ 
 <!-- Navbar -->
 <nav class="navbar">
   <div class="logo"><h1>Language Hub</h1></div>
@@ -180,14 +180,14 @@ body {
     <li><a href="grammar.html">Grammar</a></li>
   </ul>
 </nav>
-
+ 
 <!-- Page header -->
 <div class="page-header">
   <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to main page</a>
   <h1><i class="fas fa-seedling"></i> A1 – A2: Foundation</h1>
   <p>Vocabulary, grammar, listening and speaking materials for beginners</p>
 </div>
-
+ 
 <!-- Tabs bar -->
 <div class="tabs-wrapper">
   <div class="tabs-bar">
@@ -208,10 +208,10 @@ body {
     </button>
   </div>
 </div>
-
+ 
 <!-- Tab content -->
 <div class="tabs-content">
-
+ 
   <!-- VOCABULARY TAB -->
   <div class="tab-panel active" id="tab-vocabulary">
     <div class="vocab-card">
@@ -232,7 +232,7 @@ body {
       </a>
     </div>
   </div>
-
+ 
   <!-- GRAMMAR TAB -->
   <div class="tab-panel" id="tab-grammar">
     <div class="placeholder-card">
@@ -241,7 +241,7 @@ body {
       <p>Add your grammar content here, or link to a separate file like <code>a1-a2-grammar.html</code>.</p>
     </div>
   </div>
-
+ 
   <!-- LISTENING TAB -->
   <div class="tab-panel" id="tab-listening">
     <div class="placeholder-card">
@@ -250,7 +250,7 @@ body {
       <p>Embed audio files, YouTube videos or podcast links here.</p>
     </div>
   </div>
-
+ 
   <!-- SPEAKING TAB -->
   <div class="tab-panel" id="tab-speaking">
     <div class="placeholder-card">
@@ -259,7 +259,7 @@ body {
       <p>Add prompts, role-play cards or pronunciation exercises here.</p>
     </div>
   </div>
-
+ 
   <!-- READING TAB -->
   <div class="tab-panel" id="tab-reading">
     <div class="placeholder-card">
@@ -268,13 +268,13 @@ body {
       <p>Upload PDFs or paste reading texts and comprehension questions here.</p>
     </div>
   </div>
-
+ 
 </div>
-
+ 
 <div class="page-footer">
   ✏️ Edit <code>a1-a2.html</code> to add content to each tab, or link to separate files as needed.
 </div>
-
+ 
 <script>
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -283,6 +283,6 @@ function switchTab(name, btn) {
   btn.classList.add('active');
 }
 </script>
-
+ 
 </body>
 </html>
