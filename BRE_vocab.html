@@ -1,0 +1,1263 @@
+<!DOCTYPE fragment>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #1D9E75; --green-light: #E1F5EE; --green-dark: #085041;
+  --amber: #BA7517; --amber-light: #FAEEDA; --amber-dark: #412402;
+  --red: #E24B4A; --red-light: #FCEBEB;
+  --blue: #185FA5; --blue-light: #E6F1FB;
+  --purple: #6B3FA0; --purple-light: #F0EAF8;
+  --text: var(--color-text-primary); --muted: var(--color-text-secondary);
+  --bg: var(--color-background-primary); --bg2: var(--color-background-secondary);
+  --border: var(--color-border-tertiary);
+  --radius: 14px; --radius-sm: 8px;
+}
+
+.app { font-family: 'DM Sans', sans-serif; padding: 1.5rem 0; max-width: 640px; margin: 0 auto; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* HOME */
+.home-header { text-align: center; padding: 2rem 0 1.5rem; }
+.home-logo { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); letter-spacing: -0.5px; }
+.home-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+.section-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin: 1.5rem 0 0.5rem; }
+.unit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 0.5rem; }
+.unit-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem; cursor: pointer; transition: border-color 0.15s, transform 0.1s; }
+.unit-card:hover { border-color: var(--color-border-secondary); transform: translateY(-1px); }
+.unit-card.irr { border-left: 3px solid var(--purple); }
+.unit-card.coll { border-left: 3px solid var(--blue); }
+.unit-num { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.unit-name { font-size: 14px; font-weight: 500; color: var(--text); margin-top: 4px; line-height: 1.3; }
+.unit-prog { margin-top: 8px; height: 3px; background: var(--bg2); border-radius: 99px; overflow: hidden; }
+.unit-bar { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.3s; }
+.unit-count { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+.btn-primary { display: block; width: 100%; padding: 12px; background: var(--text); color: var(--bg); border: none; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 1rem; transition: opacity 0.15s; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-secondary { display: block; width: 100%; padding: 11px; background: transparent; color: var(--text); border: 0.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 8px; transition: background 0.15s; }
+.btn-secondary:hover { background: var(--bg2); }
+
+/* QUIZ */
+.quiz-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+.quiz-back { background: none; border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 13px; cursor: pointer; color: var(--muted); font-family: 'DM Sans', sans-serif; }
+.quiz-back:hover { background: var(--bg2); }
+.quiz-meta { flex: 1; }
+.quiz-title { font-size: 15px; font-weight: 500; color: var(--text); }
+.quiz-subtitle { font-size: 12px; color: var(--muted); }
+.quiz-progress-bar { height: 4px; background: var(--bg2); border-radius: 99px; overflow: hidden; margin-bottom: 1.5rem; }
+.quiz-progress-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.4s ease; }
+
+.card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 2rem 1.5rem; text-align: center; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 1rem; }
+.card-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+.card-word { font-family: 'DM Serif Display', serif; font-size: 34px; color: var(--text); letter-spacing: -0.5px; line-height: 1.2; }
+.card-context { font-size: 13px; color: var(--muted); margin-top: 8px; font-style: italic; line-height: 1.5; }
+.card-reveal { font-size: 18px; font-weight: 500; color: var(--text); margin-top: 0.5rem; }
+.card-type { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+.opt { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 14px; font-weight: 500; cursor: pointer; text-align: left; font-family: 'DM Sans', sans-serif; color: var(--text); transition: border-color 0.15s, background 0.15s; }
+.opt:hover:not(:disabled) { border-color: var(--color-border-secondary); background: var(--bg2); }
+.opt.correct { background: var(--green-light); border-color: var(--green); color: var(--green-dark); }
+.opt.wrong { background: var(--red-light); border-color: var(--red); color: #791F1F; }
+.opt:disabled { cursor: default; }
+
+.rate-label { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 10px; }
+.rate-btns { display: flex; gap: 8px; }
+.rate-btn { flex: 1; padding: 10px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.15s; }
+.rate-easy { background: var(--green-light); color: var(--green-dark); border-color: var(--green); }
+.rate-medium { background: var(--amber-light); color: var(--amber-dark); border-color: var(--amber); }
+.rate-hard { background: var(--red-light); color: #791F1F; border-color: var(--red); }
+
+/* RESULTS */
+.results-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 2rem; text-align: center; margin-bottom: 1rem; }
+.results-score { font-family: 'DM Serif Display', serif; font-size: 56px; color: var(--text); }
+.results-label { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.results-breakdown { display: flex; gap: 12px; margin-top: 1.5rem; justify-content: center; }
+.rb { flex: 1; max-width: 120px; padding: 10px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); }
+.rb-num { font-size: 20px; font-weight: 600; }
+.rb-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.next-due { background: var(--blue-light); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; color: var(--blue); margin-bottom: 1rem; }
+
+/* IRR verb card */
+.card-irr { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--text); margin-top: 0.25rem; }
+.card-ru { font-size: 15px; color: var(--muted); margin-top: 6px; }
+</style>
+
+<div class="app">
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <div class="home-header">
+    <div class="home-logo">Business Result</div>
+    <div class="home-sub">Elementary vocabulary — spaced repetition</div>
+  </div>
+  <div id="unit-grid-container"></div>
+  <button class="btn-primary" onclick="startReview()">Review due words</button>
+  <button class="btn-secondary" onclick="startAll()">Practice all learned words</button>
+</div>
+
+<!-- QUIZ -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-header">
+    <button class="quiz-back" onclick="goHome()">← Back</button>
+    <div class="quiz-meta">
+      <div class="quiz-title" id="quiz-title">Unit 1</div>
+      <div class="quiz-subtitle" id="quiz-subtitle">Question 1 of 25</div>
+    </div>
+  </div>
+  <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
+
+  <div class="card" id="quiz-card">
+    <div class="card-label" id="card-label">What does this word mean?</div>
+    <div class="card-word" id="quiz-word">meeting</div>
+    <div class="card-context" id="quiz-context"></div>
+    <div class="card-reveal" id="quiz-reveal" style="display:none"></div>
+    <div class="card-type" id="quiz-type"></div>
+  </div>
+
+  <div id="options-area">
+    <div class="options-grid" id="options-grid"></div>
+  </div>
+
+  <div id="rate-area" style="display:none">
+    <div class="rate-label">How well did you know it?</div>
+    <div class="rate-btns">
+      <button class="rate-btn rate-easy" onclick="rate(3)">Easy</button>
+      <button class="rate-btn rate-medium" onclick="rate(2)">Ok</button>
+      <button class="rate-btn rate-hard" onclick="rate(1)">Hard</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="results-card">
+    <div class="results-label" id="results-unit-label">Unit 1 complete</div>
+    <div class="results-score" id="results-score">8/10</div>
+    <div class="results-label">correct</div>
+    <div class="results-breakdown">
+      <div class="rb">
+        <div class="rb-num" id="rb-easy" style="color:var(--green)">0</div>
+        <div class="rb-label">Easy</div>
+      </div>
+      <div class="rb">
+        <div class="rb-num" id="rb-medium" style="color:var(--amber)">0</div>
+        <div class="rb-label">Ok</div>
+      </div>
+      <div class="rb">
+        <div class="rb-num" id="rb-hard" style="color:var(--red)">0</div>
+        <div class="rb-label">Hard</div>
+      </div>
+    </div>
+  </div>
+  <div class="next-due" id="next-due-msg"></div>
+  <button class="btn-primary" onclick="goHome()">Back to units</button>
+  <button class="btn-secondary" onclick="retryHard()">Retry hard words</button>
+</div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+//  VOCABULARY DATA
+//  type: "word" | "collocation" | "irr"
+//  For irr: word = infinitive, def = "past · past participle · translation"
+// ─────────────────────────────────────────────
+const VOCAB = {
+
+  // ══════════════════════════════════════
+  //  UNIT 1 – WORK
+  // ══════════════════════════════════════
+  "Unit 1A – Work (Set A)": [
+    { word: "job", def: "the work you do to earn money", ctx: "She has a good job at the bank.", type: "noun" },
+    { word: "company", def: "an organisation that makes or sells things", ctx: "He works for a big company.", type: "noun" },
+    { word: "office", def: "a room or building where people work", ctx: "My office is on the third floor.", type: "noun" },
+    { word: "meeting", def: "when people come together to discuss something", ctx: "We have a meeting every Monday.", type: "noun" },
+    { word: "colleague", def: "a person you work with", ctx: "My colleague helped me with the report.", type: "noun" },
+    { word: "manager", def: "a person who controls a team or department", ctx: "She is the manager of the sales team.", type: "noun" },
+    { word: "salary", def: "the money you earn each month", ctx: "He got a higher salary after his promotion.", type: "noun" },
+    { word: "busy", def: "having a lot of things to do", ctx: "I'm very busy today.", type: "adjective" },
+    { word: "travel", def: "to go from one place to another", ctx: "I travel to Paris for work.", type: "verb" },
+    { word: "project", def: "a planned piece of work", ctx: "We are working on a big project.", type: "noun" },
+    { word: "department", def: "a section of a company with a specific function", ctx: "She works in the marketing department.", type: "noun" },
+    { word: "employee", def: "a person who is paid to work for someone", ctx: "We have 200 employees.", type: "noun" },
+    { word: "employer", def: "a person or company that pays people to work", ctx: "My employer is very supportive.", type: "noun" },
+    { word: "deadline", def: "the last time or date for finishing something", ctx: "The deadline is Friday at 5pm.", type: "noun" },
+    { word: "shift", def: "a period of time when you work", ctx: "She works the night shift.", type: "noun" },
+    { word: "flexible", def: "able to change or be changed easily", ctx: "We offer flexible working hours.", type: "adjective" },
+    { word: "promote", def: "to give someone a higher position at work", ctx: "He was promoted to senior manager.", type: "verb" },
+    { word: "resign", def: "to leave your job by choice", ctx: "She resigned from the company last week.", type: "verb" },
+    { word: "hire", def: "to give someone a job", ctx: "We need to hire three new people.", type: "verb" },
+    { word: "workload", def: "the amount of work a person has to do", ctx: "My workload is very heavy this month.", type: "noun" },
+    // collocations
+    { word: "work overtime", def: "to work more hours than usual", ctx: "He often works overtime to finish projects.", type: "collocation" },
+    { word: "attend a meeting", def: "to go to a meeting", ctx: "All staff must attend the Monday meeting.", type: "collocation" },
+    { word: "apply for a job", def: "to make a formal request for a position", ctx: "She applied for a job at Google.", type: "collocation" },
+    { word: "earn a salary", def: "to receive regular pay for work", ctx: "Doctors earn a high salary.", type: "collocation" },
+    { word: "go on a business trip", def: "to travel for work purposes", ctx: "He goes on a business trip every month.", type: "collocation" }
+  ],
+
+  "Unit 1B – Work (Set B)": [
+    { word: "report", def: "a formal document about a topic", ctx: "She wrote a report about sales.", type: "noun" },
+    { word: "task", def: "a piece of work to be done", ctx: "My first task is to check my emails.", type: "noun" },
+    { word: "boss", def: "the person in charge", ctx: "My boss is strict but fair.", type: "noun" },
+    { word: "break", def: "a short rest during work", ctx: "Let's take a ten-minute break.", type: "noun" },
+    { word: "schedule", def: "a plan showing times for activities", ctx: "Check your schedule for tomorrow.", type: "noun" },
+    { word: "remote", def: "working away from the office, usually from home", ctx: "She works remote three days a week.", type: "adjective" },
+    { word: "permanent", def: "lasting for a long time or forever", ctx: "I have a permanent contract.", type: "adjective" },
+    { word: "temporary", def: "lasting for a short time only", ctx: "It is a temporary position.", type: "adjective" },
+    { word: "part-time", def: "working fewer hours than a full working week", ctx: "She works part-time while studying.", type: "adjective" },
+    { word: "full-time", def: "working the whole working week", ctx: "He is looking for a full-time job.", type: "adjective" },
+    { word: "retire", def: "to stop working permanently, usually at an old age", ctx: "She plans to retire at 65.", type: "verb" },
+    { word: "progress", def: "improvement or forward movement", ctx: "The project is making good progress.", type: "noun" },
+    { word: "target", def: "a goal you want to achieve", ctx: "We need to meet our sales target.", type: "noun" },
+    { word: "team", def: "a group of people working together", ctx: "My team is very motivated.", type: "noun" },
+    { word: "performance", def: "how well someone does their work", ctx: "Her performance this year was excellent.", type: "noun" },
+    { word: "feedback", def: "comments about someone's work", ctx: "My manager gave me useful feedback.", type: "noun" },
+    { word: "policy", def: "a set of rules made by an organisation", ctx: "Please read our company policy.", type: "noun" },
+    { word: "role", def: "a position or function within a company", ctx: "His role is to manage the accounts.", type: "noun" },
+    { word: "industry", def: "a type of business or trade", ctx: "She works in the banking industry.", type: "noun" },
+    { word: "professional", def: "relating to a job that needs special training", ctx: "She has a very professional approach.", type: "adjective" },
+    // collocations
+    { word: "meet a deadline", def: "to finish something on time", ctx: "We always try to meet our deadlines.", type: "collocation" },
+    { word: "take a break", def: "to stop working for a short time", ctx: "Let's take a break at noon.", type: "collocation" },
+    { word: "give feedback", def: "to tell someone what you think of their work", ctx: "The manager gave positive feedback.", type: "collocation" },
+    { word: "set a target", def: "to decide on a goal to achieve", ctx: "We set a new sales target for Q3.", type: "collocation" },
+    { word: "work from home", def: "to do your job at home instead of the office", ctx: "I work from home on Fridays.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 2 – COMPANIES
+  // ══════════════════════════════════════
+  "Unit 2A – Companies (Set A)": [
+    { word: "headquarters", def: "the main office of a company", ctx: "Their headquarters is in London.", type: "noun" },
+    { word: "branch", def: "a local office of a larger company", ctx: "We opened a new branch in Berlin.", type: "noun" },
+    { word: "product", def: "something made to sell", ctx: "This is our best product.", type: "noun" },
+    { word: "service", def: "help or work provided to customers", ctx: "We offer excellent customer service.", type: "noun" },
+    { word: "international", def: "involving more than one country", ctx: "It is an international company.", type: "adjective" },
+    { word: "successful", def: "achieving what you wanted to achieve", ctx: "She is a very successful businesswoman.", type: "adjective" },
+    { word: "staff", def: "the people who work for an organisation", ctx: "Our staff work very hard.", type: "noun" },
+    { word: "customer", def: "a person who buys something", ctx: "We have customers all over the world.", type: "noun" },
+    { word: "profit", def: "the money made after paying costs", ctx: "The company made a big profit last year.", type: "noun" },
+    { word: "competitor", def: "a company selling similar products", ctx: "Our biggest competitor is in Germany.", type: "noun" },
+    { word: "global", def: "relating to the whole world", ctx: "We have a global network of offices.", type: "adjective" },
+    { word: "local", def: "relating to a specific area or region", ctx: "We support local businesses.", type: "adjective" },
+    { word: "launch", def: "to introduce a new product or service", ctx: "We will launch the new product next month.", type: "verb" },
+    { word: "expand", def: "to make bigger or grow", ctx: "The company plans to expand into Asia.", type: "verb" },
+    { word: "merger", def: "when two companies join together", ctx: "The merger created a very large firm.", type: "noun" },
+    { word: "startup", def: "a new company just beginning to operate", ctx: "He works for a tech startup.", type: "noun" },
+    { word: "revenue", def: "the total money a company earns", ctx: "Revenue grew by 15% last year.", type: "noun" },
+    { word: "market", def: "a place or system where goods are bought and sold", ctx: "We are entering new markets.", type: "noun" },
+    { word: "invest", def: "to put money into something to make a profit", ctx: "We invest in new technology.", type: "verb" },
+    { word: "manufacture", def: "to make goods in large quantities", ctx: "They manufacture cars in Germany.", type: "verb" },
+    // collocations
+    { word: "run a company", def: "to manage and control a company", ctx: "She runs a company with 50 employees.", type: "collocation" },
+    { word: "launch a product", def: "to introduce a new product to the market", ctx: "They launched a new product in January.", type: "collocation" },
+    { word: "increase profit", def: "to make more money than before", ctx: "The new strategy helped increase profit.", type: "collocation" },
+    { word: "expand into a market", def: "to start selling in a new place or area", ctx: "We want to expand into the Asian market.", type: "collocation" },
+    { word: "provide a service", def: "to offer something useful to customers", ctx: "We provide a 24-hour support service.", type: "collocation" }
+  ],
+
+  "Unit 2B – Companies (Set B)": [
+    { word: "shareholder", def: "a person who owns part of a company", ctx: "Shareholders voted for the new CEO.", type: "noun" },
+    { word: "CEO", def: "the most senior person in a company", ctx: "The CEO announced a new strategy.", type: "noun" },
+    { word: "board", def: "a group of people who control a company", ctx: "The board meets four times a year.", type: "noun" },
+    { word: "subsidiary", def: "a company owned by a larger company", ctx: "It is a subsidiary of a French group.", type: "noun" },
+    { word: "turnover", def: "the total sales of a company in a period", ctx: "The company's turnover is €5 million.", type: "noun" },
+    { word: "workforce", def: "all the people employed by a company", ctx: "The workforce includes 300 people.", type: "noun" },
+    { word: "sector", def: "a part of the economy or business world", ctx: "She works in the public sector.", type: "noun" },
+    { word: "partnership", def: "an arrangement where two parties work together", ctx: "We formed a partnership with a US firm.", type: "noun" },
+    { word: "supplier", def: "a company that provides goods or materials", ctx: "Our main supplier is in China.", type: "noun" },
+    { word: "client", def: "a person or company that uses a professional service", ctx: "We have 50 regular clients.", type: "noun" },
+    { word: "distribute", def: "to deliver goods to different places", ctx: "We distribute our products worldwide.", type: "verb" },
+    { word: "compete", def: "to try to be more successful than others", ctx: "We compete with larger companies.", type: "verb" },
+    { word: "loss", def: "when costs are more than income", ctx: "The company reported a loss this year.", type: "noun" },
+    { word: "strategy", def: "a plan to achieve a goal", ctx: "We need a new marketing strategy.", type: "noun" },
+    { word: "brand", def: "the name and image of a company or product", ctx: "They have a very strong brand.", type: "noun" },
+    { word: "annual", def: "happening once a year", ctx: "The annual report is published in March.", type: "adjective" },
+    { word: "domestic", def: "relating to one's own country", ctx: "Domestic sales rose by 10%.", type: "adjective" },
+    { word: "private", def: "owned by individuals, not the government", ctx: "It is a private company.", type: "adjective" },
+    { word: "public", def: "owned by or available to everyone", ctx: "The company went public last year.", type: "adjective" },
+    { word: "operate", def: "to function or be in business", ctx: "The company operates in 30 countries.", type: "verb" },
+    // collocations
+    { word: "sign a contract", def: "to write your name on a legal agreement", ctx: "We signed a contract with the supplier.", type: "collocation" },
+    { word: "set up a business", def: "to start a new company", ctx: "He set up a business last year.", type: "collocation" },
+    { word: "lose a customer", def: "when a customer stops buying from you", ctx: "Bad service can make you lose a customer.", type: "collocation" },
+    { word: "hold a meeting", def: "to organise and have a meeting", ctx: "We hold a team meeting every Friday.", type: "collocation" },
+    { word: "do business with", def: "to trade or work with someone", ctx: "We do business with companies in Asia.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 3 – TRAVEL
+  // ══════════════════════════════════════
+  "Unit 3A – Travel (Set A)": [
+    { word: "airport", def: "a place where planes take off and land", ctx: "The airport is very busy in summer.", type: "noun" },
+    { word: "flight", def: "a journey by plane", ctx: "Our flight leaves at 6am.", type: "noun" },
+    { word: "hotel", def: "a place where you pay to sleep", ctx: "I stayed at a nice hotel.", type: "noun" },
+    { word: "reservation", def: "when you book something in advance", ctx: "I made a reservation for two nights.", type: "noun" },
+    { word: "departure", def: "the time a transport leaves", ctx: "Departure is at 14:00.", type: "noun" },
+    { word: "arrival", def: "the time a transport gets somewhere", ctx: "Our arrival time is 18:30.", type: "noun" },
+    { word: "delay", def: "when something is later than planned", ctx: "There was a delay of two hours.", type: "noun" },
+    { word: "boarding pass", def: "the document you need to get on a plane", ctx: "Please show your boarding pass.", type: "noun" },
+    { word: "luggage", def: "the bags you take when you travel", ctx: "I only have one piece of luggage.", type: "noun" },
+    { word: "check in", def: "to register at a hotel or airport", ctx: "You can check in online.", type: "verb" },
+    { word: "passport", def: "an official document for travelling abroad", ctx: "Don't forget your passport.", type: "noun" },
+    { word: "visa", def: "permission to enter another country", ctx: "I need a visa to visit Russia.", type: "noun" },
+    { word: "terminal", def: "the building at an airport for passengers", ctx: "We leave from Terminal 2.", type: "noun" },
+    { word: "taxi", def: "a car you pay to drive you somewhere", ctx: "I took a taxi to the hotel.", type: "noun" },
+    { word: "connection", def: "a second flight you take after the first one", ctx: "I have a connection in Frankfurt.", type: "noun" },
+    { word: "accommodation", def: "a place to stay when you travel", ctx: "The company pays for accommodation.", type: "noun" },
+    { word: "itinerary", def: "a plan for a journey", ctx: "The travel agent sent me the itinerary.", type: "noun" },
+    { word: "transfer", def: "to move from one transport to another", ctx: "There is a free transfer to the hotel.", type: "noun" },
+    { word: "direct", def: "going from one place to another without stops", ctx: "I prefer a direct flight.", type: "adjective" },
+    { word: "economy class", def: "the cheapest level of seats on a plane", ctx: "I usually fly economy class.", type: "noun" },
+    // collocations
+    { word: "book a flight", def: "to reserve a seat on a plane", ctx: "I booked my flight three weeks ago.", type: "collocation" },
+    { word: "miss a flight", def: "to be too late for your plane", ctx: "He missed his flight because of traffic.", type: "collocation" },
+    { word: "make a reservation", def: "to arrange to use something in the future", ctx: "I made a reservation at the restaurant.", type: "collocation" },
+    { word: "go through customs", def: "to pass through the border check at an airport", ctx: "We went through customs quickly.", type: "collocation" },
+    { word: "catch a train", def: "to get on a train in time", ctx: "I need to catch the 8 o'clock train.", type: "collocation" }
+  ],
+
+  "Unit 3B – Travel (Set B)": [
+    { word: "check out", def: "to leave a hotel after paying", ctx: "We check out at 11am.", type: "verb" },
+    { word: "single room", def: "a hotel room for one person", ctx: "I need a single room for one night.", type: "noun" },
+    { word: "double room", def: "a hotel room with a large bed", ctx: "We booked a double room.", type: "noun" },
+    { word: "reception", def: "the front desk area in a hotel", ctx: "Please collect your key from reception.", type: "noun" },
+    { word: "platform", def: "the area at a train station where you board", ctx: "The train leaves from platform 4.", type: "noun" },
+    { word: "ticket", def: "a document that lets you travel or enter", ctx: "I bought a return ticket.", type: "noun" },
+    { word: "return", def: "a ticket that includes travel there and back", ctx: "A return ticket is cheaper on weekdays.", type: "adjective" },
+    { word: "one-way", def: "a ticket for travel in one direction only", ctx: "I bought a one-way ticket to Madrid.", type: "adjective" },
+    { word: "currency", def: "the money used in a particular country", ctx: "What is the local currency?", type: "noun" },
+    { word: "exchange rate", def: "how much one currency is worth in another", ctx: "The exchange rate is good today.", type: "noun" },
+    { word: "business class", def: "a comfortable and expensive level on a plane", ctx: "She always travels business class.", type: "noun" },
+    { word: "hand luggage", def: "a small bag you take onto the plane", ctx: "I only have hand luggage.", type: "noun" },
+    { word: "gate", def: "the area in an airport where you board the plane", ctx: "Please go to gate 12 now.", type: "noun" },
+    { word: "schedule", def: "a list of planned times", ctx: "Check the train schedule online.", type: "noun" },
+    { word: "rent a car", def: "to pay to use a car for a period of time", ctx: "I rented a car at the airport.", type: "verb" },
+    { word: "confirm", def: "to say that something is definite", ctx: "Please confirm your booking.", type: "verb" },
+    { word: "cancel", def: "to decide that a planned event will not happen", ctx: "The flight was cancelled.", type: "verb" },
+    { word: "refund", def: "money paid back after a cancellation", ctx: "I got a full refund for the ticket.", type: "noun" },
+    { word: "frequent flyer", def: "a regular plane traveller with reward points", ctx: "He is a frequent flyer with BA.", type: "noun" },
+    { word: "jet lag", def: "tiredness after a long flight across time zones", ctx: "I always have jet lag after flying to Japan.", type: "noun" },
+    // collocations
+    { word: "check out of a hotel", def: "to leave a hotel after paying your bill", ctx: "We checked out of the hotel at noon.", type: "collocation" },
+    { word: "rent a car", def: "to pay to use a car temporarily", ctx: "I rented a car at the airport.", type: "collocation" },
+    { word: "go on a trip", def: "to travel somewhere for a period of time", ctx: "We went on a business trip to Rome.", type: "collocation" },
+    { word: "pack your bags", def: "to put things in your bags before travelling", ctx: "I packed my bags the night before.", type: "collocation" },
+    { word: "board the plane", def: "to get on the aircraft", ctx: "Passengers will board the plane at 10am.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 4 – COMMUNICATION
+  // ══════════════════════════════════════
+  "Unit 4A – Communication (Set A)": [
+    { word: "email", def: "an electronic message sent over the internet", ctx: "I sent you an email this morning.", type: "noun" },
+    { word: "message", def: "a piece of information sent to someone", ctx: "Did you get my message?", type: "noun" },
+    { word: "reply", def: "to answer someone", ctx: "Please reply to this email by Friday.", type: "verb" },
+    { word: "attach", def: "to add a file to an email", ctx: "I will attach the document.", type: "verb" },
+    { word: "subject", def: "the title of an email", ctx: "What is the subject of the email?", type: "noun" },
+    { word: "presentation", def: "when you show and explain something to an audience", ctx: "She gave a great presentation.", type: "noun" },
+    { word: "report", def: "a document with information about something", ctx: "Please write a report by Monday.", type: "noun" },
+    { word: "agenda", def: "a list of things to discuss in a meeting", ctx: "The agenda has three items.", type: "noun" },
+    { word: "confirm", def: "to say yes, something is correct or will happen", ctx: "Please confirm your attendance.", type: "verb" },
+    { word: "deadline", def: "the last day to finish something", ctx: "The deadline is next Friday.", type: "noun" },
+    { word: "call", def: "to speak to someone by phone", ctx: "I'll call you at 3pm.", type: "verb" },
+    { word: "discuss", def: "to talk about something with another person", ctx: "Let's discuss the proposal.", type: "verb" },
+    { word: "arrange", def: "to make plans for something", ctx: "Can you arrange a meeting for Tuesday?", type: "verb" },
+    { word: "introduce", def: "to present someone or something for the first time", ctx: "Let me introduce my colleague, Anna.", type: "verb" },
+    { word: "memo", def: "a short written note sent within a company", ctx: "I sent a memo to all staff.", type: "noun" },
+    { word: "minutes", def: "written notes taken during a meeting", ctx: "Who is going to write the minutes?", type: "noun" },
+    { word: "proposal", def: "a plan or suggestion for others to consider", ctx: "She presented a proposal to the board.", type: "noun" },
+    { word: "negotiate", def: "to discuss to reach an agreement", ctx: "We need to negotiate the price.", type: "verb" },
+    { word: "formal", def: "following accepted rules and conventions", ctx: "Please write a formal email.", type: "adjective" },
+    { word: "urgent", def: "needing to be done very soon", ctx: "This is an urgent matter.", type: "adjective" },
+    // collocations
+    { word: "send an email", def: "to write and deliver an email message", ctx: "I'll send an email to confirm the meeting.", type: "collocation" },
+    { word: "give a presentation", def: "to present information to an audience", ctx: "She gave a presentation to the board.", type: "collocation" },
+    { word: "make a phone call", def: "to call someone by telephone", ctx: "He made a phone call to the supplier.", type: "collocation" },
+    { word: "arrange a meeting", def: "to organise a meeting", ctx: "Can you arrange a meeting for Thursday?", type: "collocation" },
+    { word: "take notes", def: "to write down important information", ctx: "Please take notes during the meeting.", type: "collocation" }
+  ],
+
+  "Unit 4B – Communication (Set B)": [
+    { word: "conference call", def: "a phone call with several people at once", ctx: "We have a conference call at 10.", type: "noun" },
+    { word: "feedback", def: "comments about someone's work or ideas", ctx: "I got very useful feedback on my report.", type: "noun" },
+    { word: "clarify", def: "to make something easier to understand", ctx: "Can you clarify your question?", type: "verb" },
+    { word: "summarise", def: "to give the main points of something briefly", ctx: "Please summarise the key findings.", type: "verb" },
+    { word: "apology", def: "saying sorry for something", ctx: "Please accept my apology for the delay.", type: "noun" },
+    { word: "complaint", def: "a statement that something is wrong", ctx: "We received a complaint from a client.", type: "noun" },
+    { word: "update", def: "to give the latest information about something", ctx: "Please update me on the project.", type: "verb" },
+    { word: "enquiry", def: "a question asking for information", ctx: "I sent an enquiry about pricing.", type: "noun" },
+    { word: "invitation", def: "a request to come to an event", ctx: "She sent me an invitation to the launch.", type: "noun" },
+    { word: "decline", def: "to politely refuse", ctx: "He declined the invitation.", type: "verb" },
+    { word: "interrupt", def: "to say something while someone else is talking", ctx: "Please don't interrupt me.", type: "verb" },
+    { word: "misunderstand", def: "to understand something incorrectly", ctx: "I think I misunderstood your message.", type: "verb" },
+    { word: "tone", def: "the mood or feeling of a piece of writing", ctx: "The tone of the email was too informal.", type: "noun" },
+    { word: "broadcast", def: "to send information to many people at once", ctx: "We broadcast the news to all staff.", type: "verb" },
+    { word: "deadline", def: "the final time by which something must be done", ctx: "The report deadline is Friday.", type: "noun" },
+    { word: "bilingual", def: "able to speak two languages", ctx: "She is bilingual in English and Spanish.", type: "adjective" },
+    { word: "translate", def: "to change words into another language", ctx: "Can you translate this document?", type: "verb" },
+    { word: "signature", def: "your name written by yourself at the end", ctx: "Please add your signature to the form.", type: "noun" },
+    { word: "attachment", def: "a file sent with an email", ctx: "The attachment is a PDF file.", type: "noun" },
+    { word: "cc", def: "to send a copy of an email to another person", ctx: "Please cc me in all future emails.", type: "verb" },
+    // collocations
+    { word: "deal with a complaint", def: "to handle and respond to a customer complaint", ctx: "We deal with complaints within 24 hours.", type: "collocation" },
+    { word: "reach an agreement", def: "to find a solution both sides accept", ctx: "We finally reached an agreement.", type: "collocation" },
+    { word: "write a report", def: "to produce a formal written document", ctx: "I need to write a report for the CEO.", type: "collocation" },
+    { word: "answer the phone", def: "to pick up and speak on the telephone", ctx: "She always answers the phone politely.", type: "collocation" },
+    { word: "keep someone updated", def: "to give someone the latest information", ctx: "Please keep me updated on the situation.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 5 – MONEY
+  // ══════════════════════════════════════
+  "Unit 5A – Money (Set A)": [
+    { word: "invoice", def: "a document asking for payment", ctx: "I sent the invoice to the client.", type: "noun" },
+    { word: "payment", def: "the act of paying money", ctx: "Payment is due in 30 days.", type: "noun" },
+    { word: "budget", def: "a plan for how to spend money", ctx: "We need to stay within the budget.", type: "noun" },
+    { word: "cost", def: "the amount of money you pay for something", ctx: "What is the cost of the project?", type: "noun" },
+    { word: "discount", def: "a reduction in the price", ctx: "We offer a 10% discount for large orders.", type: "noun" },
+    { word: "price", def: "the amount you pay to buy something", ctx: "The price is too high.", type: "noun" },
+    { word: "order", def: "a request to buy something", ctx: "We received a large order yesterday.", type: "noun" },
+    { word: "contract", def: "a legal agreement between two parties", ctx: "Please sign the contract.", type: "noun" },
+    { word: "expense", def: "money spent on something", ctx: "Travel expenses are paid by the company.", type: "noun" },
+    { word: "tax", def: "money paid to the government", ctx: "The price includes tax.", type: "noun" },
+    { word: "cash", def: "money in the form of coins and notes", ctx: "Do you pay by cash or card?", type: "noun" },
+    { word: "credit card", def: "a card used to buy things and pay later", ctx: "I paid by credit card.", type: "noun" },
+    { word: "bank account", def: "an arrangement to keep money in a bank", ctx: "I opened a new bank account.", type: "noun" },
+    { word: "loan", def: "money borrowed and paid back with interest", ctx: "She took out a bank loan.", type: "noun" },
+    { word: "interest", def: "extra money paid for borrowing", ctx: "The interest rate is 5% per year.", type: "noun" },
+    { word: "debt", def: "money owed to someone", ctx: "The company is in debt.", type: "noun" },
+    { word: "income", def: "money received regularly from work", ctx: "Her income has increased this year.", type: "noun" },
+    { word: "transfer", def: "to move money from one account to another", ctx: "Please transfer the money by Friday.", type: "verb" },
+    { word: "charge", def: "to ask someone to pay an amount", ctx: "They charge €50 for delivery.", type: "verb" },
+    { word: "refund", def: "money returned after paying too much", ctx: "I got a full refund for the broken item.", type: "noun" },
+    // collocations
+    { word: "pay an invoice", def: "to give money for a bill or invoice", ctx: "Please pay the invoice within 14 days.", type: "collocation" },
+    { word: "stay within budget", def: "to not spend more than planned", ctx: "We need to stay within budget.", type: "collocation" },
+    { word: "offer a discount", def: "to reduce the price for a customer", ctx: "We offered a 15% discount.", type: "collocation" },
+    { word: "place an order", def: "to make a request to buy something", ctx: "I placed an order for 200 units.", type: "collocation" },
+    { word: "sign a contract", def: "to write your name on a legal document", ctx: "Both parties signed the contract.", type: "collocation" }
+  ],
+
+  "Unit 5B – Money (Set B)": [
+    { word: "profit margin", def: "the percentage of revenue that is profit", ctx: "Our profit margin is 20%.", type: "noun" },
+    { word: "overhead", def: "regular business costs like rent and electricity", ctx: "We need to reduce our overheads.", type: "noun" },
+    { word: "quote", def: "a stated price for work to be done", ctx: "Can you give me a quote for the repairs?", type: "noun" },
+    { word: "VAT", def: "a tax added to the price of goods and services", ctx: "The price is €100 plus VAT.", type: "noun" },
+    { word: "currency", def: "money used in a particular country", ctx: "The local currency is the euro.", type: "noun" },
+    { word: "exchange", def: "to give one thing and receive another", ctx: "I need to exchange dollars for euros.", type: "verb" },
+    { word: "receipt", def: "a paper showing you have paid", ctx: "Keep your receipt for the records.", type: "noun" },
+    { word: "spend", def: "to use money to buy something", ctx: "We spend a lot on advertising.", type: "verb" },
+    { word: "save", def: "to keep money for future use", ctx: "We need to save money on travel.", type: "verb" },
+    { word: "invest", def: "to put money into something to earn more", ctx: "We invest in new equipment each year.", type: "verb" },
+    { word: "profit", def: "the money left after paying all costs", ctx: "The company made a profit of €2 million.", type: "noun" },
+    { word: "loss", def: "when costs are higher than income", ctx: "We made a loss in the first quarter.", type: "noun" },
+    { word: "break even", def: "to make neither a profit nor a loss", ctx: "We hope to break even by December.", type: "verb" },
+    { word: "cashflow", def: "the movement of money in and out of a business", ctx: "Good cashflow is important for any business.", type: "noun" },
+    { word: "negotiate", def: "to discuss to reach a financial agreement", ctx: "We negotiated the price down by 10%.", type: "verb" },
+    { word: "installment", def: "one of a series of regular payments", ctx: "You can pay in monthly installments.", type: "noun" },
+    { word: "annual", def: "happening once per year", ctx: "The annual budget is reviewed in December.", type: "adjective" },
+    { word: "net", def: "after all deductions like tax are removed", ctx: "What is the net salary?", type: "adjective" },
+    { word: "gross", def: "total amount before deductions", ctx: "Gross salary includes all bonuses.", type: "adjective" },
+    { word: "balance", def: "the amount of money in an account", ctx: "I checked my bank balance this morning.", type: "noun" },
+    // collocations
+    { word: "make a payment", def: "to pay money for something", ctx: "Please make a payment before Friday.", type: "collocation" },
+    { word: "reduce costs", def: "to spend less money on something", ctx: "We need to reduce costs this year.", type: "collocation" },
+    { word: "raise prices", def: "to increase the price of goods or services", ctx: "We may need to raise prices next year.", type: "collocation" },
+    { word: "open a bank account", def: "to start a banking arrangement", ctx: "I opened a bank account in Germany.", type: "collocation" },
+    { word: "negotiate a price", def: "to agree on a price through discussion", ctx: "We negotiated a better price.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 6 – PEOPLE & SKILLS
+  // ══════════════════════════════════════
+  "Unit 6A – People & Skills (Set A)": [
+    { word: "experience", def: "knowledge gained from doing things", ctx: "She has ten years of experience.", type: "noun" },
+    { word: "qualification", def: "a certificate showing you have a skill", ctx: "What qualifications do you have?", type: "noun" },
+    { word: "responsible", def: "in charge of something or someone", ctx: "He is responsible for marketing.", type: "adjective" },
+    { word: "interview", def: "a meeting to decide if someone gets a job", ctx: "I have a job interview tomorrow.", type: "noun" },
+    { word: "apply", def: "to make a formal request for something", ctx: "I want to apply for this position.", type: "verb" },
+    { word: "promote", def: "to give someone a higher position", ctx: "She was promoted to team leader.", type: "verb" },
+    { word: "recruit", def: "to find new people to work for you", ctx: "We are recruiting three new staff.", type: "verb" },
+    { word: "skill", def: "the ability to do something well", ctx: "Communication is an important skill.", type: "noun" },
+    { word: "teamwork", def: "working together with other people", ctx: "Good teamwork is essential.", type: "noun" },
+    { word: "CV", def: "a document with your work history and skills", ctx: "Please send us your CV.", type: "noun" },
+    { word: "confident", def: "feeling sure about yourself and your abilities", ctx: "She is a confident public speaker.", type: "adjective" },
+    { word: "motivated", def: "having a reason or desire to do something", ctx: "The team is very motivated.", type: "adjective" },
+    { word: "flexible", def: "willing to change and adapt", ctx: "You need to be flexible in this job.", type: "adjective" },
+    { word: "ambitious", def: "wanting to be very successful", ctx: "He is very ambitious and works hard.", type: "adjective" },
+    { word: "reliable", def: "able to be trusted to do what you promise", ctx: "We need a reliable supplier.", type: "adjective" },
+    { word: "creative", def: "using imagination to produce new ideas", ctx: "She has a very creative approach.", type: "adjective" },
+    { word: "leadership", def: "the ability to lead and guide others", ctx: "Good leadership is important.", type: "noun" },
+    { word: "communication", def: "sharing information with others", ctx: "Good communication is key in business.", type: "noun" },
+    { word: "training", def: "teaching or learning new skills", ctx: "All new staff receive training.", type: "noun" },
+    { word: "performance", def: "how well someone does their job", ctx: "His performance review is next week.", type: "noun" },
+    // collocations
+    { word: "have experience in", def: "to have done something before", ctx: "She has experience in finance.", type: "collocation" },
+    { word: "attend an interview", def: "to go to a job interview", ctx: "He attended three interviews this week.", type: "collocation" },
+    { word: "apply for a position", def: "to formally request a job", ctx: "I applied for the position online.", type: "collocation" },
+    { word: "develop a skill", def: "to improve an ability over time", ctx: "You can develop your skills with practice.", type: "collocation" },
+    { word: "work in a team", def: "to cooperate with a group to do a task", ctx: "She works well in a team.", type: "collocation" }
+  ],
+
+  "Unit 6B – People & Skills (Set B)": [
+    { word: "reference", def: "a person who supports your job application", ctx: "My previous boss gave me a reference.", type: "noun" },
+    { word: "contract", def: "a written agreement between employer and employee", ctx: "I signed a one-year contract.", type: "noun" },
+    { word: "probation", def: "a test period at the start of a new job", ctx: "He is on three months' probation.", type: "noun" },
+    { word: "appraisal", def: "a formal assessment of how well you work", ctx: "She had her annual appraisal last week.", type: "noun" },
+    { word: "bonus", def: "extra money paid for good work", ctx: "He received a bonus at the end of the year.", type: "noun" },
+    { word: "pension", def: "money paid to you after you retire", ctx: "The company offers a good pension plan.", type: "noun" },
+    { word: "dismissal", def: "being told to leave your job", ctx: "He faced dismissal for being late.", type: "noun" },
+    { word: "redundancy", def: "losing your job because it no longer exists", ctx: "She accepted voluntary redundancy.", type: "noun" },
+    { word: "maternity leave", def: "time off work for a new mother", ctx: "She is on maternity leave until May.", type: "noun" },
+    { word: "diversity", def: "having people of different backgrounds", ctx: "Diversity is important in our company.", type: "noun" },
+    { word: "initiative", def: "the ability to act without being told", ctx: "Take initiative and find a solution.", type: "noun" },
+    { word: "priority", def: "something that is more important than other things", ctx: "Customer service is our first priority.", type: "noun" },
+    { word: "pressure", def: "a feeling of stress from demands", ctx: "She works well under pressure.", type: "noun" },
+    { word: "punctual", def: "arriving at the right time", ctx: "It is important to be punctual.", type: "adjective" },
+    { word: "efficient", def: "doing work well without wasting time", ctx: "He is a very efficient worker.", type: "adjective" },
+    { word: "organised", def: "able to plan and control work effectively", ctx: "She is very well organised.", type: "adjective" },
+    { word: "independent", def: "able to work without help from others", ctx: "This role suits an independent person.", type: "adjective" },
+    { word: "interpersonal", def: "relating to relationships between people", ctx: "You need strong interpersonal skills.", type: "adjective" },
+    { word: "manage", def: "to control people or a situation", ctx: "She manages a team of ten people.", type: "verb" },
+    { word: "improve", def: "to make something better", ctx: "We need to improve our customer service.", type: "verb" },
+    // collocations
+    { word: "get a promotion", def: "to be given a higher job position", ctx: "She got a promotion last month.", type: "collocation" },
+    { word: "write a CV", def: "to create a document about your experience", ctx: "I updated my CV before the interview.", type: "collocation" },
+    { word: "give a reference", def: "to write or speak in support of someone", ctx: "My manager agreed to give me a reference.", type: "collocation" },
+    { word: "be responsible for", def: "to be in charge of a task or person", ctx: "She is responsible for the accounts.", type: "collocation" },
+    { word: "work under pressure", def: "to do your job well during stressful situations", ctx: "Can you work under pressure?", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 7 – PRODUCTS & SERVICES
+  // ══════════════════════════════════════
+  "Unit 7A – Products & Services (Set A)": [
+    { word: "quality", def: "how good something is", ctx: "Our products are known for their quality.", type: "noun" },
+    { word: "design", def: "the way something looks or is made", ctx: "The design is modern and attractive.", type: "noun" },
+    { word: "feature", def: "an important part or aspect of something", ctx: "The main feature is the battery life.", type: "noun" },
+    { word: "range", def: "a set of different products or options", ctx: "We have a wide range of products.", type: "noun" },
+    { word: "available", def: "possible to get or use", ctx: "The product is available in three colours.", type: "adjective" },
+    { word: "guarantee", def: "a promise that a product will work", ctx: "The laptop comes with a one-year guarantee.", type: "noun" },
+    { word: "warranty", def: "a written promise to repair or replace goods", ctx: "The warranty covers all parts.", type: "noun" },
+    { word: "delivery", def: "bringing goods to a customer", ctx: "Delivery is free for orders over €50.", type: "noun" },
+    { word: "packaging", def: "the material around a product", ctx: "The packaging is eco-friendly.", type: "noun" },
+    { word: "retail", def: "selling goods directly to consumers", ctx: "We sell our products through retail stores.", type: "noun" },
+    { word: "wholesale", def: "buying and selling goods in large quantities", ctx: "We offer wholesale prices for bulk orders.", type: "noun" },
+    { word: "stock", def: "goods that a shop has available to sell", ctx: "We are out of stock at the moment.", type: "noun" },
+    { word: "catalogue", def: "a list of all products a company sells", ctx: "Please send me your current catalogue.", type: "noun" },
+    { word: "sample", def: "a small quantity of a product to try", ctx: "Can you send me a sample?", type: "noun" },
+    { word: "recall", def: "to ask customers to return a faulty product", ctx: "The company recalled 10,000 units.", type: "verb" },
+    { word: "upgrade", def: "a better version of a product", ctx: "I upgraded my phone last month.", type: "verb" },
+    { word: "after-sales", def: "support given to customers after a purchase", ctx: "Our after-sales service is excellent.", type: "noun" },
+    { word: "consumer", def: "a person who buys and uses products", ctx: "Consumers want cheaper products.", type: "noun" },
+    { word: "feedback", def: "customers' opinions about a product", ctx: "We use customer feedback to improve.", type: "noun" },
+    { word: "review", def: "an opinion about a product or service", ctx: "The product has very good reviews.", type: "noun" },
+    // collocations
+    { word: "place an order", def: "to officially request to buy something", ctx: "We placed an order for 500 items.", type: "collocation" },
+    { word: "come with a guarantee", def: "to include a quality promise", ctx: "All products come with a two-year guarantee.", type: "collocation" },
+    { word: "be in stock", def: "to be available to buy now", ctx: "Is the item in stock?", type: "collocation" },
+    { word: "deliver on time", def: "to bring goods by the agreed date", ctx: "We always deliver on time.", type: "collocation" },
+    { word: "meet customer needs", def: "to provide what customers want", ctx: "Our service meets customer needs.", type: "collocation" }
+  ],
+
+  "Unit 7B – Products & Services (Set B)": [
+    { word: "competitive", def: "offering prices or quality that are as good as rivals", ctx: "Our prices are very competitive.", type: "adjective" },
+    { word: "affordable", def: "not too expensive", ctx: "We offer affordable solutions.", type: "adjective" },
+    { word: "exclusive", def: "only available to a certain group", ctx: "This is an exclusive offer for members.", type: "adjective" },
+    { word: "reliable", def: "can be trusted to work well", ctx: "Customers say the product is very reliable.", type: "adjective" },
+    { word: "durable", def: "made to last a long time", ctx: "The case is strong and durable.", type: "adjective" },
+    { word: "innovative", def: "using new ideas or methods", ctx: "It is an innovative product.", type: "adjective" },
+    { word: "efficient", def: "working well without wasting time or energy", ctx: "This new machine is very efficient.", type: "adjective" },
+    { word: "user-friendly", def: "easy to use", ctx: "The software is very user-friendly.", type: "adjective" },
+    { word: "bestseller", def: "the most popular product in a range", ctx: "This model is our bestseller.", type: "noun" },
+    { word: "specification", def: "the exact details or requirements of a product", ctx: "Check the product specifications.", type: "noun" },
+    { word: "model", def: "a particular version of a product", ctx: "This is the newest model.", type: "noun" },
+    { word: "edition", def: "a particular version of something", ctx: "The limited edition sold out fast.", type: "noun" },
+    { word: "version", def: "a form of something that differs from others", ctx: "We use the latest version of the software.", type: "noun" },
+    { word: "customise", def: "to make something to meet specific needs", ctx: "You can customise the product online.", type: "verb" },
+    { word: "assemble", def: "to put parts together to make something", ctx: "The furniture is easy to assemble.", type: "verb" },
+    { word: "import", def: "to bring goods into a country", ctx: "We import parts from Japan.", type: "verb" },
+    { word: "export", def: "to send goods to another country", ctx: "We export 40% of our production.", type: "verb" },
+    { word: "demand", def: "how much of a product customers want", ctx: "Demand for the product is growing.", type: "noun" },
+    { word: "supply", def: "the amount of a product available", ctx: "Supply cannot keep up with demand.", type: "noun" },
+    { word: "brochure", def: "a small book with information about a product", ctx: "Please take a product brochure.", type: "noun" },
+    // collocations
+    { word: "develop a product", def: "to create and improve a new product", ctx: "It took two years to develop the product.", type: "collocation" },
+    { word: "increase demand", def: "to make more people want a product", ctx: "Good marketing increases demand.", type: "collocation" },
+    { word: "improve quality", def: "to make a product or service better", ctx: "We are constantly improving quality.", type: "collocation" },
+    { word: "offer a service", def: "to make a service available to customers", ctx: "We offer a free consultation service.", type: "collocation" },
+    { word: "expand the range", def: "to add more products to the selection", ctx: "We plan to expand the range next year.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 8 – MARKETING
+  // ══════════════════════════════════════
+  "Unit 8A – Marketing (Set A)": [
+    { word: "advertising", def: "telling people about products to make them buy", ctx: "We spend a lot on advertising.", type: "noun" },
+    { word: "campaign", def: "a planned series of activities for a goal", ctx: "The marketing campaign was a success.", type: "noun" },
+    { word: "target audience", def: "the group of people you want to reach", ctx: "Our target audience is young professionals.", type: "noun" },
+    { word: "brand", def: "the name and image of a product or company", ctx: "They have a very well-known brand.", type: "noun" },
+    { word: "logo", def: "the design symbol of a company", ctx: "The logo is simple but effective.", type: "noun" },
+    { word: "slogan", def: "a short phrase used in advertising", ctx: "Their slogan is 'Just do it'.", type: "noun" },
+    { word: "promotion", def: "activity to make people buy more", ctx: "We are running a summer promotion.", type: "noun" },
+    { word: "social media", def: "websites and apps for sharing information", ctx: "We use social media to reach customers.", type: "noun" },
+    { word: "market research", def: "finding out what customers want", ctx: "We did market research before the launch.", type: "noun" },
+    { word: "survey", def: "a set of questions to collect information", ctx: "We sent a survey to 500 customers.", type: "noun" },
+    { word: "website", def: "a set of pages on the internet", ctx: "Check our website for more information.", type: "noun" },
+    { word: "online", def: "connected to or available on the internet", ctx: "You can buy our products online.", type: "adjective" },
+    { word: "influencer", def: "a person who promotes products online", ctx: "We work with several influencers.", type: "noun" },
+    { word: "strategy", def: "a plan to achieve a business goal", ctx: "We need a strong marketing strategy.", type: "noun" },
+    { word: "content", def: "information created to attract customers", ctx: "Good content brings more visitors.", type: "noun" },
+    { word: "click", def: "to press a button on a computer or phone", ctx: "Click on the link for more information.", type: "verb" },
+    { word: "viral", def: "spreading quickly among many people online", ctx: "The video went viral in one day.", type: "adjective" },
+    { word: "newsletter", def: "a regular email with company news", ctx: "Subscribe to our newsletter.", type: "noun" },
+    { word: "sponsor", def: "to pay for an event in exchange for publicity", ctx: "We sponsor the local football team.", type: "verb" },
+    { word: "competitor", def: "another company selling similar products", ctx: "We watch what our competitors do.", type: "noun" },
+    // collocations
+    { word: "run a campaign", def: "to organise and carry out a marketing campaign", ctx: "We ran a campaign on social media.", type: "collocation" },
+    { word: "do market research", def: "to study what customers want", ctx: "We did market research before the launch.", type: "collocation" },
+    { word: "build a brand", def: "to create and develop a brand identity", ctx: "It takes time to build a strong brand.", type: "collocation" },
+    { word: "attract customers", def: "to make customers want to come to you", ctx: "Good prices attract customers.", type: "collocation" },
+    { word: "go viral", def: "to spread very quickly on social media", ctx: "The video went viral overnight.", type: "collocation" }
+  ],
+
+  "Unit 8B – Marketing (Set B)": [
+    { word: "launch", def: "to introduce a new product to the market", ctx: "We will launch the product in spring.", type: "verb" },
+    { word: "channel", def: "a way of reaching customers", ctx: "Email is our main marketing channel.", type: "noun" },
+    { word: "lead", def: "a potential customer", ctx: "Sales got 50 new leads this month.", type: "noun" },
+    { word: "conversion", def: "turning a potential customer into a buyer", ctx: "The conversion rate is 5%.", type: "noun" },
+    { word: "analytics", def: "the study of data to understand results", ctx: "We use analytics to improve our ads.", type: "noun" },
+    { word: "click-through rate", def: "the percentage of people who click a link", ctx: "The click-through rate went up by 2%.", type: "noun" },
+    { word: "engagement", def: "how much customers interact with your content", ctx: "Our social media engagement is high.", type: "noun" },
+    { word: "loyalty", def: "when customers keep buying from you", ctx: "We reward customer loyalty with discounts.", type: "noun" },
+    { word: "reach", def: "the number of people who see your content", ctx: "This post had a reach of 10,000 people.", type: "noun" },
+    { word: "impression", def: "the number of times content is shown", ctx: "The ad had 50,000 impressions.", type: "noun" },
+    { word: "testimonial", def: "a customer's positive comment", ctx: "We display testimonials on our website.", type: "noun" },
+    { word: "positioning", def: "how a product is seen in the market", ctx: "Our positioning is 'affordable luxury'.", type: "noun" },
+    { word: "unique", def: "unlike anything else", ctx: "Our product offers a unique experience.", type: "adjective" },
+    { word: "trend", def: "a direction things are moving in", ctx: "The trend is towards online shopping.", type: "noun" },
+    { word: "niche", def: "a small specific part of the market", ctx: "We focus on a niche market.", type: "noun" },
+    { word: "partnership", def: "working together with another company", ctx: "We formed a marketing partnership.", type: "noun" },
+    { word: "deal", def: "an agreement, often involving a discount", ctx: "We have a special deal this month.", type: "noun" },
+    { word: "offer", def: "a special low price for a product", ctx: "This is a limited offer.", type: "noun" },
+    { word: "poster", def: "a large printed advertisement", ctx: "We put posters in the city centre.", type: "noun" },
+    { word: "endorse", def: "to publicly support a product", ctx: "A famous athlete endorsed the product.", type: "verb" },
+    // collocations
+    { word: "launch a campaign", def: "to start a new advertising campaign", ctx: "We launched a campaign in January.", type: "collocation" },
+    { word: "target a market", def: "to aim at a specific group of customers", ctx: "We target the European market.", type: "collocation" },
+    { word: "increase sales", def: "to make more products or services sell", ctx: "The campaign helped increase sales.", type: "collocation" },
+    { word: "promote a product", def: "to advertise or support a product", ctx: "We used influencers to promote the product.", type: "collocation" },
+    { word: "grow an audience", def: "to get more followers or customers", ctx: "We grew our audience by 30%.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 9 – TECHNOLOGY
+  // ══════════════════════════════════════
+  "Unit 9A – Technology (Set A)": [
+    { word: "software", def: "programs used by a computer", ctx: "We use special software for accounting.", type: "noun" },
+    { word: "hardware", def: "the physical parts of a computer", ctx: "We need to upgrade our hardware.", type: "noun" },
+    { word: "network", def: "a system connecting computers together", ctx: "The office network went down.", type: "noun" },
+    { word: "cloud", def: "storing data on internet servers", ctx: "We save all files in the cloud.", type: "noun" },
+    { word: "password", def: "a secret word to access a system", ctx: "Change your password regularly.", type: "noun" },
+    { word: "data", def: "facts and information stored by a computer", ctx: "We collect data from our customers.", type: "noun" },
+    { word: "security", def: "protecting information from harm", ctx: "Cybersecurity is very important.", type: "noun" },
+    { word: "database", def: "an organised collection of information", ctx: "All customer details are in the database.", type: "noun" },
+    { word: "device", def: "a piece of technology like a phone or laptop", ctx: "You can access it from any device.", type: "noun" },
+    { word: "update", def: "to install a newer version of software", ctx: "Please update your software.", type: "verb" },
+    { word: "download", def: "to copy data from the internet to your device", ctx: "Download the app for free.", type: "verb" },
+    { word: "upload", def: "to copy data from your device to the internet", ctx: "Please upload the file to the server.", type: "verb" },
+    { word: "backup", def: "a copy of data kept in case the original is lost", ctx: "Always make a backup of your files.", type: "noun" },
+    { word: "server", def: "a computer that stores and sends data", ctx: "The server crashed this morning.", type: "noun" },
+    { word: "internet", def: "a global network of computers", ctx: "The internet is essential for business.", type: "noun" },
+    { word: "app", def: "a software program for phones or computers", ctx: "Download our free app.", type: "noun" },
+    { word: "website", def: "a set of pages on the internet", ctx: "Visit our website for more information.", type: "noun" },
+    { word: "digital", def: "using computer technology", ctx: "We are moving to digital processes.", type: "adjective" },
+    { word: "wireless", def: "using radio signals without cables", ctx: "We have wireless internet in the office.", type: "adjective" },
+    { word: "screen", def: "the display area of a device", ctx: "The screen is very clear.", type: "noun" },
+    // collocations
+    { word: "save data", def: "to store information in a file or system", ctx: "Remember to save your data regularly.", type: "collocation" },
+    { word: "install software", def: "to put a program onto a computer", ctx: "IT installed new software on my laptop.", type: "collocation" },
+    { word: "connect to the internet", def: "to link a device to the internet", ctx: "Can I connect to the internet here?", type: "collocation" },
+    { word: "back up files", def: "to make copies of files for safety", ctx: "Back up your files every week.", type: "collocation" },
+    { word: "upgrade a system", def: "to improve technology or software", ctx: "We need to upgrade our IT system.", type: "collocation" }
+  ],
+
+  "Unit 9B – Technology (Set B)": [
+    { word: "cybersecurity", def: "protection of computer systems from attack", ctx: "Cybersecurity is a priority for us.", type: "noun" },
+    { word: "automation", def: "using machines to do tasks automatically", ctx: "Automation reduces human error.", type: "noun" },
+    { word: "artificial intelligence", def: "computer systems that perform human tasks", ctx: "AI is used in many applications.", type: "noun" },
+    { word: "interface", def: "the way a user interacts with a system", ctx: "The interface is very simple.", type: "noun" },
+    { word: "platform", def: "a system or software that others can build on", ctx: "We use a cloud platform.", type: "noun" },
+    { word: "process", def: "a series of steps to complete a task", ctx: "We automated the billing process.", type: "noun" },
+    { word: "integrate", def: "to combine systems so they work together", ctx: "We integrated the new software.", type: "verb" },
+    { word: "access", def: "to be able to use something", ctx: "You can access the file from home.", type: "verb" },
+    { word: "encrypt", def: "to convert data into a code for security", ctx: "All files are encrypted.", type: "verb" },
+    { word: "troubleshoot", def: "to find and fix problems in a system", ctx: "IT helped troubleshoot the error.", type: "verb" },
+    { word: "glitch", def: "a small problem or error in a system", ctx: "There was a glitch in the software.", type: "noun" },
+    { word: "bug", def: "an error in a computer program", ctx: "The developer fixed the bug.", type: "noun" },
+    { word: "IT support", def: "help from people who manage technology", ctx: "Contact IT support if you have problems.", type: "noun" },
+    { word: "remote access", def: "connecting to a computer from another location", ctx: "I use remote access to work from home.", type: "noun" },
+    { word: "bandwidth", def: "the amount of data a connection can carry", ctx: "We need more bandwidth for video calls.", type: "noun" },
+    { word: "monitor", def: "to watch something over time", ctx: "We monitor the system 24 hours a day.", type: "verb" },
+    { word: "log in", def: "to access a system with a username and password", ctx: "Log in with your company email.", type: "verb" },
+    { word: "notification", def: "a message telling you something happened", ctx: "Turn off notifications during meetings.", type: "noun" },
+    { word: "virtual", def: "existing online rather than physically", ctx: "We held a virtual conference.", type: "adjective" },
+    { word: "compatible", def: "able to work with another system", ctx: "Is the software compatible with Mac?", type: "adjective" },
+    // collocations
+    { word: "fix a bug", def: "to correct an error in a program", ctx: "The team fixed the bug overnight.", type: "collocation" },
+    { word: "log in to a system", def: "to enter a username and password to gain access", ctx: "Log in to the system with your email.", type: "collocation" },
+    { word: "run a program", def: "to use or start a software program", ctx: "Run the program and follow the steps.", type: "collocation" },
+    { word: "protect data", def: "to keep information safe", ctx: "We protect data with strong encryption.", type: "collocation" },
+    { word: "work remotely", def: "to do your job from a different location", ctx: "Many employees now work remotely.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 10 – MEETINGS & NEGOTIATIONS
+  // ══════════════════════════════════════
+  "Unit 10A – Meetings & Negotiations (Set A)": [
+    { word: "agenda", def: "a list of topics to discuss in a meeting", ctx: "Please send the agenda before Friday.", type: "noun" },
+    { word: "chairperson", def: "the person who leads a meeting", ctx: "The chairperson opened the meeting.", type: "noun" },
+    { word: "minutes", def: "an official written record of a meeting", ctx: "Who will take the minutes today?", type: "noun" },
+    { word: "point", def: "a single topic or idea in a discussion", ctx: "She made an excellent point.", type: "noun" },
+    { word: "vote", def: "to choose an option by saying yes or no", ctx: "We voted for the new proposal.", type: "verb" },
+    { word: "decision", def: "a choice made after thinking", ctx: "The board made a final decision.", type: "noun" },
+    { word: "action point", def: "a task agreed on during a meeting", ctx: "There were three action points from the meeting.", type: "noun" },
+    { word: "consensus", def: "when everyone agrees", ctx: "We reached a consensus after discussion.", type: "noun" },
+    { word: "propose", def: "to put forward an idea or plan", ctx: "She proposed a new solution.", type: "verb" },
+    { word: "object", def: "to say you do not agree with something", ctx: "He objected to the proposed changes.", type: "verb" },
+    { word: "adjourn", def: "to stop a meeting and continue later", ctx: "We adjourned the meeting until Thursday.", type: "verb" },
+    { word: "brief", def: "to give someone essential information", ctx: "Please brief the team before the client arrives.", type: "verb" },
+    { word: "issue", def: "an important topic to discuss", ctx: "There is an issue with the contract.", type: "noun" },
+    { word: "solution", def: "an answer to a problem", ctx: "We found a solution to the problem.", type: "noun" },
+    { word: "compromise", def: "when both sides agree to give up something", ctx: "We reached a compromise on price.", type: "noun" },
+    { word: "deadline", def: "the final date for completing something", ctx: "The deadline for the report is Monday.", type: "noun" },
+    { word: "goal", def: "what you want to achieve", ctx: "Our goal is to increase sales by 20%.", type: "noun" },
+    { word: "outcome", def: "the result of something", ctx: "The outcome of the meeting was positive.", type: "noun" },
+    { word: "chair", def: "to lead a meeting", ctx: "She will chair the meeting.", type: "verb" },
+    { word: "clarify", def: "to make something clearer", ctx: "Can you clarify what you mean?", type: "verb" },
+    // collocations
+    { word: "chair a meeting", def: "to lead or control a meeting", ctx: "She chaired the annual meeting.", type: "collocation" },
+    { word: "reach a decision", def: "to decide on something after discussion", ctx: "We reached a decision by noon.", type: "collocation" },
+    { word: "take the minutes", def: "to write notes of what is said in a meeting", ctx: "Could you take the minutes please?", type: "collocation" },
+    { word: "raise a point", def: "to mention a topic for discussion", ctx: "He raised an important point.", type: "collocation" },
+    { word: "set an agenda", def: "to decide what topics to discuss in a meeting", ctx: "Please set the agenda for Thursday.", type: "collocation" }
+  ],
+
+  "Unit 10B – Meetings & Negotiations (Set B)": [
+    { word: "negotiation", def: "a discussion to reach an agreement", ctx: "Negotiations lasted three hours.", type: "noun" },
+    { word: "deal", def: "an agreement reached by both sides", ctx: "We made a great deal with the supplier.", type: "noun" },
+    { word: "offer", def: "a proposal to do or pay something", ctx: "They made us a very good offer.", type: "noun" },
+    { word: "counteroffer", def: "a different proposal made in reply to another", ctx: "We made a counteroffer of €80,000.", type: "noun" },
+    { word: "reject", def: "to say no to a proposal", ctx: "They rejected our first offer.", type: "verb" },
+    { word: "accept", def: "to say yes to a proposal", ctx: "She accepted the terms.", type: "verb" },
+    { word: "terms", def: "the conditions of an agreement", ctx: "We discussed the terms of the contract.", type: "noun" },
+    { word: "condition", def: "something that must happen for an agreement", ctx: "The condition is delivery within 30 days.", type: "noun" },
+    { word: "deadline", def: "the last time to complete something", ctx: "The negotiation deadline is tomorrow.", type: "noun" },
+    { word: "position", def: "where you stand in a negotiation", ctx: "Our position is firm on price.", type: "noun" },
+    { word: "concession", def: "something you give up in a negotiation", ctx: "We made a concession on delivery time.", type: "noun" },
+    { word: "binding", def: "legally required, must be followed", ctx: "The contract is legally binding.", type: "adjective" },
+    { word: "draft", def: "a first version of a document", ctx: "Please send me the draft contract.", type: "noun" },
+    { word: "finalise", def: "to complete and agree the last details", ctx: "We will finalise the deal tomorrow.", type: "verb" },
+    { word: "party", def: "a person or group in an agreement", ctx: "Both parties signed the agreement.", type: "noun" },
+    { word: "clause", def: "a specific section in a contract", ctx: "There is a termination clause.", type: "noun" },
+    { word: "flexibility", def: "willingness to change position", ctx: "Some flexibility on price is possible.", type: "noun" },
+    { word: "priority", def: "the most important thing", ctx: "Our priority is quality over cost.", type: "noun" },
+    { word: "mutual", def: "shared equally by both sides", ctx: "The agreement is of mutual benefit.", type: "adjective" },
+    { word: "dispute", def: "a serious disagreement", ctx: "There is a dispute over the deadline.", type: "noun" },
+    // collocations
+    { word: "make an offer", def: "to propose a price or deal", ctx: "We made an offer of €50,000.", type: "collocation" },
+    { word: "reach an agreement", def: "to find a solution that both sides accept", ctx: "We finally reached an agreement.", type: "collocation" },
+    { word: "sign a deal", def: "to officially agree and finalise a deal", ctx: "We signed the deal last Friday.", type: "collocation" },
+    { word: "reject an offer", def: "to refuse an offer made to you", ctx: "They rejected our offer.", type: "collocation" },
+    { word: "make a concession", def: "to give something up in a negotiation", ctx: "We made a concession on price.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 11 – FINANCE & BANKING
+  // ══════════════════════════════════════
+  "Unit 11A – Finance & Banking (Set A)": [
+    { word: "bank", def: "an organisation that holds and lends money", ctx: "I need to go to the bank.", type: "noun" },
+    { word: "account", def: "an arrangement to store money at a bank", ctx: "I have two bank accounts.", type: "noun" },
+    { word: "savings", def: "money you have kept and not spent", ctx: "I have some savings in the bank.", type: "noun" },
+    { word: "mortgage", def: "a loan to buy a property", ctx: "They took out a mortgage to buy the flat.", type: "noun" },
+    { word: "loan", def: "money borrowed that must be paid back", ctx: "He applied for a business loan.", type: "noun" },
+    { word: "interest rate", def: "the percentage charged for borrowing money", ctx: "The interest rate is 3% per year.", type: "noun" },
+    { word: "deposit", def: "money placed into a bank account", ctx: "I made a deposit of €500.", type: "noun" },
+    { word: "withdraw", def: "to take money out of a bank account", ctx: "I withdrew €200 from the ATM.", type: "verb" },
+    { word: "statement", def: "a record of transactions in an account", ctx: "I check my bank statement monthly.", type: "noun" },
+    { word: "overdraft", def: "spending more than you have in your account", ctx: "I went into overdraft this month.", type: "noun" },
+    { word: "transfer", def: "to move money from one account to another", ctx: "Please transfer the money today.", type: "verb" },
+    { word: "cash", def: "physical money in coins and notes", ctx: "I prefer to pay by cash.", type: "noun" },
+    { word: "cheque", def: "a written order to pay money from an account", ctx: "She paid by cheque.", type: "noun" },
+    { word: "balance", def: "the amount of money in an account", ctx: "Check your balance online.", type: "noun" },
+    { word: "credit", def: "buying now and paying later", ctx: "We offer six months' interest-free credit.", type: "noun" },
+    { word: "debit", def: "money taken directly from your account", ctx: "I paid by debit card.", type: "noun" },
+    { word: "fee", def: "money paid for a service", ctx: "There is a small bank fee.", type: "noun" },
+    { word: "currency", def: "money used in a country", ctx: "The euro is the currency here.", type: "noun" },
+    { word: "stock market", def: "a place where company shares are traded", ctx: "The stock market fell today.", type: "noun" },
+    { word: "shares", def: "parts of a company that you can buy", ctx: "I bought shares in the company.", type: "noun" },
+    // collocations
+    { word: "open an account", def: "to start a banking arrangement", ctx: "I opened an account with the new bank.", type: "collocation" },
+    { word: "take out a loan", def: "to borrow money from a bank", ctx: "We took out a loan to buy equipment.", type: "collocation" },
+    { word: "pay back a loan", def: "to return borrowed money", ctx: "We pay back the loan monthly.", type: "collocation" },
+    { word: "earn interest", def: "to receive money from savings or investments", ctx: "I earn 2% interest on my savings.", type: "collocation" },
+    { word: "withdraw money", def: "to take cash out of a bank account", ctx: "I withdrew money from the ATM.", type: "collocation" }
+  ],
+
+  "Unit 11B – Finance & Banking (Set B)": [
+    { word: "investment", def: "money put into something to earn more", ctx: "The investment paid off after three years.", type: "noun" },
+    { word: "dividend", def: "money paid to shareholders from profit", ctx: "Shareholders received a dividend.", type: "noun" },
+    { word: "portfolio", def: "a collection of investments", ctx: "She has a diverse investment portfolio.", type: "noun" },
+    { word: "asset", def: "something valuable owned by a company", ctx: "Property is a valuable asset.", type: "noun" },
+    { word: "liability", def: "money owed by a company", ctx: "The company has high liabilities.", type: "noun" },
+    { word: "equity", def: "the value of a company after debts", ctx: "The company has €1 million in equity.", type: "noun" },
+    { word: "financial", def: "relating to money and finance", ctx: "We need a financial report.", type: "adjective" },
+    { word: "quarterly", def: "happening four times a year", ctx: "We publish quarterly financial results.", type: "adjective" },
+    { word: "forecast", def: "a prediction about future finance", ctx: "The financial forecast looks positive.", type: "noun" },
+    { word: "audit", def: "an official check of accounts", ctx: "We have an annual audit every January.", type: "noun" },
+    { word: "accountant", def: "a person who manages financial records", ctx: "Our accountant prepares the tax returns.", type: "noun" },
+    { word: "tax return", def: "a document reporting income to the government", ctx: "He filed his tax return online.", type: "noun" },
+    { word: "revenue", def: "total income earned by a company", ctx: "Revenue was up 10% this quarter.", type: "noun" },
+    { word: "expenditure", def: "the total amount of money spent", ctx: "We must reduce our expenditure.", type: "noun" },
+    { word: "profit and loss", def: "a financial report showing income and costs", ctx: "The profit and loss statement is ready.", type: "noun" },
+    { word: "break even", def: "to make neither a profit nor a loss", ctx: "We expect to break even by year two.", type: "verb" },
+    { word: "capital", def: "money used to start or grow a business", ctx: "We need capital to expand.", type: "noun" },
+    { word: "venture capital", def: "money invested in new businesses", ctx: "The startup received venture capital.", type: "noun" },
+    { word: "invoice", def: "a bill sent to a customer", ctx: "The invoice is attached to this email.", type: "noun" },
+    { word: "receipt", def: "proof that a payment was made", ctx: "Keep the receipt for your records.", type: "noun" },
+    // collocations
+    { word: "make an investment", def: "to put money into something to earn profit", ctx: "We made an investment in new machinery.", type: "collocation" },
+    { word: "prepare a budget", def: "to plan how money will be spent", ctx: "I prepared the annual budget.", type: "collocation" },
+    { word: "file a tax return", def: "to officially submit income information to the government", ctx: "He filed his tax return in April.", type: "collocation" },
+    { word: "manage finances", def: "to control how money is used", ctx: "She manages the company's finances.", type: "collocation" },
+    { word: "raise capital", def: "to get money to start or expand a business", ctx: "We raised capital from investors.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  UNIT 12 – GLOBALISATION & CULTURE
+  // ══════════════════════════════════════
+  "Unit 12A – Globalisation & Culture (Set A)": [
+    { word: "globalisation", def: "the process of the world becoming more connected", ctx: "Globalisation helps businesses grow.", type: "noun" },
+    { word: "culture", def: "the beliefs and traditions of a group", ctx: "Business culture varies by country.", type: "noun" },
+    { word: "diversity", def: "including people of many different backgrounds", ctx: "Our company values diversity.", type: "noun" },
+    { word: "multicultural", def: "including many different cultures", ctx: "We work in a multicultural environment.", type: "adjective" },
+    { word: "import", def: "to bring goods into a country from abroad", ctx: "We import raw materials from Asia.", type: "verb" },
+    { word: "export", def: "to send goods to another country", ctx: "We export 60% of our production.", type: "verb" },
+    { word: "trade", def: "buying and selling goods between countries", ctx: "International trade has increased.", type: "noun" },
+    { word: "tariff", def: "a tax on imported goods", ctx: "High tariffs make imports expensive.", type: "noun" },
+    { word: "customs", def: "the official process for checking goods at borders", ctx: "The goods were held at customs.", type: "noun" },
+    { word: "regulation", def: "an official rule", ctx: "We follow all EU regulations.", type: "noun" },
+    { word: "headquartered", def: "having the main office in a place", ctx: "The company is headquartered in Paris.", type: "adjective" },
+    { word: "overseas", def: "in or to a foreign country", ctx: "We have offices overseas.", type: "adjective" },
+    { word: "subsidiary", def: "a company owned by a bigger company", ctx: "It is a subsidiary of a US company.", type: "noun" },
+    { word: "joint venture", def: "a business activity by two or more companies", ctx: "We formed a joint venture in China.", type: "noun" },
+    { word: "outsource", def: "to pay another company to do work for you", ctx: "We outsource our IT support.", type: "verb" },
+    { word: "offshore", def: "in another country, often for lower costs", ctx: "The factory is offshore.", type: "adjective" },
+    { word: "supply chain", def: "the process from making to delivering a product", ctx: "We improved our supply chain.", type: "noun" },
+    { word: "labour", def: "work done by people, especially physical work", ctx: "Labour costs are lower in some countries.", type: "noun" },
+    { word: "standard of living", def: "the quality of life in a country", ctx: "The standard of living has improved.", type: "noun" },
+    { word: "emerging market", def: "a developing country's economy growing fast", ctx: "India is an emerging market.", type: "noun" },
+    // collocations
+    { word: "do business abroad", def: "to trade or operate in another country", ctx: "We do business abroad in 15 countries.", type: "collocation" },
+    { word: "enter a market", def: "to start selling in a new country or region", ctx: "We entered the Asian market last year.", type: "collocation" },
+    { word: "follow regulations", def: "to obey official rules", ctx: "All companies must follow regulations.", type: "collocation" },
+    { word: "form a partnership", def: "to start working together officially", ctx: "We formed a partnership with a local firm.", type: "collocation" },
+    { word: "manage a team", def: "to lead and organise a group of people", ctx: "She manages a team across five countries.", type: "collocation" }
+  ],
+
+  "Unit 12B – Globalisation & Culture (Set B)": [
+    { word: "protocol", def: "rules about how to behave in formal situations", ctx: "Learn the local business protocol.", type: "noun" },
+    { word: "etiquette", def: "accepted rules for polite behaviour", ctx: "Business etiquette varies by country.", type: "noun" },
+    { word: "hierarchy", def: "a system of people ranked by authority", ctx: "Some cultures have a strict hierarchy.", type: "noun" },
+    { word: "relationship", def: "the way two people or groups are connected", ctx: "Good relationships are key in business.", type: "noun" },
+    { word: "trust", def: "belief that someone is honest and reliable", ctx: "Trust is important in negotiations.", type: "noun" },
+    { word: "network", def: "a group of people you know who help each other", ctx: "She has a strong professional network.", type: "noun" },
+    { word: "language barrier", def: "difficulty because people speak different languages", ctx: "The language barrier made talks difficult.", type: "noun" },
+    { word: "interpreter", def: "a person who translates spoken language", ctx: "We used an interpreter in the meeting.", type: "noun" },
+    { word: "negotiate", def: "to discuss to reach an agreement", ctx: "We need to negotiate across cultures.", type: "verb" },
+    { word: "adapt", def: "to change to suit a new situation", ctx: "You must adapt to local customs.", type: "verb" },
+    { word: "stereotype", def: "a fixed general idea about a group of people", ctx: "Try to avoid cultural stereotypes.", type: "noun" },
+    { word: "inclusive", def: "welcoming people of all backgrounds", ctx: "We want to be more inclusive.", type: "adjective" },
+    { word: "value", def: "something considered important in a culture", ctx: "Company values guide our decisions.", type: "noun" },
+    { word: "formal", def: "following strict rules of behaviour", ctx: "Business meetings are often formal.", type: "adjective" },
+    { word: "informal", def: "relaxed and not following strict rules", ctx: "The team culture is quite informal.", type: "adjective" },
+    { word: "time zone", def: "one of the world's divided regions by clock time", ctx: "We work across three time zones.", type: "noun" },
+    { word: "conference", def: "a large formal meeting for discussion", ctx: "I attended an international conference.", type: "noun" },
+    { word: "delegate", def: "a person sent to represent others", ctx: "She was a delegate at the summit.", type: "noun" },
+    { word: "summit", def: "a meeting of senior leaders", ctx: "World leaders attended the G20 summit.", type: "noun" },
+    { word: "bilateral", def: "involving two countries or sides", ctx: "They signed a bilateral trade agreement.", type: "adjective" },
+    // collocations
+    { word: "build relationships", def: "to develop good connections with people", ctx: "It takes time to build strong relationships.", type: "collocation" },
+    { word: "overcome a language barrier", def: "to solve communication problems between languages", ctx: "We use translation apps to overcome barriers.", type: "collocation" },
+    { word: "respect local customs", def: "to follow and honour traditions of a place", ctx: "It is important to respect local customs.", type: "collocation" },
+    { word: "work across time zones", def: "to collaborate with people in different times", ctx: "We work across time zones every day.", type: "collocation" },
+    { word: "adapt to a culture", def: "to change your behaviour to fit a new culture", ctx: "She quickly adapted to the local culture.", type: "collocation" }
+  ],
+
+  // ══════════════════════════════════════
+  //  IRREGULAR VERBS — Split into 5 sets
+  // ══════════════════════════════════════
+  "Irregular Verbs A (be – give)": [
+    { word: "be", def: "was / were · been · быть", ctx: "I was at the office. We were very busy.", type: "irr" },
+    { word: "become", def: "became · become · стать", ctx: "She became the manager last year.", type: "irr" },
+    { word: "begin", def: "began · begun · начинать", ctx: "The meeting began at 9am.", type: "irr" },
+    { word: "break", def: "broke · broken · сломать", ctx: "He broke the screen by accident.", type: "irr" },
+    { word: "bring", def: "brought · brought · принести", ctx: "Please bring your ID.", type: "irr" },
+    { word: "build", def: "built · built · построить", ctx: "They built a new office block.", type: "irr" },
+    { word: "buy", def: "bought · bought · купить", ctx: "We bought new laptops.", type: "irr" },
+    { word: "catch", def: "caught · caught · поймать/успеть", ctx: "I caught the early flight.", type: "irr" },
+    { word: "choose", def: "chose · chosen · выбрать", ctx: "She chose the best candidate.", type: "irr" },
+    { word: "come", def: "came · come · прийти/приехать", ctx: "He came to the meeting late.", type: "irr" },
+    { word: "cost", def: "cost · cost · стоить", ctx: "The project cost €10,000.", type: "irr" },
+    { word: "do", def: "did · done · делать", ctx: "We did a lot of work this week.", type: "irr" },
+    { word: "drive", def: "drove · driven · ехать/водить", ctx: "She drove to the airport.", type: "irr" },
+    { word: "find", def: "found · found · найти", ctx: "We found a new supplier.", type: "irr" },
+    { word: "fly", def: "flew · flown · лететь", ctx: "I flew to Tokyo last week.", type: "irr" },
+    { word: "forget", def: "forgot · forgotten · забыть", ctx: "He forgot to send the email.", type: "irr" },
+    { word: "get", def: "got · got · получить/стать", ctx: "I got a promotion last month.", type: "irr" },
+    { word: "give", def: "gave · given · дать/давать", ctx: "She gave a great presentation.", type: "irr" }
+  ],
+
+  "Irregular Verbs B (go – make)": [
+    { word: "go", def: "went · gone · идти/ехать", ctx: "We went to the conference.", type: "irr" },
+    { word: "grow", def: "grew · grown · расти", ctx: "Revenue grew by 20%.", type: "irr" },
+    { word: "have", def: "had · had · иметь", ctx: "We had a team meeting.", type: "irr" },
+    { word: "hear", def: "heard · heard · слышать", ctx: "Have you heard the news?", type: "irr" },
+    { word: "keep", def: "kept · kept · держать/хранить", ctx: "Keep the receipt.", type: "irr" },
+    { word: "know", def: "knew · known · знать", ctx: "She knew the answer.", type: "irr" },
+    { word: "lead", def: "led · led · вести/руководить", ctx: "He led the project team.", type: "irr" },
+    { word: "leave", def: "left · left · уходить/оставлять", ctx: "She left the company last year.", type: "irr" },
+    { word: "lend", def: "lent · lent · одолжить", ctx: "The bank lent us money.", type: "irr" },
+    { word: "let", def: "let · let · позволять", ctx: "They let us use the meeting room.", type: "irr" },
+    { word: "lose", def: "lost · lost · потерять", ctx: "We lost the contract.", type: "irr" },
+    { word: "make", def: "made · made · делать/производить", ctx: "We made a profit this year.", type: "irr" }
+  ],
+
+  "Irregular Verbs C (meet – send)": [
+    { word: "meet", def: "met · met · встречать/встретиться", ctx: "I met the client this morning.", type: "irr" },
+    { word: "pay", def: "paid · paid · платить", ctx: "We paid the invoice on time.", type: "irr" },
+    { word: "put", def: "put · put · класть/помещать", ctx: "Please put the files on my desk.", type: "irr" },
+    { word: "read", def: "read · read · читать", ctx: "I read the report last night.", type: "irr" },
+    { word: "run", def: "ran · run · бежать/управлять", ctx: "She runs a successful business.", type: "irr" },
+    { word: "say", def: "said · said · говорить/сказать", ctx: "He said the project is on track.", type: "irr" },
+    { word: "see", def: "saw · seen · видеть", ctx: "I saw the CEO at the conference.", type: "irr" },
+    { word: "sell", def: "sold · sold · продавать", ctx: "We sold 1,000 units last month.", type: "irr" },
+    { word: "send", def: "sent · sent · отправить", ctx: "I sent the email this morning.", type: "irr" }
+  ],
+
+  "Irregular Verbs D (set – write)": [
+    { word: "set", def: "set · set · устанавливать", ctx: "We set a new sales record.", type: "irr" },
+    { word: "show", def: "showed · shown · показывать", ctx: "She showed the slides.", type: "irr" },
+    { word: "sign", def: "signed · signed · подписать", ctx: "We signed the contract.", type: "irr" },
+    { word: "sit", def: "sat · sat · сидеть", ctx: "He sat at the head of the table.", type: "irr" },
+    { word: "speak", def: "spoke · spoken · говорить", ctx: "She spoke to the board.", type: "irr" },
+    { word: "spend", def: "spent · spent · тратить", ctx: "We spent a lot on marketing.", type: "irr" },
+    { word: "stand", def: "stood · stood · стоять", ctx: "He stood up and gave the presentation.", type: "irr" },
+    { word: "take", def: "took · taken · брать/принимать", ctx: "I took the minutes in the meeting.", type: "irr" },
+    { word: "tell", def: "told · told · говорить/рассказывать", ctx: "She told us about the new policy.", type: "irr" },
+    { word: "think", def: "thought · thought · думать", ctx: "We thought about new strategies.", type: "irr" },
+    { word: "understand", def: "understood · understood · понимать", ctx: "Did you understand the brief?", type: "irr" },
+    { word: "win", def: "won · won · выиграть/победить", ctx: "We won a new contract.", type: "irr" },
+    { word: "write", def: "wrote · written · писать", ctx: "She wrote a report for the CEO.", type: "irr" }
+  ],
+
+  "Irregular Verbs E (Mixed review)": [
+    { word: "arise", def: "arose · arisen · возникать", ctx: "A problem arose during the project.", type: "irr" },
+    { word: "cut", def: "cut · cut · резать/сокращать", ctx: "We cut costs by 15%.", type: "irr" },
+    { word: "deal", def: "dealt · dealt · иметь дело с", ctx: "She dealt with the complaint.", type: "irr" },
+    { word: "fall", def: "fell · fallen · падать", ctx: "Sales fell in the last quarter.", type: "irr" },
+    { word: "feel", def: "felt · felt · чувствовать", ctx: "I felt confident during the interview.", type: "irr" },
+    { word: "hold", def: "held · held · держать/проводить", ctx: "We held a meeting with the board.", type: "irr" },
+    { word: "input", def: "input · input · вводить данные", ctx: "Please input the data into the system.", type: "irr" },
+    { word: "lay", def: "laid · laid · класть/увольнять", ctx: "The company laid off 50 staff.", type: "irr" },
+    { word: "rise", def: "rose · risen · расти/подниматься", ctx: "Prices rose by 5% last year.", type: "irr" },
+    { word: "seek", def: "sought · sought · искать", ctx: "We sought new investment.", type: "irr" },
+    { word: "shut", def: "shut · shut · закрывать", ctx: "They shut the factory last year.", type: "irr" },
+    { word: "spread", def: "spread · spread · распространять", ctx: "News spread quickly.", type: "irr" },
+    { word: "withdraw", def: "withdrew · withdrawn · снимать деньги/отзывать", ctx: "He withdrew from the negotiations.", type: "irr" }
+  ]
+
+};
+
+// ─────────────────────────────────────────────
+//  UI CONFIG
+// ─────────────────────────────────────────────
+const SECTION_ORDER = [
+  { label: "Units 1–6", keys: ["Unit 1A","Unit 1B","Unit 2A","Unit 2B","Unit 3A","Unit 3B","Unit 4A","Unit 4B","Unit 5A","Unit 5B","Unit 6A","Unit 6B"] },
+  { label: "Units 7–12", keys: ["Unit 7A","Unit 7B","Unit 8A","Unit 8B","Unit 9A","Unit 9B","Unit 10A","Unit 10B","Unit 11A","Unit 11B","Unit 12A","Unit 12B"] },
+  { label: "Irregular Verbs", keys: ["Irregular Verbs A","Irregular Verbs B","Irregular Verbs C","Irregular Verbs D","Irregular Verbs E"] }
+];
+
+const units = Object.keys(VOCAB);
+
+let progress = {};
+let quizQueue = [];
+let quizIndex = 0;
+let quizMode = '';
+let currentUnit = '';
+let currentItem = null;
+let sessionStats = { easy: 0, medium: 0, hard: 0, correct: 0, total: 0 };
+let hardWords = [];
+
+function loadProgress() {
+  try { progress = JSON.parse(localStorage.getItem('br_elem_v2_progress') || '{}'); } catch(e) { progress = {}; }
+}
+function saveProgress() {
+  try { localStorage.setItem('br_elem_v2_progress', JSON.stringify(progress)); } catch(e) {}
+}
+
+function getWordKey(unit, word) { return unit + '::' + word; }
+function getInterval(level) { return [0, 1, 3, 7, 14, 30][Math.min(level, 5)]; }
+function isDue(key) { const p = progress[key]; if (!p) return false; return Date.now() >= (p.nextDue || 0); }
+function isLearned(key) { return !!(progress[key]); }
+
+function getUnitShortLabel(unitKey) {
+  const dash = unitKey.indexOf('–');
+  if (dash !== -1) return unitKey.substring(0, dash).trim();
+  return unitKey;
+}
+function getUnitName(unitKey) {
+  const dash = unitKey.indexOf('–');
+  if (dash !== -1) return unitKey.substring(dash + 1).trim();
+  return unitKey;
+}
+
+function renderHome() {
+  const container = document.getElementById('unit-grid-container');
+  container.innerHTML = '';
+
+  SECTION_ORDER.forEach(section => {
+    const lbl = document.createElement('div');
+    lbl.className = 'section-label';
+    lbl.textContent = section.label;
+    container.appendChild(lbl);
+
+    const grid = document.createElement('div');
+    grid.className = 'unit-grid';
+
+    section.keys.forEach(prefix => {
+      // find matching unit key
+      const matchingKey = units.find(u => u.startsWith(prefix));
+      if (!matchingKey) return;
+      const words = VOCAB[matchingKey];
+      let learned = 0, due = 0;
+      words.forEach(item => {
+        const key = getWordKey(matchingKey, item.word);
+        if (isLearned(key)) { learned++; if (isDue(key)) due++; }
+      });
+      const pct = Math.round((learned / words.length) * 100);
+      const card = document.createElement('div');
+      const isIrr = matchingKey.startsWith('Irregular');
+      card.className = 'unit-card' + (isIrr ? ' irr' : '');
+
+      const shortNum = getUnitShortLabel(matchingKey);
+      const name = getUnitName(matchingKey);
+
+      card.innerHTML = `<div class="unit-num">${shortNum}</div><div class="unit-name">${name}</div><div class="unit-prog"><div class="unit-bar" style="width:${pct}%"></div></div><div class="unit-count">${learned}/${words.length} learned${due > 0 ? ` · <span style="color:var(--amber)">${due} due</span>` : ''}</div>`;
+      card.onclick = () => startUnit(matchingKey);
+      grid.appendChild(card);
+    });
+
+    container.appendChild(grid);
+  });
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome() { renderHome(); showScreen('screen-home'); }
+
+function startUnit(unit) {
+  currentUnit = unit;
+  quizMode = 'unit';
+  quizQueue = shuffle([...VOCAB[unit]]);
+  sessionStats = { easy: 0, medium: 0, hard: 0, correct: 0, total: 0 };
+  hardWords = [];
+  quizIndex = 0;
+  document.getElementById('quiz-title').textContent = unit;
+  showScreen('screen-quiz');
+  showQuestion();
+}
+
+function startReview() {
+  quizMode = 'review';
+  quizQueue = [];
+  units.forEach(unit => {
+    VOCAB[unit].forEach(item => {
+      const key = getWordKey(unit, item.word);
+      if (isDue(key)) quizQueue.push({ ...item, _unit: unit });
+    });
+  });
+  if (quizQueue.length === 0) {
+    alert('No words due for review right now. Come back later or practice all learned words.');
+    return;
+  }
+  quizQueue = shuffle(quizQueue);
+  sessionStats = { easy: 0, medium: 0, hard: 0, correct: 0, total: 0 };
+  hardWords = [];
+  quizIndex = 0;
+  document.getElementById('quiz-title').textContent = 'Review';
+  showScreen('screen-quiz');
+  showQuestion();
+}
+
+function startAll() {
+  quizMode = 'all';
+  quizQueue = [];
+  units.forEach(unit => {
+    VOCAB[unit].forEach(item => {
+      const key = getWordKey(unit, item.word);
+      if (isLearned(key)) quizQueue.push({ ...item, _unit: unit });
+    });
+  });
+  if (quizQueue.length === 0) {
+    alert('No learned words yet. Start with a unit first.');
+    return;
+  }
+  quizQueue = shuffle(quizQueue);
+  sessionStats = { easy: 0, medium: 0, hard: 0, correct: 0, total: 0 };
+  hardWords = [];
+  quizIndex = 0;
+  document.getElementById('quiz-title').textContent = 'All words';
+  showScreen('screen-quiz');
+  showQuestion();
+}
+
+function retryHard() {
+  if (hardWords.length === 0) { goHome(); return; }
+  quizQueue = shuffle([...hardWords]);
+  hardWords = [];
+  sessionStats = { easy: 0, medium: 0, hard: 0, correct: 0, total: 0 };
+  quizIndex = 0;
+  showScreen('screen-quiz');
+  showQuestion();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getDistractors(item, unit) {
+  // For irregular verbs: pick distractors only from irr items
+  const isIrrItem = item.type === 'irr';
+  let pool;
+  if (isIrrItem) {
+    pool = units.filter(u => u.startsWith('Irregular')).flatMap(u => VOCAB[u]);
+  } else {
+    pool = unit ? VOCAB[unit] : Object.values(VOCAB).flat().filter(w => w.type !== 'irr');
+  }
+  const others = pool.filter(w => w.word !== item.word);
+  return shuffle(others).slice(0, 3).map(w => w.def);
+}
+
+function showQuestion() {
+  if (quizIndex >= quizQueue.length) { showResults(); return; }
+  currentItem = quizQueue[quizIndex];
+  const pct = Math.round((quizIndex / quizQueue.length) * 100);
+  document.getElementById('quiz-progress-fill').style.width = pct + '%';
+  document.getElementById('quiz-subtitle').textContent = `Question ${quizIndex + 1} of ${quizQueue.length}`;
+
+  const isIrr = currentItem.type === 'irr';
+  const cardLabel = document.getElementById('card-label');
+  if (isIrr) {
+    cardLabel.textContent = 'Past · Past Participle · Translation?';
+  } else if (currentItem.type === 'collocation') {
+    cardLabel.textContent = 'What does this phrase mean?';
+  } else {
+    cardLabel.textContent = 'What does this word mean?';
+  }
+
+  document.getElementById('quiz-word').textContent = currentItem.word;
+  document.getElementById('quiz-context').textContent = currentItem.ctx || '';
+  document.getElementById('quiz-reveal').style.display = 'none';
+  document.getElementById('quiz-type').textContent = '';
+  document.getElementById('options-area').style.display = 'block';
+  document.getElementById('rate-area').style.display = 'none';
+
+  const unit = currentItem._unit || currentUnit;
+  const distractors = getDistractors(currentItem, unit);
+  const opts = shuffle([currentItem.def, ...distractors]);
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = opt;
+    btn.onclick = () => selectOption(btn, opt === currentItem.def);
+    grid.appendChild(btn);
+  });
+}
+
+function selectOption(btn, isCorrect) {
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === currentItem.def) b.classList.add('correct');
+  });
+  if (!isCorrect) btn.classList.add('wrong');
+  sessionStats.total++;
+  if (isCorrect) sessionStats.correct++;
+
+  document.getElementById('quiz-reveal').textContent = currentItem.def;
+  document.getElementById('quiz-reveal').style.display = 'block';
+  document.getElementById('quiz-type').textContent = currentItem.type;
+  document.getElementById('options-area').style.display = 'none';
+  document.getElementById('rate-area').style.display = 'block';
+
+  const key = getWordKey(currentItem._unit || currentUnit, currentItem.word);
+  if (!progress[key]) progress[key] = { level: 0, nextDue: 0 };
+}
+
+function rate(r) {
+  const key = getWordKey(currentItem._unit || currentUnit, currentItem.word);
+  if (!progress[key]) progress[key] = { level: 0 };
+  let level = progress[key].level || 0;
+  if (r === 3) { level = Math.min(level + 2, 5); sessionStats.easy++; }
+  else if (r === 2) { level = Math.min(level + 1, 5); sessionStats.medium++; }
+  else { level = Math.max(level - 1, 0); sessionStats.hard++; hardWords.push(currentItem); }
+  const days = getInterval(level);
+  progress[key] = { level, nextDue: Date.now() + days * 864e5 };
+  saveProgress();
+  quizIndex++;
+  showQuestion();
+}
+
+function showResults() {
+  const s = sessionStats;
+  document.getElementById('results-unit-label').textContent = document.getElementById('quiz-title').textContent + ' complete';
+  document.getElementById('results-score').textContent = s.correct + '/' + s.total;
+  document.getElementById('rb-easy').textContent = s.easy;
+  document.getElementById('rb-medium').textContent = s.medium;
+  document.getElementById('rb-hard').textContent = s.hard;
+
+  let dueMsg = 'Hard words will appear again next session.';
+  if (s.easy > 0) dueMsg = 'Easy words: review in 7 days. Hard words: review tomorrow.';
+  document.getElementById('next-due-msg').textContent = dueMsg;
+
+  const retryBtn = document.querySelector('#screen-results .btn-secondary');
+  if (hardWords.length === 0) {
+    retryBtn.style.display = 'none';
+  } else {
+    retryBtn.style.display = 'block';
+    retryBtn.textContent = `Retry ${hardWords.length} hard word${hardWords.length > 1 ? 's' : ''}`;
+  }
+  showScreen('screen-results');
+}
+
+loadProgress();
+renderHome();
+</script>
