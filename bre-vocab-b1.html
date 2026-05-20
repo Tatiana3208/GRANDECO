@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Result | Vocabulary Trainer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy2: #1a2d40;
+    --gold: #c89b3c;
+    --gold-light: #e8b84b;
+    --cream: #f5f0e8;
+    --slate: #5a7a94;
+    --slate-light: #8fb0c8;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --text: #e8e0d4;
+    --text-dim: #8a8f99;
+    --card-bg: #162336;
+    --border: rgba(200,155,60,0.18);
+    --shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* ── Layout ── */
+  .app { display: flex; height: 100vh; overflow: hidden; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 260px;
+    background: var(--navy2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo .brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+  }
+  .sidebar-logo .sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .nav-section {
+    padding: 16px 0 8px;
+  }
+  .nav-label {
+    padding: 4px 24px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text-dim);
+    font-size: 14px;
+    border-left: 3px solid transparent;
+  }
+  .nav-item:hover { color: var(--text); background: rgba(200,155,60,0.06); }
+  .nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(200,155,60,0.1); }
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .nav-item .badge {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 20px;
+    min-width: 22px;
+    text-align: center;
+  }
+  .nav-item .badge.red { background: var(--red); color: white; }
+
+  .unit-list { padding: 0; }
+  .unit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 24px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .unit-item:hover { color: var(--text); background: rgba(200,155,60,0.06); }
+  .unit-item.active { color: var(--gold); background: rgba(200,155,60,0.1); }
+  .unit-num {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .unit-item.active .unit-num { background: var(--gold); color: var(--navy); }
+  .unit-prog {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .unit-item.active .unit-prog { color: var(--gold-light); }
+
+  /* ── Main Content ── */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Views ── */
+  .view { display: none; flex-direction: column; height: 100%; }
+  .view.active { display: flex; }
+
+  /* ── Dashboard ── */
+  .dash-header {
+    padding: 40px 48px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dash-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--cream);
+  }
+  .dash-header p { color: var(--text-dim); margin-top: 4px; font-size: 14px; }
+  .dash-body { padding: 32px 48px; overflow-y: auto; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 20px 16px;
+  }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+  .stat-val { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: var(--cream); margin: 4px 0 2px; }
+  .stat-sub { font-size: 11px; color: var(--text-dim); }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+
+  /* Due cards */
+  .due-section { margin-bottom: 32px; }
+  .due-list { display: flex; flex-direction: column; gap: 8px; }
+  .due-row {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .due-word { font-weight: 500; color: var(--cream); flex: 1; }
+  .due-unit { font-size: 12px; color: var(--text-dim); }
+  .due-overdue { font-size: 12px; color: var(--red); font-weight: 500; }
+  .due-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .due-badge.new { background: rgba(200,155,60,0.2); color: var(--gold); }
+  .due-badge.review { background: rgba(94,158,205,0.2); color: var(--slate-light); }
+  .study-btn {
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: auto;
+  }
+  .study-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* Progress visualization */
+  .progress-section { margin-bottom: 32px; }
+  .unit-progress-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  .up-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .up-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .up-card .up-num { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--gold); }
+  .up-card .up-name { font-size: 10px; color: var(--text-dim); margin: 3px 0 8px; line-height: 1.3; }
+  .up-bar-wrap { background: rgba(255,255,255,0.08); border-radius: 4px; height: 5px; }
+  .up-bar { background: var(--gold); height: 5px; border-radius: 4px; transition: width 0.5s; }
+  .up-pct { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+
+  /* Heatmap */
+  .heatmap-section { margin-bottom: 32px; }
+  .heatmap-wrap { overflow-x: auto; }
+  .heatmap { display: grid; grid-template-columns: repeat(52, 14px); gap: 2px; }
+  .hm-day {
+    width: 12px; height: 12px; border-radius: 2px;
+    background: rgba(255,255,255,0.05);
+    cursor: default;
+  }
+  .hm-day.l1 { background: rgba(200,155,60,0.25); }
+  .hm-day.l2 { background: rgba(200,155,60,0.5); }
+  .hm-day.l3 { background: rgba(200,155,60,0.75); }
+  .hm-day.l4 { background: var(--gold); }
+
+  /* ── Study View ── */
+  .study-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .study-header {
+    padding: 24px 48px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .study-back {
+    background: none; border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 7px 14px; border-radius: 8px;
+    cursor: pointer; font-size: 13px;
+    transition: all 0.15s;
+  }
+  .study-back:hover { color: var(--text); border-color: var(--text-dim); }
+  .study-info h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px; font-weight: 800;
+    color: var(--cream);
+  }
+  .study-info p { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
+  .study-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-left: 20px;
+  }
+  .study-progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 3px;
+    transition: width 0.4s;
+  }
+  .study-counter { font-size: 13px; color: var(--text-dim); white-space: nowrap; }
+
+  .study-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 48px;
+    overflow-y: auto;
+  }
+
+  .flashcard-wrap { width: 100%; max-width: 700px; }
+
+  .flashcard {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 40px 32px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    min-height: 220px;
+    transition: border-color 0.3s;
+  }
+  .flashcard::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+  .flashcard.correct { border-color: var(--green); }
+  .flashcard.correct::before { background: var(--green); opacity: 1; }
+  .flashcard.wrong { border-color: var(--red); }
+  .flashcard.wrong::before { background: var(--red); opacity: 1; }
+
+  .fc-unit-tag {
+    display: inline-block;
+    background: rgba(200,155,60,0.15);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .fc-question {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--cream);
+    margin-bottom: 24px;
+  }
+  .fc-question em { font-style: normal; color: var(--gold); }
+
+  .fc-blank {
+    display: inline-block;
+    background: rgba(200,155,60,0.12);
+    border-bottom: 2px solid var(--gold);
+    min-width: 80px;
+    height: 22px;
+    vertical-align: bottom;
+    border-radius: 2px;
+  }
+
+  .answer-input-wrap {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .answer-input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 18px;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .answer-input:focus { border-color: var(--gold); }
+  .answer-input.correct { border-color: var(--green); background: rgba(46,204,113,0.08); }
+  .answer-input.wrong { border-color: var(--red); background: rgba(231,76,60,0.08); }
+  .check-btn {
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .check-btn:hover { background: var(--gold-light); }
+  .check-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .feedback-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feedback-row.show { opacity: 1; }
+  .feedback-row.correct { background: rgba(46,204,113,0.1); color: var(--green); }
+  .feedback-row.wrong { background: rgba(231,76,60,0.1); color: var(--red); }
+  .feedback-row .correct-answer { color: var(--green); font-weight: 600; }
+
+  /* Light indicator dot */
+  .fc-light {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    transition: all 0.3s;
+  }
+  .fc-light.green { background: var(--green); box-shadow: 0 0 10px var(--green); }
+  .fc-light.red { background: var(--red); box-shadow: 0 0 10px var(--red); }
+
+  /* Difficulty buttons */
+  .difficulty-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .difficulty-row.show { opacity: 1; pointer-events: all; }
+  .diff-label { font-size: 12px; color: var(--text-dim); margin-right: 4px; align-self: center; }
+  .diff-btn {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .diff-btn:hover { color: var(--text); border-color: var(--text-dim); }
+  .diff-btn.easy { --c: var(--green); }
+  .diff-btn.ok { --c: var(--gold); }
+  .diff-btn.hard { --c: var(--red); }
+  .diff-btn:hover { border-color: var(--c); color: var(--c); background: color-mix(in srgb, var(--c) 10%, transparent); }
+
+  /* Session complete */
+  .session-done {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 16px;
+    padding: 60px 40px;
+  }
+  .session-done.show { display: flex; }
+  .session-done .done-icon { font-size: 56px; }
+  .session-done h2 { font-family: 'Syne', sans-serif; font-size: 26px; color: var(--cream); }
+  .session-done p { color: var(--text-dim); max-width: 360px; }
+  .done-stats {
+    display: flex; gap: 32px; margin: 8px 0;
+  }
+  .done-stat { text-align: center; }
+  .done-stat .n { font-family: 'Syne', sans-serif; font-size: 36px; color: var(--gold); }
+  .done-stat .l { font-size: 12px; color: var(--text-dim); }
+
+  /* ── Progress View ── */
+  .progress-view-body { padding: 40px 48px; overflow-y: auto; }
+  .progress-view-body h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px; font-weight: 800;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .progress-view-body > p { color: var(--text-dim); margin-bottom: 32px; }
+
+  .level-legend {
+    display: flex; gap: 16px; margin-bottom: 24px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-dim); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .legend-dot.l0 { background: rgba(255,255,255,0.1); }
+  .legend-dot.l1 { background: rgba(200,155,60,0.35); }
+  .legend-dot.l2 { background: rgba(200,155,60,0.6); }
+  .legend-dot.l3 { background: var(--gold); }
+  .legend-dot.l4 { background: var(--green); }
+
+  .all-units-table { width: 100%; border-collapse: collapse; }
+  .all-units-table th {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-dim); padding: 8px 16px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .all-units-table td { padding: 12px 16px; border-bottom: 1px solid rgba(200,155,60,0.06); }
+  .all-units-table tr:hover td { background: rgba(200,155,60,0.04); }
+  .level-bar-wrap { display: flex; gap: 3px; align-items: center; }
+  .level-seg {
+    height: 8px; flex: 1; border-radius: 2px;
+    transition: background 0.4s;
+  }
+
+  .word-detail-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 16px;
+  }
+  .wdg-cell {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wdg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .sidebar { width: 200px; }
+    .dash-body, .progress-view-body, .study-header, .study-body { padding-left: 24px; padding-right: 24px; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .unit-progress-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand">Business Result</div>
+      <div class="sub">B1–B2 Vocabulary Trainer</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Navigation</div>
+      <div class="nav-item active" onclick="showView('dashboard')">
+        <span class="icon">🏠</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showView('progress')">
+        <span class="icon">📊</span> My Progress
+      </div>
+      <div class="nav-item" onclick="startDueSession()" id="due-nav">
+        <span class="icon">🔔</span> Due for Review
+        <span class="badge red" id="due-count-badge">0</span>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Units</div>
+      <div class="unit-list" id="unit-list"></div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Dashboard -->
+    <div class="view active" id="view-dashboard">
+      <div class="dash-header">
+        <h1 id="dash-greeting">Good morning 👋</h1>
+        <p>Business Result Intermediate — B1/B2 Vocabulary</p>
+      </div>
+      <div class="dash-body">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">Total Words</div>
+            <div class="stat-val" id="stat-total">225</div>
+            <div class="stat-sub">across 15 units</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Studied</div>
+            <div class="stat-val" id="stat-studied">0</div>
+            <div class="stat-sub">words introduced</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Mastered</div>
+            <div class="stat-val" id="stat-mastered">0</div>
+            <div class="stat-sub">level 4 words</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Streak</div>
+            <div class="stat-val" id="stat-streak">0</div>
+            <div class="stat-sub">days in a row</div>
+          </div>
+        </div>
+
+        <!-- Due section -->
+        <div class="due-section">
+          <div class="section-title">📋 Due for Review Today</div>
+          <div class="due-list" id="due-list-dash">
+            <div style="color: var(--text-dim); font-size: 14px; padding: 16px 0;">No reviews due. Keep studying new units! ✨</div>
+          </div>
+          <div style="margin-top: 12px" id="start-due-wrap" style="display:none">
+            <button class="study-btn" onclick="startDueSession()">Review All Due Words →</button>
+          </div>
+        </div>
+
+        <!-- Unit progress overview -->
+        <div class="progress-section">
+          <div class="section-title">📚 Unit Progress</div>
+          <div class="unit-progress-grid" id="unit-progress-grid"></div>
+        </div>
+
+        <!-- Heatmap -->
+        <div class="heatmap-section">
+          <div class="section-title">📅 Study Activity</div>
+          <div class="heatmap-wrap">
+            <div class="heatmap" id="heatmap"></div>
+          </div>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 8px;">Last 52 weeks of review activity</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Study View -->
+    <div class="view" id="view-study">
+      <div class="study-header">
+        <button class="study-back" onclick="exitStudy()">← Back</button>
+        <div class="study-info">
+          <h2 id="study-unit-title">Unit 1 – Working Life</h2>
+          <p id="study-subtitle">Flashcard review</p>
+        </div>
+        <div class="study-progress-bar">
+          <div class="study-progress-fill" id="study-fill" style="width:0%"></div>
+        </div>
+        <div class="study-counter" id="study-counter">0 / 0</div>
+      </div>
+
+      <div class="study-body">
+        <div class="flashcard-wrap" id="study-content">
+          <!-- flashcard rendered here -->
+        </div>
+
+        <div class="session-done" id="session-done">
+          <div class="done-icon">🎉</div>
+          <h2>Session Complete!</h2>
+          <div class="done-stats">
+            <div class="done-stat"><div class="n" id="done-correct">0</div><div class="l">Correct</div></div>
+            <div class="done-stat"><div class="n" id="done-wrong">0</div><div class="l">Incorrect</div></div>
+            <div class="done-stat"><div class="n" id="done-pct">0%</div><div class="l">Accuracy</div></div>
+          </div>
+          <p id="done-message">Great work!</p>
+          <button class="study-btn" onclick="exitStudy()">Back to Dashboard</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress View -->
+    <div class="view" id="view-progress">
+      <div class="progress-view-body">
+        <h1>My Progress</h1>
+        <p>Track your mastery across all 15 Business Result units</p>
+
+        <div class="level-legend">
+          <div class="legend-item"><div class="legend-dot l0"></div> New</div>
+          <div class="legend-item"><div class="legend-dot l1"></div> Seen (L1)</div>
+          <div class="legend-item"><div class="legend-dot l2"></div> Learning (L2)</div>
+          <div class="legend-item"><div class="legend-dot l3"></div> Familiar (L3)</div>
+          <div class="legend-item"><div class="legend-dot l4"></div> Mastered (L4)</div>
+        </div>
+
+        <table class="all-units-table" id="progress-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Unit</th>
+              <th>Topic</th>
+              <th>Words</th>
+              <th>Mastery breakdown</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="progress-tbody"></tbody>
+        </table>
+
+        <div style="margin-top: 32px">
+          <div class="section-title">🗂️ All Words at a Glance</div>
+          <div style="color: var(--text-dim); font-size: 13px; margin-bottom: 12px;">Colour-coded by mastery level</div>
+          <div class="word-detail-grid" id="word-detail-grid"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ─── VOCABULARY DATA ──────────────────────────────────────────────────────────
+// 15 units × 15 words, sourced from Business Result Intermediate B1-B2 themes
+// Each word: { word, hint, question, answer }
+// question = fill-in-the-blank or description clue; answer = the target word
+
+const UNITS = [
+  {
+    id: 1, title: "Working Life", topic: "Describing work",
+    color: "#c89b3c",
+    words: [
+      { word: "specialize in", hint: "verb phrase", q: "He doesn't cover all areas of law — he _____ intellectual property cases exclusively.", a: "specializes in" },
+      { word: "be in charge of", hint: "verb phrase", q: "She _____ recruiting, which means all hiring decisions go through her.", a: "is in charge of" },
+      { word: "be responsible for", hint: "verb phrase", q: "The site manager _____ ensuring health and safety compliance on all projects.", a: "is responsible for" },
+      { word: "consist of", hint: "verb phrase", q: "The induction programme _____ three days of training followed by a mentoring period.", a: "consists of" },
+      { word: "deal with", hint: "verb phrase", q: "Customer service representatives _____ complaints — often difficult ones.", a: "deal with" },
+      { word: "freelance", hint: "adjective/noun", q: "She's not on the payroll; she works on a _____ basis for several different clients.", a: "freelance" },
+      { word: "multinational", hint: "adjective", q: "The company operates in 40 countries — it is a truly _____ corporation.", a: "multinational" },
+      { word: "budgeting", hint: "noun", q: "Careful _____ is essential when allocating departmental resources for the year.", a: "budgeting" },
+      { word: "consultant", hint: "noun", q: "The firm hired an external _____ to advise on restructuring their supply chain.", a: "consultant" },
+      { word: "coordinating", hint: "participle", q: "She spends most of her day _____ schedules between four different project teams.", a: "coordinating" },
+      { word: "full-time", hint: "adjective", q: "Unlike part-time employees, _____ staff are contracted for a standard 40-hour week.", a: "full-time" },
+      { word: "work as", hint: "verb phrase", q: "After his MBA he went on to _____ a strategy manager for a global retailer.", a: "work as" },
+      { word: "marketing strategy", hint: "noun phrase", q: "The agency developed a bold _____ to position the brand for younger consumers.", a: "marketing strategy" },
+      { word: "employment law", hint: "noun phrase", q: "HR professionals must have thorough knowledge of _____ to handle dismissals lawfully.", a: "employment law" },
+      { word: "agency", hint: "noun", q: "She left the in-house team to set up her own independent design _____.", a: "agency" }
+    ]
+  },
+  {
+    id: 2, title: "Work–Life Balance", topic: "Workplace conditions",
+    color: "#5a9abf",
+    words: [
+      { word: "flexitime", hint: "noun", q: "The company operates a _____ system — employees must be in during core hours but can vary their start and finish times.", a: "flexitime" },
+      { word: "statutory pay", hint: "noun phrase", q: "After a short-term illness of under four weeks, staff receive full pay; beyond that they drop to _____.", a: "statutory pay" },
+      { word: "maternity leave", hint: "noun phrase", q: "She is currently on _____ after the birth of her second child and plans to return in six months.", a: "maternity leave" },
+      { word: "paternity leave", hint: "noun phrase", q: "The new policy extended _____ from two to four weeks to encourage shared childcare.", a: "paternity leave" },
+      { word: "annual leave", hint: "noun phrase", q: "Unused _____ cannot be carried over beyond March 31 under the revised holiday policy.", a: "annual leave" },
+      { word: "overtime", hint: "noun", q: "Staff who work beyond 6 p.m. are entitled to paid _____ at one and a half times their normal rate.", a: "overtime" },
+      { word: "core hours", hint: "noun phrase", q: "Although start times are flexible, everyone must be at their desk during the _____ of 10 a.m. to 4 p.m.", a: "core hours" },
+      { word: "home-working", hint: "noun", q: "The policy allows a maximum of one day's _____ per week, subject to managerial approval.", a: "home-working" },
+      { word: "sick leave", hint: "noun phrase", q: "Employees absent for more than five consecutive days must provide a doctor's certificate to claim _____.", a: "sick leave" },
+      { word: "terms and conditions", hint: "noun phrase", q: "Before signing the contract, read the _____ carefully, particularly the section on redundancy.", a: "terms and conditions" },
+      { word: "entitlement", hint: "noun", q: "Your holiday _____ increases from 25 to 27 days once you have completed five years' service.", a: "entitlement" },
+      { word: "long-hours culture", hint: "noun phrase", q: "The start-up was notorious for its _____, with engineers regularly working past midnight.", a: "long-hours culture" },
+      { word: "burnout", hint: "noun", q: "After two years without a holiday, she suffered complete _____ and had to take extended sick leave.", a: "burnout" },
+      { word: "wellbeing", hint: "noun", q: "The company invested in an employee _____ programme offering counselling and yoga classes.", a: "wellbeing" },
+      { word: "on-site", hint: "adjective", q: "The tech campus provides _____ childcare to help working parents manage pick-up times.", a: "on-site" }
+    ]
+  },
+  {
+    id: 3, title: "Projects", topic: "Project management",
+    color: "#7a9c5e",
+    words: [
+      { word: "meet the deadline", hint: "verb phrase", q: "The development team worked through the weekend to _____ for the product launch.", a: "meet the deadline" },
+      { word: "fall behind schedule", hint: "verb phrase", q: "The construction project began to _____ after weeks of bad weather caused delays.", a: "fall behind schedule" },
+      { word: "catch up", hint: "phrasal verb", q: "We lost a fortnight due to the supplier issue, so we need a plan to _____ before the client review.", a: "catch up" },
+      { word: "be on track", hint: "phrase", q: "The project manager confirmed that all deliverables are _____ for completion by Q3.", a: "on track" },
+      { word: "use resources", hint: "verb phrase", q: "An efficient project manager knows how to _____ wisely without exceeding the budget.", a: "use resources" },
+      { word: "stay within budget", hint: "verb phrase", q: "The biggest challenge was to _____ while still delivering the full scope of the project.", a: "stay within budget" },
+      { word: "allocate tasks", hint: "verb phrase", q: "At the kick-off meeting, the team leader will _____ based on each member's skills.", a: "allocate tasks" },
+      { word: "provide updates", hint: "verb phrase", q: "She was asked to _____ twice a week to keep senior management informed of progress.", a: "provide updates" },
+      { word: "milestone", hint: "noun", q: "Completing the prototype is a key _____ that unlocks the next phase of funding.", a: "milestone" },
+      { word: "scope", hint: "noun", q: "Any additional work not included in the original brief is considered outside the _____ of the contract.", a: "scope" },
+      { word: "objectives", hint: "noun", q: "Clear project _____ must be agreed upon at the start so the team knows what success looks like.", a: "objectives" },
+      { word: "coordination", hint: "noun", q: "Poor _____ between the design and engineering teams led to costly rework.", a: "coordination" },
+      { word: "volunteer project", hint: "noun phrase", q: "As part of its CSR commitment, each department undertakes at least one _____ per year.", a: "volunteer project" },
+      { word: "budget", hint: "noun", q: "The initial _____ of €50,000 proved insufficient once the project expanded in scope.", a: "budget" },
+      { word: "progress report", hint: "noun phrase", q: "The client expects a weekly _____ outlining completed tasks and any risks identified.", a: "progress report" }
+    ]
+  },
+  {
+    id: 4, title: "Customers", topic: "Customer relations",
+    color: "#b05fc4",
+    words: [
+      { word: "loyal customer", hint: "noun phrase", q: "A _____ is someone who repeatedly chooses your brand even when cheaper alternatives are available.", a: "loyal customer" },
+      { word: "target market", hint: "noun phrase", q: "The product was redesigned after research revealed that the _____ had shifted to the 35–50 age group.", a: "target market" },
+      { word: "customer satisfaction", hint: "noun phrase", q: "Post-purchase surveys are a common way to measure _____ and identify areas for improvement.", a: "customer satisfaction" },
+      { word: "complaint", hint: "noun", q: "She filed a formal _____ after waiting three weeks for a response to her warranty claim.", a: "complaint" },
+      { word: "handle", hint: "verb", q: "It takes considerable skill to _____ difficult customers without escalating the situation.", a: "handle" },
+      { word: "refund", hint: "noun/verb", q: "The shop was legally required to issue a full _____ after the item proved faulty.", a: "refund" },
+      { word: "query", hint: "noun", q: "The helpdesk received over 200 _____ per day in the week following the software update.", a: "queries" },
+      { word: "follow up", hint: "phrasal verb", q: "Make sure to _____ with the client 48 hours after sending the proposal.", a: "follow up" },
+      { word: "word of mouth", hint: "noun phrase", q: "The bakery grew its reputation entirely through _____ — no advertising was ever used.", a: "word of mouth" },
+      { word: "exceed expectations", hint: "verb phrase", q: "Customer retention increases significantly when a business consistently _____ rather than merely meeting them.", a: "exceeds expectations" },
+      { word: "after-sales service", hint: "noun phrase", q: "The brand's strong _____ — including free repairs for two years — built considerable trust.", a: "after-sales service" },
+      { word: "enquiry", hint: "noun", q: "We received a large number of _____ about the new product following the trade fair.", a: "enquiries" },
+      { word: "retention", hint: "noun", q: "It costs five times more to acquire a new customer than to improve _____ of existing ones.", a: "retention" },
+      { word: "demographic", hint: "noun", q: "Data shows the platform is losing users in the 18–24 _____, which concerns investors.", a: "demographic" },
+      { word: "brand loyalty", hint: "noun phrase", q: "Consistent quality and good _____ encourage customers to return despite higher prices.", a: "brand loyalty" }
+    ]
+  },
+  {
+    id: 5, title: "Travel", topic: "Business travel",
+    color: "#c05050",
+    words: [
+      { word: "itinerary", hint: "noun", q: "She emailed the final _____ to all delegates — flights, hotels, and meeting venues were all listed.", a: "itinerary" },
+      { word: "layover", hint: "noun", q: "The cheapest ticket involved a four-hour _____ in Amsterdam before connecting to Dubai.", a: "layover" },
+      { word: "business class", hint: "noun phrase", q: "Company policy allows senior managers to fly _____ on flights exceeding eight hours.", a: "business class" },
+      { word: "expense claim", hint: "noun phrase", q: "Receipts must be attached to every _____ submitted within 30 days of travel.", a: "expense claim" },
+      { word: "subsistence allowance", hint: "noun phrase", q: "Staff travelling abroad receive a daily _____ to cover meals and incidentals.", a: "subsistence allowance" },
+      { word: "jet lag", hint: "noun", q: "After flying from London to Tokyo, she needed two days to recover from severe _____.", a: "jet lag" },
+      { word: "transit visa", hint: "noun phrase", q: "He was not permitted to board the connecting flight because he lacked the required _____.", a: "transit visa" },
+      { word: "check in", hint: "phrasal verb", q: "Passengers are advised to _____ online 24 hours before departure to secure a preferred seat.", a: "check in" },
+      { word: "ground transportation", hint: "noun phrase", q: "The conference fee includes _____ between the airport and the venue.", a: "ground transportation" },
+      { word: "networking", hint: "noun/gerund", q: "The conference is primarily a _____ opportunity — the sessions are almost secondary.", a: "networking" },
+      { word: "reimburse", hint: "verb", q: "The accounts team will _____ you for any reasonable expenses incurred during the trip.", a: "reimburse" },
+      { word: "customs declaration", hint: "noun phrase", q: "Travellers bringing goods worth over €430 must complete a _____ at the border.", a: "customs declaration" },
+      { word: "conference call", hint: "noun phrase", q: "Rather than flying everyone to head office, the team held a _____ to review the quarterly figures.", a: "conference call" },
+      { word: "venue", hint: "noun", q: "The event coordinator is searching for a _____ that can accommodate 500 delegates.", a: "venue" },
+      { word: "accommodation", hint: "noun", q: "The company arranges _____ for all visiting clients, usually at a nearby four-star hotel.", a: "accommodation" }
+    ]
+  },
+  {
+    id: 6, title: "Companies", topic: "Company structures",
+    color: "#4a8fd4",
+    words: [
+      { word: "subsidiary", hint: "noun", q: "The German division is a wholly-owned _____ of the US parent company.", a: "subsidiary" },
+      { word: "headquarters", hint: "noun", q: "The group _____ moved from London to Dublin following Brexit-related restructuring.", a: "headquarters" },
+      { word: "shareholder", hint: "noun", q: "Each _____ will receive a dividend payment based on the number of shares they hold.", a: "shareholder" },
+      { word: "turnover", hint: "noun", q: "Despite a difficult market, annual _____ grew by 12% to reach €4.2 billion.", a: "turnover" },
+      { word: "profit margin", hint: "noun phrase", q: "The retailer saw its _____ squeezed as raw material costs rose faster than retail prices.", a: "profit margin" },
+      { word: "merger", hint: "noun", q: "The _____ between the two airlines created the largest carrier in the region.", a: "merger" },
+      { word: "acquisition", hint: "noun", q: "The tech giant's latest _____ — a software start-up valued at $2 billion — surprised analysts.", a: "acquisition" },
+      { word: "board of directors", hint: "noun phrase", q: "The _____ approved the expansion plan at an extraordinary general meeting.", a: "board of directors" },
+      { word: "listed company", hint: "noun phrase", q: "As a _____, they must publish quarterly financial results for public scrutiny.", a: "listed company" },
+      { word: "franchise", hint: "noun", q: "The fast-food chain expanded rapidly by selling _____ rights to local entrepreneurs.", a: "franchise" },
+      { word: "market share", hint: "noun phrase", q: "Their aggressive pricing strategy helped them capture a larger _____ in Southeast Asia.", a: "market share" },
+      { word: "joint venture", hint: "noun phrase", q: "The two companies formed a _____ to develop the technology together, sharing risks equally.", a: "joint venture" },
+      { word: "stakeholder", hint: "noun", q: "Effective communication with every _____ — from investors to local communities — is critical.", a: "stakeholder" },
+      { word: "revenue", hint: "noun", q: "The firm's _____ from digital products now exceeds that from its traditional print division.", a: "revenue" },
+      { word: "restructure", hint: "verb", q: "After the loss-making year, the board decided to _____ the business and cut 15% of staff.", a: "restructure" }
+    ]
+  },
+  {
+    id: 7, title: "Communication", topic: "Workplace communication",
+    color: "#e07832",
+    words: [
+      { word: "clarify", hint: "verb", q: "Could you _____ what you mean by 'soon'? I need a specific date for the handover.", a: "clarify" },
+      { word: "brief", hint: "verb/noun", q: "The project manager will _____ all team members on Thursday about the new security requirements.", a: "brief" },
+      { word: "circulate", hint: "verb", q: "Please _____ the agenda to all participants at least 48 hours before the meeting.", a: "circulate" },
+      { word: "minutes", hint: "noun (plural)", q: "The _____ of last month's steering committee have been posted on the intranet for review.", a: "minutes" },
+      { word: "agenda", hint: "noun", q: "Item three on the _____ — budget revisions — is likely to take the most time.", a: "agenda" },
+      { word: "put forward", hint: "phrasal verb", q: "She _____ a proposal to reduce travel costs by switching all internal meetings to video.", a: "put forward" },
+      { word: "raise a point", hint: "verb phrase", q: "He waited for the end of the presentation before _____ about the environmental impact.", a: "raising a point" },
+      { word: "action point", hint: "noun phrase", q: "Every _____ from the meeting was assigned an owner and a deadline to prevent inaction.", a: "action point" },
+      { word: "consensus", hint: "noun", q: "The team reached a _____ after lengthy debate — everyone agreed to prioritise the European market.", a: "consensus" },
+      { word: "miscommunication", hint: "noun", q: "A simple _____ about the delivery date caused a chain reaction of costly delays.", a: "miscommunication" },
+      { word: "transparent", hint: "adjective", q: "Management promised to be fully _____ about the financial situation after last year's confusion.", a: "transparent" },
+      { word: "face-to-face", hint: "adjective/adverb", q: "Some negotiations are better handled _____ rather than via email, where tone is easily misread.", a: "face-to-face" },
+      { word: "follow-up email", hint: "noun phrase", q: "She sent a _____ after the call to confirm the key points discussed and next steps.", a: "follow-up email" },
+      { word: "cc", hint: "verb (email)", q: "Please _____ the finance team on all correspondence related to the new supplier contract.", a: "cc" },
+      { word: "tone", hint: "noun", q: "The _____ of her reply was surprisingly blunt, which made the client feel undervalued.", a: "tone" }
+    ]
+  },
+  {
+    id: 8, title: "Presenting", topic: "Presentations & data",
+    color: "#6abf69",
+    words: [
+      { word: "outline", hint: "verb/noun", q: "She began by presenting an _____ of the three main findings before going into detail.", a: "outline" },
+      { word: "highlight", hint: "verb", q: "I'd like to _____ one particular trend that has a direct impact on our pricing strategy.", a: "highlight" },
+      { word: "demonstrate", hint: "verb", q: "This graph clearly _____ that customer acquisition costs have fallen by 30% since 2022.", a: "demonstrates" },
+      { word: "handout", hint: "noun", q: "Please refer to the _____ for the full set of statistics — I'll only mention the key ones.", a: "handout" },
+      { word: "Q&A session", hint: "noun phrase", q: "The presenter allowed 15 minutes at the end for a _____ so the audience could seek clarification.", a: "Q&A session" },
+      { word: "running order", hint: "noun phrase", q: "The _____ for the conference shows the keynote speech is scheduled for 9 a.m. sharp.", a: "running order" },
+      { word: "signposting", hint: "noun/gerund", q: "Good _____ — phrases like 'moving on to' or 'to summarise' — helps the audience follow your argument.", a: "signposting" },
+      { word: "bar chart", hint: "noun phrase", q: "A _____ is most useful when comparing discrete categories, such as sales performance by region.", a: "bar chart" },
+      { word: "pie chart", hint: "noun phrase", q: "The _____ illustrates the breakdown of operating costs, with salaries accounting for 62%.", a: "pie chart" },
+      { word: "trend", hint: "noun", q: "The data reveals a clear _____ towards remote working across all age groups and sectors.", a: "trend" },
+      { word: "fluctuation", hint: "noun", q: "There was significant _____ in exchange rates throughout Q2, making forecasting difficult.", a: "fluctuation" },
+      { word: "steady increase", hint: "noun phrase", q: "The graph shows a _____ in online orders from 2020 onwards.", a: "steady increase" },
+      { word: "sharp decline", hint: "noun phrase", q: "A _____ in foot traffic after the pandemic forced many retailers to accelerate digitalisation.", a: "sharp decline" },
+      { word: "peak", hint: "noun/verb", q: "Demand _____ in December and then drops sharply in January across all product lines.", a: "peaks" },
+      { word: "approximate", hint: "adjective", q: "The _____ cost of the project is €180,000, though final figures depend on material prices.", a: "approximate" }
+    ]
+  },
+  {
+    id: 9, title: "Logistics", topic: "Supply chains & orders",
+    color: "#b08040",
+    words: [
+      { word: "supply chain", hint: "noun phrase", q: "A disruption at any point in the _____ — from raw materials to delivery — can halt production.", a: "supply chain" },
+      { word: "warehouse", hint: "noun", q: "All goods are stored in a temperature-controlled _____ before being dispatched to retailers.", a: "warehouse" },
+      { word: "dispatch", hint: "verb/noun", q: "Orders placed before noon are _____ the same day from our fulfilment centre.", a: "dispatched" },
+      { word: "freight", hint: "noun", q: "Sea _____ is significantly cheaper than air transport but adds 3–4 weeks to delivery time.", a: "freight" },
+      { word: "inventory", hint: "noun", q: "Just-in-time manufacturing minimises _____ levels, reducing storage costs but increasing risk.", a: "inventory" },
+      { word: "lead time", hint: "noun phrase", q: "The supplier quoted a 6-week _____ for custom-made components.", a: "lead time" },
+      { word: "place an order", hint: "verb phrase", q: "We need to _____ for the raw materials at least 10 days before production begins.", a: "place an order" },
+      { word: "handle an order", hint: "verb phrase", q: "The new CRM system allows teams to _____ more efficiently from receipt to delivery.", a: "handle an order" },
+      { word: "backlog", hint: "noun", q: "A factory shutdown created a significant _____ of unprocessed orders that took weeks to clear.", a: "backlog" },
+      { word: "carrier", hint: "noun", q: "We switched to a different delivery _____ after repeated complaints about late shipments.", a: "carrier" },
+      { word: "tracking number", hint: "noun phrase", q: "Once your parcel is shipped, you will receive a _____ by email to monitor its progress.", a: "tracking number" },
+      { word: "customs clearance", hint: "noun phrase", q: "The shipment was held up at the port pending _____ — the paperwork was incomplete.", a: "customs clearance" },
+      { word: "bulk order", hint: "noun phrase", q: "Placing a _____ of 500 units qualifies for a 15% discount from the manufacturer.", a: "bulk order" },
+      { word: "shortage", hint: "noun", q: "A global _____ of semiconductor chips forced several car manufacturers to halt production.", a: "shortage" },
+      { word: "distribution network", hint: "noun phrase", q: "The company expanded its _____ to include 12 new regional depots across Eastern Europe.", a: "distribution network" }
+    ]
+  },
+  {
+    id: 10, title: "Facilities", topic: "Workplaces & spaces",
+    color: "#7070c8",
+    words: [
+      { word: "open-plan office", hint: "noun phrase", q: "Critics argue that the _____ promotes collaboration but often reduces individual concentration.", a: "open-plan office" },
+      { word: "hot-desking", hint: "noun/gerund", q: "The firm introduced _____ to reduce real estate costs, replacing assigned desks with shared ones.", a: "hot-desking" },
+      { word: "canteen", hint: "noun", q: "The staff _____ provides subsidised meals and is popular during lunch breaks.", a: "canteen" },
+      { word: "premises", hint: "noun (plural)", q: "CCTV cameras are installed throughout the _____ for security and insurance purposes.", a: "premises" },
+      { word: "maintenance", hint: "noun", q: "Facilities management is responsible for the ongoing _____ of all office equipment and systems.", a: "maintenance" },
+      { word: "renovation", hint: "noun", q: "The reception area closed for a month-long _____ to modernise the company's first impression.", a: "renovation" },
+      { word: "accessibility", hint: "noun", q: "The building's _____ was improved by adding ramps and a lift for wheelchair users.", a: "accessibility" },
+      { word: "occupancy rate", hint: "noun phrase", q: "The co-working space reports a 94% _____ — nearly every desk is booked every day.", a: "occupancy rate" },
+      { word: "lease", hint: "noun/verb", q: "The company signed a 10-year _____ on the new head office building in the city centre.", a: "lease" },
+      { word: "utilities", hint: "noun (plural)", q: "The monthly cost of _____ — electricity, heating, and water — increased by 40% last winter.", a: "utilities" },
+      { word: "conference room", hint: "noun phrase", q: "The _____ on the fourth floor can be booked through the intranet for up to 20 people.", a: "conference room" },
+      { word: "flexible workspace", hint: "noun phrase", q: "Start-ups often prefer _____ that can be scaled up or down as the team grows.", a: "flexible workspace" },
+      { word: "floor plan", hint: "noun phrase", q: "The _____ was revised to accommodate additional workstations following the team expansion.", a: "floor plan" },
+      { word: "air conditioning", hint: "noun phrase", q: "The _____ unit broke down during the heatwave, making the office almost unusable.", a: "air conditioning" },
+      { word: "security pass", hint: "noun phrase", q: "All visitors must sign in at reception and be issued a _____ before entering the building.", a: "security pass" }
+    ]
+  },
+  {
+    id: 11, title: "Decisions", topic: "Decision-making",
+    color: "#c85080",
+    words: [
+      { word: "weigh up", hint: "phrasal verb", q: "Before signing the deal, we need to _____ the potential returns against the financial risks.", a: "weigh up" },
+      { word: "pros and cons", hint: "noun phrase", q: "The board spent an hour discussing the _____ of relocating the factory to Eastern Europe.", a: "pros and cons" },
+      { word: "feasibility", hint: "noun", q: "A _____ study will determine whether the project is technically and financially viable.", a: "feasibility" },
+      { word: "implement", hint: "verb", q: "Once the board approves the strategy, the operations team will _____ it over a six-month rollout.", a: "implement" },
+      { word: "contingency plan", hint: "noun phrase", q: "A robust _____ should exist for every critical process in case the primary approach fails.", a: "contingency plan" },
+      { word: "risk assessment", hint: "noun phrase", q: "The project cannot start until the health and safety team completes a full _____.", a: "risk assessment" },
+      { word: "consensus", hint: "noun", q: "After two hours of debate, the team finally reached _____ on which supplier to choose.", a: "consensus" },
+      { word: "trade-off", hint: "noun", q: "There is always a _____ between speed and quality; rushing a product to market risks costly errors.", a: "trade-off" },
+      { word: "criteria", hint: "noun (plural)", q: "Three _____ were used to evaluate each candidate: experience, cultural fit, and technical skills.", a: "criteria" },
+      { word: "rational decision", hint: "noun phrase", q: "Business schools teach that a _____ is based on data and logic rather than instinct or emotion.", a: "rational decision" },
+      { word: "delegate", hint: "verb", q: "A good manager knows when to _____ tasks and when to remain personally involved.", a: "delegate" },
+      { word: "short-term vs long-term", hint: "phrase", q: "The key tension in strategic planning is often _____ thinking — quick wins versus sustainable growth.", a: "short-term vs long-term" },
+      { word: "outcome", hint: "noun", q: "The _____ of the vote was unexpected — a majority opposed the proposed acquisition.", a: "outcome" },
+      { word: "escalate", hint: "verb", q: "If a complaint is not resolved at team level within 24 hours, it must be _____ to management.", a: "escalated" },
+      { word: "opt for", hint: "phrasal verb", q: "After reviewing all proposals, the committee decided to _____ the most cost-effective solution.", a: "opt for" }
+    ]
+  },
+  {
+    id: 12, title: "Innovation", topic: "Ideas & technology",
+    color: "#50a878",
+    words: [
+      { word: "disruptive", hint: "adjective", q: "The start-up's _____ technology threatened the traditional business models of established banks.", a: "disruptive" },
+      { word: "prototype", hint: "noun", q: "Engineers built a working _____ to test the concept before committing to full production.", a: "prototype" },
+      { word: "intellectual property", hint: "noun phrase", q: "The company registered the design as _____ to prevent competitors from copying it.", a: "intellectual property" },
+      { word: "patent", hint: "noun/verb", q: "They spent two years trying to _____ the invention before releasing it commercially.", a: "patent" },
+      { word: "scalable", hint: "adjective", q: "Investors look for business models that are _____ — capable of rapid growth without proportional costs.", a: "scalable" },
+      { word: "R&D", hint: "abbreviation", q: "The company channels 12% of annual revenue into _____ — one of the highest ratios in the sector.", a: "R&D" },
+      { word: "iterate", hint: "verb", q: "The design team will _____ quickly on user feedback rather than aiming for perfection from the start.", a: "iterate" },
+      { word: "benchmark", hint: "noun/verb", q: "Before launching, we should _____ our prices against the main competitors in the market.", a: "benchmark" },
+      { word: "disruption", hint: "noun", q: "Digital _____ has transformed entire industries — from retail to transport to financial services.", a: "disruption" },
+      { word: "cutting-edge", hint: "adjective", q: "The lab employs _____ imaging technology that produces results four times faster than existing methods.", a: "cutting-edge" },
+      { word: "roll out", hint: "phrasal verb", q: "The new software will _____ gradually — first to pilot sites, then company-wide.", a: "roll out" },
+      { word: "brainstorm", hint: "verb/noun", q: "The design team held a _____ session to generate ideas for the rebrand without filtering any suggestions.", a: "brainstorm" },
+      { word: "early adopter", hint: "noun phrase", q: "An _____ takes a risk on new technology before it is proven or mainstream.", a: "early adopter" },
+      { word: "leverage", hint: "verb", q: "The startup was able to _____ its data to offer personalised recommendations far superior to rivals.", a: "leverage" },
+      { word: "proof of concept", hint: "noun phrase", q: "Management requested a _____ before approving full-scale development funding.", a: "proof of concept" }
+    ]
+  },
+  {
+    id: 13, title: "Breakdowns", topic: "Problems & solutions",
+    color: "#c87028",
+    words: [
+      { word: "malfunction", hint: "noun/verb", q: "The production line came to a halt after a key machine began to _____ without warning.", a: "malfunction" },
+      { word: "fault", hint: "noun", q: "An intermittent _____ in the circuit board caused random system crashes.", a: "fault" },
+      { word: "diagnose", hint: "verb", q: "The IT technician took two hours to _____ the problem before recommending a fix.", a: "diagnose" },
+      { word: "workaround", hint: "noun", q: "Until the software bug is patched, staff are using a temporary _____ to complete transactions.", a: "workaround" },
+      { word: "downtime", hint: "noun", q: "The server _____ lasted four hours, disrupting online services for thousands of customers.", a: "downtime" },
+      { word: "escalate a problem", hint: "verb phrase", q: "If a front-line agent cannot resolve the issue, they must _____ to a supervisor immediately.", a: "escalate" },
+      { word: "root cause", hint: "noun phrase", q: "Rather than applying a temporary fix, the engineer searched for the _____ of the repeated failures.", a: "root cause" },
+      { word: "resolution", hint: "noun", q: "The customer was frustrated by the lack of _____ — the same issue had been reported three times.", a: "resolution" },
+      { word: "crisis management", hint: "noun phrase", q: "The PR disaster required swift _____ to protect the brand's reputation.", a: "crisis management" },
+      { word: "damage limitation", hint: "noun phrase", q: "After the data breach, the company went into _____ mode, issuing a public apology.", a: "damage limitation" },
+      { word: "technical support", hint: "noun phrase", q: "Customers can reach _____ by phone, live chat, or email between 8 a.m. and 10 p.m.", a: "technical support" },
+      { word: "patch", hint: "noun/verb", q: "The software company released an emergency _____ to fix the security vulnerability.", a: "patch" },
+      { word: "outage", hint: "noun", q: "A major _____ at the data centre left thousands of businesses unable to access cloud services.", a: "outage" },
+      { word: "troubleshoot", hint: "verb", q: "The manual provides step-by-step instructions to _____ the most common error codes.", a: "troubleshoot" },
+      { word: "recall", hint: "noun/verb", q: "The manufacturer issued a product _____ after discovering that the safety latch could fail.", a: "recall" }
+    ]
+  },
+  {
+    id: 14, title: "Processes", topic: "Describing workflows",
+    color: "#4a90b8",
+    words: [
+      { word: "workflow", hint: "noun", q: "Streamlining the approval _____ reduced processing time from five days to just 24 hours.", a: "workflow" },
+      { word: "assembly line", hint: "noun phrase", q: "Workers on the _____ perform the same task repeatedly, enabling high-volume production.", a: "assembly line" },
+      { word: "quality control", hint: "noun phrase", q: "Every unit passes through _____ before leaving the factory, with a rejection rate under 0.5%.", a: "quality control" },
+      { word: "outsource", hint: "verb", q: "The company decided to _____ its payroll function to an external specialist provider.", a: "outsource" },
+      { word: "automate", hint: "verb", q: "Robotic systems now _____ many repetitive tasks that previously required human labour.", a: "automate" },
+      { word: "streamline", hint: "verb", q: "The aim of the restructure was to _____ operations and eliminate unnecessary duplication.", a: "streamline" },
+      { word: "compliance", hint: "noun", q: "All suppliers must demonstrate _____ with environmental regulations before signing the contract.", a: "compliance" },
+      { word: "turnaround time", hint: "noun phrase", q: "Customers expect a 24-hour _____ on repair jobs — delays quickly generate negative reviews.", a: "turnaround time" },
+      { word: "input", hint: "noun", q: "The _____ stage of the manufacturing process involves sourcing raw materials from approved suppliers.", a: "input" },
+      { word: "output", hint: "noun", q: "The new equipment increased daily _____ from 800 units to over 1,400.", a: "output" },
+      { word: "bottleneck", hint: "noun", q: "The _____ in the packaging department was slowing the entire production line.", a: "bottleneck" },
+      { word: "sign off", hint: "phrasal verb", q: "The legal team must _____ on every contract before it is sent to the client.", a: "sign off" },
+      { word: "protocol", hint: "noun", q: "A strict cleaning _____ was introduced to meet the new hygiene standards in food production.", a: "protocol" },
+      { word: "capacity", hint: "noun", q: "The plant is now operating at full _____, leaving no room to absorb additional orders.", a: "capacity" },
+      { word: "continuous improvement", hint: "noun phrase", q: "Lean manufacturing is built on the principle of _____ — small, incremental gains over time.", a: "continuous improvement" }
+    ]
+  },
+  {
+    id: 15, title: "Performance", topic: "Appraisals & qualities",
+    color: "#a060c0",
+    words: [
+      { word: "appraisal", hint: "noun", q: "Her annual _____ highlighted strong leadership skills but flagged poor time management.", a: "appraisal" },
+      { word: "KPI", hint: "abbreviation", q: "Each department sets its own _____ to measure whether strategic targets have been achieved.", a: "KPIs" },
+      { word: "target", hint: "noun/verb", q: "Sales representatives must _____ 20 new client meetings per month as a minimum.", a: "target" },
+      { word: "underperform", hint: "verb", q: "The branch continued to _____ despite two rounds of additional investment.", a: "underperform" },
+      { word: "exceed targets", hint: "verb phrase", q: "She was awarded a bonus after choosing to _____ for the third consecutive quarter.", a: "exceed targets" },
+      { word: "constructive feedback", hint: "noun phrase", q: "Managers are trained to deliver _____ that motivates improvement without demoralising staff.", a: "constructive feedback" },
+      { word: "probationary period", hint: "noun phrase", q: "New employees are reviewed at the end of their _____ — typically three to six months.", a: "probationary period" },
+      { word: "objective", hint: "noun", q: "SMART _____ should be specific, measurable, and time-bound to be effective.", a: "objectives" },
+      { word: "self-assessment", hint: "noun phrase", q: "Staff are asked to complete a _____ before the formal review so managers can compare perceptions.", a: "self-assessment" },
+      { word: "initiative", hint: "noun", q: "She showed real _____ by identifying the problem and proposing a solution before being asked.", a: "initiative" },
+      { word: "resilience", hint: "noun", q: "Working in fast-moving environments demands _____ — the ability to recover quickly from setbacks.", a: "resilience" },
+      { word: "adaptability", hint: "noun", q: "Her _____ was praised — she successfully managed three role changes within two years.", a: "adaptability" },
+      { word: "accountability", hint: "noun", q: "Introducing clear _____ meant every team member knew exactly who owned each deliverable.", a: "accountability" },
+      { word: "incentive", hint: "noun", q: "A performance-related _____ scheme was introduced to reward staff who met or exceeded their goals.", a: "incentive" },
+      { word: "benchmark", hint: "noun", q: "The new _____ for customer response time is 4 hours — anything longer is flagged.", a: "benchmark" }
+    ]
+  }
+];
+
+// ─── SRS ENGINE ───────────────────────────────────────────────────────────────
+// Each word card: { level: 0-4, nextDue: timestamp, interval: days, easeFactor }
+// SRS intervals: Level 0→1: 1d, 1→2: 3d, 2→3: 7d, 3→4: 14d, 4: 30d
+// Difficulty adjustments: easy +50%, ok normal, hard /2
+
+const SRS_INTERVALS = [1, 3, 7, 14, 30]; // days per level
+
+function initState() {
+  const s = {};
+  UNITS.forEach(u => {
+    s[`u${u.id}`] = {};
+    u.words.forEach((w, i) => {
+      s[`u${u.id}`][i] = { level: 0, nextDue: Date.now(), interval: 1, ef: 2.5, seen: false };
+    });
+  });
+  return s;
+}
+
+let state = {};
+let activityLog = {}; // date string → count
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('brvocab_state');
+    const a = localStorage.getItem('brvocab_activity');
+    if (s) state = JSON.parse(s);
+    else state = initState();
+    if (a) activityLog = JSON.parse(a);
+  } catch(e) { state = initState(); }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('brvocab_state', JSON.stringify(state));
+    localStorage.setItem('brvocab_activity', JSON.stringify(activityLog));
+  } catch(e) {}
+}
+
+function getCardState(unitId, wordIdx) {
+  if (!state[`u${unitId}`]) state[`u${unitId}`] = {};
+  if (!state[`u${unitId}`][wordIdx]) {
+    state[`u${unitId}`][wordIdx] = { level: 0, nextDue: Date.now(), interval: 1, ef: 2.5, seen: false };
+  }
+  return state[`u${unitId}`][wordIdx];
+}
+
+function reviewCard(unitId, wordIdx, difficulty) {
+  const cs = getCardState(unitId, wordIdx);
+  cs.seen = true;
+  const now = Date.now();
+  const dayMs = 86400000;
+
+  // difficulty: 'easy' | 'ok' | 'hard'
+  if (difficulty === 'hard') {
+    cs.level = Math.max(0, cs.level - 1);
+    cs.interval = Math.max(1, Math.floor(cs.interval / 2));
+    cs.ef = Math.max(1.3, cs.ef - 0.2);
+  } else if (difficulty === 'ok') {
+    cs.level = Math.min(4, cs.level + 1);
+    cs.interval = Math.round(SRS_INTERVALS[cs.level] * cs.ef / 2.5);
+    cs.interval = Math.max(1, cs.interval);
+  } else { // easy
+    cs.level = Math.min(4, cs.level + 1);
+    cs.ef = Math.min(3.0, cs.ef + 0.1);
+    cs.interval = Math.round(SRS_INTERVALS[cs.level] * cs.ef / 2.5 * 1.5);
+    cs.interval = Math.max(2, cs.interval);
+  }
+  cs.nextDue = now + cs.interval * dayMs;
+
+  // Log activity
+  const today = new Date().toISOString().slice(0,10);
+  activityLog[today] = (activityLog[today] || 0) + 1;
+
+  saveState();
+}
+
+function getDueWords() {
+  const now = Date.now();
+  const due = [];
+  UNITS.forEach(u => {
+    u.words.forEach((w, i) => {
+      const cs = getCardState(u.id, i);
+      if (cs.seen && cs.nextDue <= now + 3600000) { // due now or within 1hr
+        due.push({ unitId: u.id, wordIdx: i, word: w.word, unitTitle: u.title, overdue: Math.floor((now - cs.nextDue)/86400000) });
+      }
+    });
+  });
+  return due;
+}
+
+function getNewWords(unitId, count = 5) {
+  const u = UNITS.find(x => x.id === unitId);
+  const newW = [];
+  u.words.forEach((w, i) => {
+    const cs = getCardState(unitId, i);
+    if (!cs.seen) newW.push({ unitId, wordIdx: i, word: w.word });
+  });
+  return newW.slice(0, count);
+}
+
+// ─── VIEWS ────────────────────────────────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(`view-${name}`).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nm = document.querySelector(`[onclick="showView('${name}')"]`);
+  if (nm) nm.classList.add('active');
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'progress') renderProgress();
+}
+
+// ─── SIDEBAR UNITS ────────────────────────────────────────────────────────────
+function buildSidebar() {
+  const ul = document.getElementById('unit-list');
+  ul.innerHTML = '';
+  UNITS.forEach(u => {
+    const total = u.words.length;
+    const mastered = u.words.filter((w,i) => getCardState(u.id, i).level >= 4).length;
+    const div = document.createElement('div');
+    div.className = 'unit-item';
+    div.onclick = () => startUnitStudy(u.id);
+    div.innerHTML = `<div class="unit-num">${u.id}</div><span>${u.title}</span><span class="unit-prog">${mastered}/${total}</span>`;
+    ul.appendChild(div);
+  });
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const now = Date.now();
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('dash-greeting').textContent = `${greet} 👋`;
+
+  // Stats
+  let studied = 0, mastered = 0;
+  UNITS.forEach(u => u.words.forEach((w,i) => {
+    const cs = getCardState(u.id, i);
+    if (cs.seen) studied++;
+    if (cs.level >= 4) mastered++;
+  }));
+  document.getElementById('stat-studied').textContent = studied;
+  document.getElementById('stat-mastered').textContent = mastered;
+  document.getElementById('stat-total').textContent = UNITS.reduce((s,u) => s + u.words.length, 0);
+
+  // Streak
+  let streak = 0;
+  const d = new Date();
+  for (let i = 0; i < 365; i++) {
+    const k = d.toISOString().slice(0,10);
+    if (activityLog[k]) { streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  document.getElementById('stat-streak').textContent = streak;
+
+  // Due
+  const due = getDueWords();
+  document.getElementById('due-count-badge').textContent = due.length;
+  const dueList = document.getElementById('due-list-dash');
+  if (due.length === 0) {
+    dueList.innerHTML = '<div style="color:var(--text-dim);font-size:14px;padding:16px 0">No reviews due. Keep studying new units! ✨</div>';
+    document.getElementById('start-due-wrap').style.display = 'none';
+  } else {
+    const show = due.slice(0, 6);
+    dueList.innerHTML = show.map(d => `
+      <div class="due-row">
+        <div class="due-word">${d.word}</div>
+        <div class="due-unit">Unit ${d.unitId}: ${d.unitTitle}</div>
+        ${d.overdue > 0 ? `<div class="due-overdue">+${d.overdue}d overdue</div>` : ''}
+        <div class="due-badge review">review</div>
+      </div>
+    `).join('') + (due.length > 6 ? `<div style="color:var(--text-dim);font-size:13px;padding:10px 0">...and ${due.length-6} more</div>` : '');
+    document.getElementById('start-due-wrap').style.display = 'block';
+  }
+
+  // Unit progress grid
+  const grid = document.getElementById('unit-progress-grid');
+  grid.innerHTML = '';
+  UNITS.forEach(u => {
+    const total = u.words.length;
+    const seen = u.words.filter((w,i) => getCardState(u.id, i).seen).length;
+    const pct = Math.round(seen/total*100);
+    const el = document.createElement('div');
+    el.className = 'up-card';
+    el.onclick = () => startUnitStudy(u.id);
+    el.innerHTML = `
+      <div class="up-num">${u.id}</div>
+      <div class="up-name">${u.title}</div>
+      <div class="up-bar-wrap"><div class="up-bar" style="width:${pct}%"></div></div>
+      <div class="up-pct">${pct}%</div>`;
+    grid.appendChild(el);
+  });
+
+  // Heatmap
+  const hm = document.getElementById('heatmap');
+  hm.innerHTML = '';
+  const hmDate = new Date(); hmDate.setDate(hmDate.getDate() - 52*7 + 1);
+  for (let i = 0; i < 52*7; i++) {
+    const k = new Date(hmDate.getTime() + i*86400000).toISOString().slice(0,10);
+    const cnt = activityLog[k] || 0;
+    const el = document.createElement('div');
+    el.className = `hm-day${cnt===0?'':cnt<5?' l1':cnt<15?' l2':cnt<30?' l3':' l4'}`;
+    el.title = `${k}: ${cnt} reviews`;
+    hm.appendChild(el);
+  }
+}
+
+// ─── PROGRESS VIEW ────────────────────────────────────────────────────────────
+function renderProgress() {
+  const tbody = document.getElementById('progress-tbody');
+  tbody.innerHTML = '';
+  UNITS.forEach(u => {
+    const total = u.words.length;
+    const levels = [0,0,0,0,0];
+    u.words.forEach((w,i) => { const l = getCardState(u.id,i).level; levels[l]++; });
+    const segs = levels.map((n,l) => {
+      const colors = ['rgba(255,255,255,0.06)','rgba(200,155,60,0.3)','rgba(200,155,60,0.55)','var(--gold)','var(--green)'];
+      return `<div class="level-seg" style="background:${colors[l]};flex:${n||0.5}"></div>`;
+    }).join('');
+    const mastered = levels[4];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:600;color:var(--gold)">${u.id}</td>
+      <td style="color:var(--cream);font-weight:500">${u.title}</td>
+      <td style="color:var(--text-dim);font-size:13px">${u.topic}</td>
+      <td style="font-size:13px">${mastered}/${total}</td>
+      <td><div class="level-bar-wrap">${segs}</div></td>
+      <td><button class="study-btn" style="padding:6px 14px;font-size:12px" onclick="startUnitStudy(${u.id})">Study →</button></td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Word grid
+  const wg = document.getElementById('word-detail-grid');
+  wg.innerHTML = '';
+  const lvlColors = ['rgba(255,255,255,0.08)','rgba(200,155,60,0.3)','rgba(200,155,60,0.6)','var(--gold)','var(--green)'];
+  UNITS.forEach(u => u.words.forEach((w,i) => {
+    const cs = getCardState(u.id, i);
+    const el = document.createElement('div');
+    el.className = 'wdg-cell';
+    el.title = `Unit ${u.id} | Level ${cs.level}`;
+    el.innerHTML = `<div class="wdg-dot" style="background:${lvlColors[cs.level]}"></div><span style="color:${cs.seen?'var(--text)':'var(--text-dim)'}">${w.word}</span>`;
+    wg.appendChild(el);
+  }));
+}
+
+// ─── STUDY SESSION ────────────────────────────────────────────────────────────
+let currentSession = []; // [{unitId, wordIdx}]
+let sessionIdx = 0;
+let sessionCorrect = 0;
+let sessionWrong = 0;
+let pendingDifficulty = false;
+
+function startUnitStudy(unitId) {
+  const u = UNITS.find(x => x.id === unitId);
+  // Mix due words from this unit + new words
+  const now = Date.now();
+  const due = [];
+  const newW = [];
+  u.words.forEach((w, i) => {
+    const cs = getCardState(unitId, i);
+    if (cs.seen && cs.nextDue <= now + 3600000) due.push({ unitId, wordIdx: i });
+    else if (!cs.seen) newW.push({ unitId, wordIdx: i });
+  });
+  // Show up to 5 new + all due, shuffle
+  const session = [...due, ...newW.slice(0, Math.max(5, 10 - due.length))];
+  if (session.length === 0) {
+    // All caught up — show all anyway
+    u.words.forEach((w,i) => session.push({ unitId, wordIdx: i }));
+  }
+  shuffle(session);
+  beginSession(session, `Unit ${u.id} – ${u.title}`, `${session.length} cards`);
+}
+
+function startDueSession() {
+  const due = getDueWords().map(d => ({ unitId: d.unitId, wordIdx: d.wordIdx }));
+  if (due.length === 0) { showView('dashboard'); return; }
+  shuffle(due);
+  beginSession(due, 'Due for Review', `${due.length} cards due today`);
+  document.querySelector('[onclick*="startDueSession"]')?.classList?.add('active');
+}
+
+function beginSession(session, title, subtitle) {
+  currentSession = session;
+  sessionIdx = 0;
+  sessionCorrect = 0;
+  sessionWrong = 0;
+  pendingDifficulty = false;
+
+  document.getElementById('study-unit-title').textContent = title;
+  document.getElementById('study-subtitle').textContent = subtitle;
+
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-study').classList.add('active');
+  document.getElementById('session-done').style.display = 'none';
+  document.getElementById('study-content').style.display = '';
+
+  renderCard();
+}
+
+function renderCard() {
+  const total = currentSession.length;
+  const idx = sessionIdx;
+  document.getElementById('study-fill').style.width = `${(idx/total)*100}%`;
+  document.getElementById('study-counter').textContent = `${idx} / ${total}`;
+
+  if (idx >= total) {
+    showSessionDone();
+    return;
+  }
+
+  const { unitId, wordIdx } = currentSession[idx];
+  const unit = UNITS.find(u => u.id === unitId);
+  const word = unit.words[wordIdx];
+
+  const sc = document.getElementById('study-content');
+  sc.innerHTML = `
+    <div class="flashcard" id="fc-card">
+      <div class="fc-light" id="fc-light"></div>
+      <div class="fc-unit-tag">Unit ${unitId} · ${unit.title}</div>
+      <div class="fc-question">${formatQuestion(word.q, word.a)}</div>
+      <div class="answer-input-wrap">
+        <input class="answer-input" id="answer-input" type="text" placeholder="Type your answer…" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="check-btn" id="check-btn" onclick="checkAnswer()">Check</button>
+      </div>
+      <div class="feedback-row" id="feedback-row"></div>
+    </div>
+    <div class="difficulty-row" id="diff-row">
+      <span class="diff-label">How well did you know it?</span>
+      <button class="diff-btn easy" onclick="rateCard('easy')">😄 Easy</button>
+      <button class="diff-btn ok" onclick="rateCard('ok')">👍 OK</button>
+      <button class="diff-btn hard" onclick="rateCard('hard')">😓 Hard</button>
+    </div>`;
+
+  const inp = document.getElementById('answer-input');
+  inp.focus();
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
+}
+
+function formatQuestion(q, a) {
+  // Replace the answer with a blank in the question if present
+  return q.replace('_____', '<span class="fc-blank"></span>');
+}
+
+function normalize(s) {
+  return s.toLowerCase().trim()
+    .replace(/['']/g, "'")
+    .replace(/[^a-z0-9\s'&\/\-]/g, '')
+    .replace(/\s+/g, ' ');
+}
+
+function checkAnswer() {
+  const inp = document.getElementById('answer-input');
+  if (!inp || inp.disabled) return;
+  const { unitId, wordIdx } = currentSession[sessionIdx];
+  const unit = UNITS.find(u => u.id === unitId);
+  const word = unit.words[wordIdx];
+
+  const userAns = inp.value.trim();
+  if (!userAns) return;
+
+  const correct = normalize(userAns) === normalize(word.a);
+
+  const card = document.getElementById('fc-card');
+  const light = document.getElementById('fc-light');
+  const feedback = document.getElementById('feedback-row');
+  const diffRow = document.getElementById('diff-row');
+  const checkBtn = document.getElementById('check-btn');
+
+  inp.disabled = true;
+  checkBtn.disabled = true;
+  checkBtn.textContent = correct ? '✓' : '✗';
+
+  if (correct) {
+    sessionCorrect++;
+    inp.classList.add('correct');
+    card.classList.add('correct');
+    light.classList.add('green');
+    feedback.className = 'feedback-row correct show';
+    feedback.innerHTML = '✓ Correct!';
+  } else {
+    sessionWrong++;
+    inp.classList.add('wrong');
+    card.classList.add('wrong');
+    light.classList.add('red');
+    feedback.className = 'feedback-row wrong show';
+    feedback.innerHTML = `✗ Incorrect — correct answer: <span class="correct-answer">${word.a}</span>`;
+    // Pre-select "hard" but let user override
+  }
+
+  diffRow.classList.add('show');
+  pendingDifficulty = true;
+}
+
+function rateCard(difficulty) {
+  if (!pendingDifficulty) return;
+  const { unitId, wordIdx } = currentSession[sessionIdx];
+  reviewCard(unitId, wordIdx, difficulty);
+  pendingDifficulty = false;
+  sessionIdx++;
+  renderCard();
+  buildSidebar();
+}
+
+function showSessionDone() {
+  document.getElementById('study-content').style.display = 'none';
+  const done = document.getElementById('session-done');
+  done.style.display = 'flex';
+  const total = sessionCorrect + sessionWrong;
+  const pct = total > 0 ? Math.round(sessionCorrect/total*100) : 0;
+  document.getElementById('done-correct').textContent = sessionCorrect;
+  document.getElementById('done-wrong').textContent = sessionWrong;
+  document.getElementById('done-pct').textContent = `${pct}%`;
+  document.getElementById('done-message').textContent =
+    pct >= 90 ? '🌟 Outstanding! You are mastering this vocabulary.' :
+    pct >= 70 ? '👍 Great progress! Keep reviewing the ones you missed.' :
+    pct >= 50 ? '📚 Good effort — a bit more practice will sharpen these words.' :
+    '💪 Keep going! Spaced repetition works — come back tomorrow for a review.';
+  document.getElementById('study-fill').style.width = '100%';
+}
+
+function exitStudy() {
+  saveState();
+  showView('dashboard');
+  buildSidebar();
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  for (let i = arr.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadState();
+buildSidebar();
+renderDashboard();
+</script>
+</body>
+</html>
