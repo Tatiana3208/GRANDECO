@@ -910,9 +910,9 @@ function showResults() {
   document.getElementById('results-score').textContent = `${correct}/${total}`;
   document.getElementById('results-unit-label').textContent = document.getElementById('quiz-title').textContent + ' complete';
  
-  const easy   = sessionResults.filter(r => r.correct && queue.find(q => q.word === r.item.word)?.rating === 3).length;
-  const medium = sessionResults.filter(r => r.correct && queue.find(q => q.word === r.item.word)?.rating === 2).length;
-  const hard   = sessionResults.filter(r => !r.correct).length;
+  const easy   = sessionResults.filter(r => r.rating === 3).length;
+  const medium = sessionResults.filter(r => r.rating === 2).length;
+  const hard   = sessionResults.filter(r => r.rating === 1).length;
   document.getElementById('rb-easy').textContent   = easy;
   document.getElementById('rb-medium').textContent = medium;
   document.getElementById('rb-hard').textContent   = hard;
