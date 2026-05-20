@@ -892,9 +892,10 @@ function selectOpt(chosen, correct, item) {
   document.getElementById('rate-area').style.display = 'block';
 }
  
-function rate(r) {
+ function rate(r) {
   const item = queue[qIdx];
   applyRating(item.unit, item.idx, lastCorrect, r);
+  sessionResults[sessionResults.length - 1].rating = r;
   qIdx++;
   document.getElementById('rate-area').style.display = 'none';
   loadQ();
